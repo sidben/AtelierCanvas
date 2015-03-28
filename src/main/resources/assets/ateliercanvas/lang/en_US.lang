@@ -1,2 +1,5 @@
+# Entities
+entity.ateliercanvas.CustomPainting.name=Special Painting
+
 # Items
 item.ateliercanvas:custom_painting.name=Special Painting

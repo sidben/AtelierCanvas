@@ -1,5 +1,9 @@
 package sidben.ateliercanvas.proxy;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
+import sidben.ateliercanvas.ModAtelierCanvas;
+import sidben.ateliercanvas.entity.item.EntityCustomPainting;
+import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.init.MyItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -29,6 +33,9 @@ public abstract class CommonProxy implements IProxy
     @Override
     public void initialize()
     {
+        LogHelper.info("=================LOAD (common proxy)========================");
+        
+        
         // Recipes
 
         
@@ -36,6 +43,11 @@ public abstract class CommonProxy implements IProxy
 
         
         // Event Handlers
+        
+        
+        // Entities
+        LogHelper.info("-- Registering custom painting entity");
+        EntityRegistry.registerModEntity(EntityCustomPainting.class, "CustomPainting", 0, ModAtelierCanvas.instance, 10, 3, false);
     }
 
 

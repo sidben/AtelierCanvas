@@ -1,6 +1,7 @@
 package sidben.ateliercanvas;
 
 import sidben.ateliercanvas.reference.Reference;
+import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.proxy.IProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -30,6 +31,9 @@ public class ModAtelierCanvas
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        LogHelper.info("=================PREINIT========================");
+        
+        
         // Sided pre-initialization
         proxy.pre_initialize();
     }
@@ -38,6 +42,8 @@ public class ModAtelierCanvas
     @Mod.EventHandler
     public void load(FMLInitializationEvent event)
     {
+        LogHelper.info("=================LOAD========================");
+        
         // Sided initializations
         proxy.initialize();
     }
@@ -46,6 +52,11 @@ public class ModAtelierCanvas
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
+        LogHelper.info("=================POSTINIT========================");
+        
+        
+        
+        
         // Sided post-initialization
         proxy.post_initialize();
     }
