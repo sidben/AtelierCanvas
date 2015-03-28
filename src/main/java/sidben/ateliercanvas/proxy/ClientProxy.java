@@ -135,7 +135,7 @@ public class ClientProxy extends CommonProxy
             //pixels[i] = 0;
             pixels[i] = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)).getRGB();
         }
-        //pixels[0] = new Color(255, 128, 0).getRGB();  // orange
+        pixels[0] = new Color(255, 128, 0).getRGB();  // orange
         
         texture.updateDynamicTexture();
         
