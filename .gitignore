@@ -1,0 +1,15 @@
+build/
+.classpath
+.project
+.gradle/
+eclipse/
+bin/
+repo/
+.settings/
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
