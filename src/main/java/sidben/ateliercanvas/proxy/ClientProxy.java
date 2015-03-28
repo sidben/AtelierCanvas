@@ -1,5 +1,6 @@
 package sidben.ateliercanvas.proxy;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -123,6 +124,11 @@ public class ClientProxy extends CommonProxy
             e.printStackTrace();
         }
 
+        pixels = texture.getTextureData();
+        pixels[0] = new Color(255, 128, 0).getRGB();
+        
+        texture.updateDynamicTexture();
+        
         
         pixels = texture.getTextureData();
         String auxPX = "";
@@ -130,6 +136,9 @@ public class ClientProxy extends CommonProxy
             auxPX += pixels[i] + ", ";
         }
         LogHelper.info("]   " + auxPX);
+        
+        LogHelper.info("]   " + new Color(145, 170, 76).getRGB() + " / -7230900");
+        
 
     }
 
