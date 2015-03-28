@@ -47,16 +47,52 @@ public class RenderCustomPainting extends Render
     }
     
     
+    /*
+     * NOTE: 
+     * 
+     * par2, par3 and par4 are related to the player position/distance to the entity
+     * par5 is the angle facing the player
+     * par6 is a random number between 0.0F and 1.0F
+     * 
+     */
+    
     public void doRender(EntityCustomPainting painting, double par2, double par3, double par4, float par5, float par6)
     {
         LogHelper.info("doRender()");
         LogHelper.info("    par2-4: " + par2 + ", " + par3 + ", " + par4);
         LogHelper.info("    par5-6: " + par5 + ", " + par6);
         LogHelper.info("    painting pos: " + painting.posX + ", " + painting.posY + ", " + painting.posZ);
+        LogHelper.info("    painting direction: " + painting.hangingDirection);
+        LogHelper.info("    painting field: " + painting.field_146063_b + ", " + painting.field_146064_c + ", " + painting.field_146062_d);
+        LogHelper.info("    offset: " + Direction.offsetX[painting.hangingDirection] + ", " + Direction.offsetZ[painting.hangingDirection]);
+        
+        
+        
+        double renderPosX = par2;
+        double renderPosY = par3 - 0.5D;
+        double renderPosZ = par4;
+        
+        // TODO: pretty this up
+        if (par5 == 0) 
+        {
+            renderPosX -= 0.5D;
+        }
+        else if (par5 == -180) 
+        {
+            renderPosX += 0.5D;
+        }
+        else if (par5 == -90) 
+        {
+            renderPosZ -= 0.5D;
+        }
+        else if (par5 == 90) 
+        {
+            renderPosZ += 0.5D;
+        }
         
         
         GL11.glPushMatrix();
-        GL11.glTranslated(par2, par3, par4);
+        GL11.glTranslated(renderPosX, renderPosY, renderPosZ);
         GL11.glRotatef(par5, 0.0F, 1.0F, 0.0F);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         this.bindEntityTexture(painting);
@@ -68,6 +104,8 @@ public class RenderCustomPainting extends Render
         
         float f = (float)(-par2) / 2.0F;
         float f1 = (float)(-par3) / 2.0F;
+        
+        LogHelper.info("    f, f1: " + f + ", " + f1);
 
         
         Tessellator tessellator = Tessellator.instance;
