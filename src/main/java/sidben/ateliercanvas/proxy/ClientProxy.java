@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.Minecraft;
@@ -106,10 +107,11 @@ public class ClientProxy extends CommonProxy
         LogHelper.info("]   " + auxPX);
         */
         
-        //this.customPainting = texMan.getDynamicTextureLocation("custom_painting", texture);
+        customPainting = texMan.getDynamicTextureLocation("custom_painting", texture);
 
         
-        
+        /*
+        // Working!
         URL url;
         try {
             
@@ -123,9 +125,17 @@ public class ClientProxy extends CommonProxy
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
 
+        Random rand = new Random();
+        
         pixels = texture.getTextureData();
-        pixels[0] = new Color(255, 128, 0).getRGB();
+        for (int i = 0; i < pixels.length; ++i)
+        {
+            //pixels[i] = 0;
+            pixels[i] = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)).getRGB();
+        }
+        //pixels[0] = new Color(255, 128, 0).getRGB();  // orange
         
         texture.updateDynamicTexture();
         
