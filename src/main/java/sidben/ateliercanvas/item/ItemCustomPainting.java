@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 
-
+// TODO - add CanvasID (damage value) and render it
 
 public class ItemCustomPainting extends Item
 {

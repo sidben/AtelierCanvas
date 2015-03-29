@@ -6,6 +6,7 @@ import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.init.MyItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -48,6 +49,12 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     @Override
     public void onBroken(Entity entity)
     {
+        if (entity instanceof EntityPlayer)
+        {
+            EntityPlayer player = (EntityPlayer)entity;
+            if (player.capabilities.isCreativeMode) return;
+        }
+
         this.entityDropItem(new ItemStack(MyItems.customPainting), 0.0F);
     }
 
