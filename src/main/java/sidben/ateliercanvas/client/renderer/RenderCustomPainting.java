@@ -48,9 +48,9 @@ public class RenderCustomPainting extends Render
 
     
     @Override
-    public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
+    public void doRender(Entity entity, double x, double y, double z, float posYaw, float partialTickTime)
     {
-        this.doRender((EntityCustomPainting)p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+        this.doRender((EntityCustomPainting)entity, x, y, z, posYaw, partialTickTime);
     }
 
     @Override
@@ -63,15 +63,15 @@ public class RenderCustomPainting extends Render
     
     protected ResourceLocation getEntityTexture(EntityCustomPainting entity)
     {
-        return ClientProxy.customPainting;
-        
-        // return this.vabillaPainting;
+        //return ClientProxy.customPainting;
+        return PaintingData.getTexture(entity.worldObj, entity.canvasId);
     }
     
     
     
     public void doRender(EntityCustomPainting painting, double x, double y, double z, float posYaw, float partialTickTime)
     {
+        /*
         LogHelper.info("doRender()");
         LogHelper.info("    par2-4: " + x + ", " + y + ", " + z);
         LogHelper.info("    par5-6: " + posYaw + ", " + partialTickTime);
@@ -79,7 +79,6 @@ public class RenderCustomPainting extends Render
         LogHelper.info("    painting direction: " + painting.hangingDirection);
         LogHelper.info("    painting field: " + painting.field_146063_b + ", " + painting.field_146064_c + ", " + painting.field_146062_d);
         LogHelper.info("    offset: " + Direction.offsetX[painting.hangingDirection] + ", " + Direction.offsetZ[painting.hangingDirection]);
-        /*
         */
 
         
@@ -124,7 +123,7 @@ public class RenderCustomPainting extends Render
         float f14 = 0.0625F;
                 
 
-        LogHelper.info("    f, f1: " + f + ", " + f1);
+//        LogHelper.info("    f, f1: " + f + ", " + f1);
 
         
         // TODO: add bigger painting support, will require a loop
