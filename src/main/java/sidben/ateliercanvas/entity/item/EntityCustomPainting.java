@@ -14,6 +14,10 @@ import net.minecraft.world.World;
 
 public class EntityCustomPainting extends EntityHanging implements IEntityAdditionalSpawnData 
 {
+    
+    public int canvasId;
+        
+    
 
     public EntityCustomPainting(World world) {
         super(world);
@@ -22,13 +26,15 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         LogHelper.info(".   world: " + world);
     }
 
-    public EntityCustomPainting(World world, int x, int y, int z, int direction) {
+    public EntityCustomPainting(World world, int x, int y, int z, int direction, int canvasId) {
         super(world, x, y, z, direction);
         this.setDirection(direction);
+        this.canvasId = canvasId;
         
         LogHelper.info("EntityCustomPainting()");
         LogHelper.info(".   pos: " + x + ", " + y + "," + z);
         LogHelper.info(".   direaction: " + direction);
+        LogHelper.info(".   canvas: " + canvasId);
         LogHelper.info(".   pos (this): " + this.posX + ", " + this.posY + "," + this.posZ);
         LogHelper.info(".   direaction (this): " + this.hangingDirection);
     }
@@ -64,6 +70,7 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         LogHelper.info("writeSpawnData()");
         LogHelper.info("_    " + this.hangingDirection);
         
+        buffer.writeInt(this.canvasId);
         buffer.writeInt(this.field_146063_b);       // x
         buffer.writeInt(this.field_146064_c);       // y
         buffer.writeInt(this.field_146062_d);       // z
@@ -73,6 +80,7 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     @Override
     public void readSpawnData(ByteBuf buffer)
     {
+        this.canvasId = buffer.readInt();
         this.field_146063_b = buffer.readInt();
         this.field_146064_c = buffer.readInt();
         this.field_146062_d = buffer.readInt();
