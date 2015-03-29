@@ -1,10 +1,16 @@
 package sidben.ateliercanvas.proxy;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.imageio.ImageIO;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import sidben.ateliercanvas.ModAtelierCanvas;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.init.MyItems;
+import sidben.ateliercanvas.world.storage.PaintingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -54,6 +60,7 @@ public abstract class CommonProxy implements IProxy
     @Override
     public void post_initialize()
     {
+        
     }
 
 
