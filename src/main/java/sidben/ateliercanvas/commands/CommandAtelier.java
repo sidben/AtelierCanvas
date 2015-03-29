@@ -6,11 +6,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import sidben.ateliercanvas.helper.LogHelper;
+import sidben.ateliercanvas.init.MyItems;
 import sidben.ateliercanvas.world.storage.PaintingData;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 
@@ -83,7 +88,19 @@ public class CommandAtelier extends CommandBase
                     
                     image.getRGB(0, 0, w, h, imageData, 0, w);
                     
-                    PaintingData.AddPainting(world, author, name, imageData);
+                    int canvasId = PaintingData.addPainting(world, author, name, imageData);
+
+
+                    if (par1ICommandSender instanceof EntityPlayerMP) {
+                        EntityPlayerMP player = (EntityPlayerMP)par1ICommandSender;
+                        ItemStack item = new ItemStack(MyItems.customPainting, 1, canvasId);
+
+                        EntityItem entityitem = player.dropPlayerItemWithRandomChoice(item, false);
+                        entityitem.delayBeforeCanPickup = 0;
+                        entityitem.func_145797_a(player.getCommandSenderName());
+                    }
+                    
+
                     
                     func_152373_a(par1ICommandSender, this, "commands.atelier.success", new Object[0]);
                     return;
