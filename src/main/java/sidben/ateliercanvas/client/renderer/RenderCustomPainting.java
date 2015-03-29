@@ -72,7 +72,6 @@ public class RenderCustomPainting extends Render
     
     public void doRender(EntityCustomPainting painting, double x, double y, double z, float posYaw, float partialTickTime)
     {
-        /*
         LogHelper.info("doRender()");
         LogHelper.info("    par2-4: " + x + ", " + y + ", " + z);
         LogHelper.info("    par5-6: " + posYaw + ", " + partialTickTime);
@@ -80,41 +79,22 @@ public class RenderCustomPainting extends Render
         LogHelper.info("    painting direction: " + painting.hangingDirection);
         LogHelper.info("    painting field: " + painting.field_146063_b + ", " + painting.field_146064_c + ", " + painting.field_146062_d);
         LogHelper.info("    offset: " + Direction.offsetX[painting.hangingDirection] + ", " + Direction.offsetZ[painting.hangingDirection]);
+        /*
         */
 
-        // NOTE: on the client, painting entity has no info. Need to add packet support, datawatcher or something else
         
-        
-        double renderPosX = x;
+        int dir = painting.hangingDirection;
+        double renderPosX = x - (dir == 0 ? -0.5D : (dir == 2) ? 0.5D : 0);
         double renderPosY = y - 0.5D;
-        double renderPosZ = z;
-        
-        // TODO: pretty this up
-        if (posYaw == 0) 
-        {
-            renderPosX -= 0.5D;
-        }
-        else if (posYaw == -180) 
-        {
-            renderPosX += 0.5D;
-        }
-        else if (posYaw == -90) 
-        {
-            renderPosZ -= 0.5D;
-        }
-        else if (posYaw == 90) 
-        {
-            renderPosZ += 0.5D;
-        }
+        double renderPosZ = z - (dir == 1 ? -0.5D : (dir == 3) ? 0.5D : 0);
+        float scale = 0.0625F;
         
         
         GL11.glPushMatrix();
         GL11.glTranslated(renderPosX, renderPosY, renderPosZ);
         GL11.glRotatef(posYaw, 0.0F, 1.0F, 0.0F);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-
-        float f2 = 0.0625F;
-        GL11.glScalef(f2, f2, f2);
+        GL11.glScalef(scale, scale, scale);
         
         this.drawPainting(painting);
         
@@ -157,7 +137,7 @@ public class RenderCustomPainting extends Render
         float yStart = f1 + (float)(tileY * 16);
         
         // setupLightmap(poster, (xEnd + xStart) / 2.0F, (yEnd + yStart) / 2.0F);
-        // TODO: sync entity. Can't use the lightmap since the client entity has no info
+        // NOTE: doesn't look like this method is needed, lighting works fine
         
         float uStart = 1;
         float uEnd = 0;
@@ -221,6 +201,8 @@ public class RenderCustomPainting extends Render
     }
 
     
+    
+    /*
     private void setupLightmap(EntityCustomPainting entity, float par2, float par3)
     {
         int i = MathHelper.floor_double(entity.posX);
@@ -253,5 +235,6 @@ public class RenderCustomPainting extends Render
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)i1, (float)j1);
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
     }
+    */
 
 }
