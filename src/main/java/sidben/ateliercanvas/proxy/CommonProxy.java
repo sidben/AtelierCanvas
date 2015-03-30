@@ -5,11 +5,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.imageio.ImageIO;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.relauncher.Side;
 import sidben.ateliercanvas.ModAtelierCanvas;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.init.MyItems;
+import sidben.ateliercanvas.network.MessagePaintingData;
+import sidben.ateliercanvas.network.NetworkHelper;
+import sidben.ateliercanvas.reference.Reference;
 import sidben.ateliercanvas.world.storage.PaintingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -28,8 +33,12 @@ public abstract class CommonProxy implements IProxy
     public void pre_initialize()
     {
         // Register network messages
+        ModAtelierCanvas.NetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.ModChannel);
+        ModAtelierCanvas.NetworkWrapper.registerMessage(NetworkHelper.PaintingDataHandler.class, MessagePaintingData.class, 0, Side.CLIENT);
 
+        
         // Register blocks
+        
         
         // Register items
         MyItems.register();
