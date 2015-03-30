@@ -1,29 +1,12 @@
 package sidben.ateliercanvas.client.renderer;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
-import sidben.ateliercanvas.helper.LogHelper;
-import sidben.ateliercanvas.proxy.ClientProxy;
-import sidben.ateliercanvas.world.storage.PaintingData;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
+import sidben.ateliercanvas.helper.AtelierHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.Direction;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -42,6 +25,7 @@ public class RenderCustomPainting extends Render
 {
     
     private static final ResourceLocation vanillaPainting = new ResourceLocation("textures/painting/paintings_kristoffer_zetterstrand.png");
+    private static ResourceLocation customPainting = null; 
     
 
     
@@ -63,8 +47,13 @@ public class RenderCustomPainting extends Render
     
     protected ResourceLocation getEntityTexture(EntityCustomPainting entity)
     {
-        //return ClientProxy.customPainting;
-        return PaintingData.getTexture(entity.worldObj, entity.canvasId);
+        /*
+        if (customPainting == null) {
+            customPainting = AtelierHelper.getTexture(entity.worldObj, entity.canvasId);
+        }
+        return customPainting;
+        */
+        return AtelierHelper.getTexture(entity.worldObj, entity.canvasId);
     }
     
     

@@ -4,7 +4,9 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
+import sidben.ateliercanvas.helper.AtelierHelper;
 import sidben.ateliercanvas.helper.LogHelper;
+import sidben.ateliercanvas.world.storage.PaintingData;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.item.EntityPainting;
@@ -90,23 +92,50 @@ public class ItemCustomPainting extends Item
     {
         return new EntityCustomPainting(world, x, y, z, direction, canvasId);
     }
+
+    
+    
+    /*
+    public PaintingData getPaintingData(ItemStack itemstack, World world)
+    {
+        String s = AtelierHelper.getPaintingName(itemstack.getItemDamage());
+        PaintingData data = (PaintingData)world.loadItemData(PaintingData.class, s);
+
+        if (data == null && !world.isRemote)
+        {
+            itemstack.setItemDamage(world.getUniqueDataId(AtelierHelper.identifier));
+            s = AtelierHelper.getPaintingName(itemstack.getItemDamage());
+            
+            data = new PaintingData(s);
+            data.author = "";
+            data.name = "";
+            data.pixels = new int[256];
+            data.markDirty();
+            
+            world.setItemData(s, data);
+        }
+
+        return data;
+    }
+    */
     
     
     
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemstack, EntityPlayer player, List infolist, boolean debugmode)
     {
-        /*
-        if (mapdata == null)
+        PaintingData data = AtelierHelper.getPaintingData(player.worldObj, itemstack.getItemDamage());
+        
+        if (data == null)
         {
-            p_77624_3_.add("Unknown painting");
+            infolist.add("Unknown painting");
         }
         else
         {
-            p_77624_3_.add("Scaling at 1:" + (1 << mapdata.scale));
-            p_77624_3_.add("(Level " + mapdata.scale + "/" + 4 + ")");
+            infolist.add("EXTRA INFO HERE");
         }
-        */
     }
 
     

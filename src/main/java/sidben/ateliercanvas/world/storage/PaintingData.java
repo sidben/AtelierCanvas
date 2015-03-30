@@ -19,8 +19,7 @@ import net.minecraft.world.storage.MapData;
 public class PaintingData extends WorldSavedData
 {
 
-    private static final String identifier = "canvas";
-    
+   
     
     /*
      * TODO: Think of a way to avoid adding a painting that already exists. Options:
@@ -93,125 +92,6 @@ public class PaintingData extends WorldSavedData
         return data;
     }
     */
-    
-    
-    // NOTE: How to check if a painting already exists? (TODO)
-    public static int addPainting(World world, String author, String name, int[] imageData) {
-        int newId = world.getUniqueDataId(identifier);
-        String s = identifier + "_" + newId;
-        
-        LogHelper.info("Hey, I'm adding a painting! -> " + s);
-        
-        PaintingData data = new PaintingData(s);
-        world.setItemData(s, data);
-        
-        data.author = author;
-        data.name = name;
-        data.pixels = imageData;
-        data.markDirty();
-        
-        return newId;
-    }
-
-    
-    public static PaintingData getPainting(World world, int id) {
-        PaintingData data = null;
-        String s = identifier + "_" + id;
-        
-        LogHelper.info("   => map_0: " + world.loadItemData(MapData.class, "map_0"));
-        LogHelper.info("   => map_1: " + world.loadItemData(MapData.class, "map_1"));
-        LogHelper.info("   => canvas_0: " + world.loadItemData(PaintingData.class, "canvas_0"));
-        LogHelper.info("   => canvas_1: " + world.loadItemData(PaintingData.class, "canvas_1"));
-        LogHelper.info("   => canvas_2: " + world.loadItemData(PaintingData.class, "canvas_2"));
-        LogHelper.info("   => canvas_3: " + world.loadItemData(PaintingData.class, "canvas_3"));
-        LogHelper.info("   => canvas_4: " + world.loadItemData(PaintingData.class, "canvas_4"));
-        
-        
-        data = (PaintingData)world.loadItemData(PaintingData.class, s);
-        
-        return data;
-    }
-    
-    
-    
-    @SideOnly(Side.CLIENT)
-    protected static HashMap<String, DynamicTexture> loadedPaintings = new HashMap<String, DynamicTexture>();
-    private static final Minecraft mc = Minecraft.getMinecraft();
-    private static final TextureManager texMan = mc.renderEngine;
-        
-    @SideOnly(Side.CLIENT)
-    public static ResourceLocation getTexture(World world, int id) {
-        String mapName = identifier + "_" + id;
-        String uniqueName = identifier + "/" + mapName;
-        DynamicTexture texture = null;
-        int[] pixels = null;
-        
-        
-        LogHelper.info("getTexture() - " + id);
-        LogHelper.info("    name, uniquename: [" + mapName + "] [" + uniqueName + "]");
-
-        
-        // TODO: check if the "loadedPaintings" cache will conflict with multiple worlds
-        // world.getWorldInfo().getWorldName()
-        
-        if (loadedPaintings.containsKey(uniqueName)) {
-            LogHelper.info("    Found in cache");
-            texture = loadedPaintings.get(uniqueName);
-            
-        }
-        else {
-            LogHelper.info("    Creating new...");
-            
-            PaintingData data = getPainting(world, id);
-            
-            LogHelper.info("    data = " + data);
-            
-            
-            if (data == null) {
-                LogHelper.info("    Creating random 'art'");
-                
-                // Painting not found, creates a random picture
-                texture = new DynamicTexture(16, 16);
-                pixels = texture.getTextureData();
-
-                pixels[0] = new Color(255, 255, 255).getRGB();
-                for (int i = 1; i < pixels.length; ++i)
-                {
-                    pixels[i] = new Color(world.rand.nextInt(256), world.rand.nextInt(256), world.rand.nextInt(256)).getRGB();
-                }
-                texture.updateDynamicTexture();
-
-            }
-            else {
-                LogHelper.info("    Loading existing art");
-                // TODO: support for bigger paintings
-                
-                texture = new DynamicTexture(16, 16);
-                pixels = texture.getTextureData();
-                
-                if (data.pixels.length != pixels.length) {
-                    LogHelper.error("Wrong painting size, expected " + pixels.length + ", found " + data.pixels.length);
-                }
-                else {
-                    for (int i = 0; i < pixels.length; ++i)
-                    {
-                        pixels[i] = data.pixels[i];
-                    }
-                    texture.updateDynamicTexture();
-                }
-
-            }
-            
-        }
-
-        
-        LogHelper.info("    texture = " + texture);
-        
-        if (texture != null) {
-            return texMan.getDynamicTextureLocation(mapName, texture);
-        }
-        return null;
-    }
 
     
 }

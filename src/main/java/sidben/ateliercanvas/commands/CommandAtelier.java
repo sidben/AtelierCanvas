@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.imageio.ImageIO;
+import sidben.ateliercanvas.helper.AtelierHelper;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.init.MyItems;
 import sidben.ateliercanvas.world.storage.PaintingData;
@@ -88,7 +89,7 @@ public class CommandAtelier extends CommandBase
                     
                     image.getRGB(0, 0, w, h, imageData, 0, w);
                     
-                    int canvasId = PaintingData.addPainting(world, author, name, imageData);
+                    int canvasId = AtelierHelper.addPaintingData(world, author, name, imageData);
 
 
                     if (par1ICommandSender instanceof EntityPlayerMP) {
