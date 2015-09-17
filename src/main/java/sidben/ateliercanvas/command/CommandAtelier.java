@@ -1,4 +1,4 @@
-package sidben.ateliercanvas.commands;
+package sidben.ateliercanvas.command;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

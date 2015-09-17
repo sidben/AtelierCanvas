@@ -2,10 +2,12 @@ package sidben.ateliercanvas;
 
 import net.minecraftforge.common.MinecraftForge;
 import sidben.ateliercanvas.reference.Reference;
-import sidben.ateliercanvas.commands.CommandAtelier;
+import sidben.ateliercanvas.command.CommandAtelier;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.proxy.IProxy;
+import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.PlayerEventHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -41,6 +43,10 @@ public class ModAtelierCanvas
     {
         LogHelper.info("=================PREINIT========================");
         
+        // Loads config
+        ConfigurationHandler.init(event.getSuggestedConfigurationFile());
+        FMLCommonHandler.instance().bus().register(new ConfigurationHandler());
+
         
         // Sided pre-initialization
         proxy.pre_initialize();
