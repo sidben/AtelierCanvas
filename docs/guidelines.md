@@ -5,7 +5,7 @@
 Other goals:
 
 - Players should be able to add the images they want, without relying on pre-made packs;
-- There must be a way for players to share their paintings 'pack';
+- There must be a way for players to share their paintings in a 'pack' (Base64 encode?);
 - In SMP, paintings must be visible to players even if they don't have the image file (like maps);
 - Paintings should have a NBT value to indicate if it's the original or a copy (like writen books);
 - There must be a way to uniquely identify a paintings, so the mod can keep track of the original and avoid re-adding an existing painting;
@@ -36,8 +36,10 @@ They should be able to disable or remove any paintings. They should be able to b
 
 ## Blocks and items
 
-- Easel: Used to create custom paintings or select paintings.
-- Blank Canvas:
+- Easel: Used to create or copy paintings.
+- Painting Pallete: Used with the easel. Stack to 64 (?). Has 1024 uses, each pixel cosumes one tool use. 
+A painting copy would consume 256 uses (16x16 pixels). Crafted with 1 wooden plank and dyes representing RGB + CMYK and maybe a feather.
+- Blank Canvas: Used to copy or create paintings.
 - Custom Paintings: Actual painting, always have the same art.
 - Mysterious looking painting: An item that, when right-clicked, gives the player a random custom painting. 
 Could be used as a way for the player in SSP to unlock new paintings without breaking immersion. The given
@@ -51,3 +53,14 @@ Each blank canvas can create one 16x16 painting. Bigger paintings requires multi
 
 A player can use the Easel to copy any painting they know. (?) Codewise, a player is considered to
 know all vanilla paintings and all paintings they have installed (subject to change).
+
+MAYBE: The easel should have 2 slots, one for the current pallete (stack 1) and one for the
+pallete 'stock' (stack 64). The current pallete loses durability with each action. Once it's empty, 
+1 pallete from the stack moves to the active slot automatically.
+
+MAYBE: Easel GUI allow a player to select multiple brushes: 1x1px, 2x2px, 4px round, bucket (fill all)
+
+MAYBE: The easel record the last 5 action, allowing the player to undo mistakes.
+
+Once a painting is signed, it can't be changed anymore (like writen books). It's possible to make a copy of 
+the painting and edit the copy (?).
