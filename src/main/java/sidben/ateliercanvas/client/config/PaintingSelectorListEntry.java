@@ -37,60 +37,85 @@ import net.minecraft.util.ResourceLocation;
 public class PaintingSelectorListEntry implements GuiListExtended.IGuiListEntry
 {
     
-    private static final ResourceLocation field_148316_c = new ResourceLocation("textures/gui/resource_packs.png");
-    private final ResourceLocation field_148321_e;
-    protected final Minecraft field_148317_a;
-    protected final GuiScreenCustomPaintings field_148315_b;
+    private static final ResourceLocation resourcePacksTextures = new ResourceLocation("textures/gui/resource_packs.png");
+    protected final Minecraft mc;
+    protected final GuiScreenCustomPaintings parentGui;
+    private final ResourceLocation missingTextureLocation;
+    
+    
+    /**
+     * Information about the custom painting. It's expected the following format:
+     * 
+     * <ul>
+     *  <li><b>[0]</b> - Image file name. String, required.</li>
+     *  <li><b>[1]</b> - Painting GUID. Required (created automatically by the mod).</li>
+     *  <li><b>[2]</b> - Painting enabled. Boolean, required.</li>
+     *  <li><b>[3]</b> - File size, in bytes. Float, required.</li>
+     *  <li><b>[4]</b> - Painting name. String, optional.</li>
+     *  <li><b>[5]</b> - Painting author. String, optional.</li>
+     *  <li><b>[?]</b> - Painting lore. String, optional.</li>
+     *  <li><b>[?]</b> - Player name that imported / created / uploaded the painting.</li>
+     *  <li><b>[?]</b> - Player UUID that imported / created / uploaded the painting.</li>
+     *  <li><b>[?]</b> - Creation date. Datetime, required.</li>
+     *  <li><b>[?]</b> - Last update date. Datetime, required. Initially, will be the same as the creation date.</li>
+     * </ul>
+     * 
+     */
+    private final String[] _entryData;
+    
 
 
-    public PaintingSelectorListEntry(GuiScreenCustomPaintings p_i45051_1_)
+    public PaintingSelectorListEntry(GuiScreenCustomPaintings p_i45051_1_, String[] entryData)
     {
-        this.field_148315_b = p_i45051_1_;
-        this.field_148317_a = Minecraft.getMinecraft();
+        this.parentGui = p_i45051_1_;
+        this.mc = Minecraft.getMinecraft();
         
         
         DynamicTexture dynamictexture;
         dynamictexture = TextureUtil.missingTexture;
 
-        this.field_148321_e = this.field_148317_a.getTextureManager().getDynamicTextureLocation("texturepackicon", dynamictexture);
+        this.missingTextureLocation = this.mc.getTextureManager().getDynamicTextureLocation("texturepackicon", dynamictexture);
+        this._entryData = entryData;
+    }
+    
+    
+    
+
+    /**
+     * @return TRUE is the entryData array has a valid size.
+     */
+    public boolean isValid() {
+        // TODO: add other checks, like file size. Add a tooltip telling what is the problem.
+        
+        int expectedLength = 6;
+        return (this._entryData != null && this._entryData.length >= expectedLength);
     }
 
     
     
+    protected String getPaintingFileName() {
+        return this._entryData[0];
+    }
     
+    protected String getPaintingTitle() {
+        return this._entryData[4].isEmpty() ? "§oUnnamed§r" : this._entryData[4];
+    }
+    
+    protected String getPaintingAuthor() {
+        return this._entryData[5].isEmpty() ? "§oUnknown§r" : this._entryData[5];
+    }
+    
+    
+    
+    
+    
+    // TODO: DrawInvalidEntry() / DrawFoundEntry()
     
     @SuppressWarnings("rawtypes")
     @Override
-    public void drawEntry(int p_148279_1_, int p_148279_2_, int p_148279_3_, int p_148279_4_, int p_148279_5_, Tessellator p_148279_6_, int p_148279_7_, int p_148279_8_, boolean p_148279_9_)
+    public void drawEntry(int p_148279_1_, int listInitialX, int listInitialY, int p_148279_4_, int p_148279_5_, Tessellator p_148279_6_, int p_148279_7_, int p_148279_8_, boolean mouseOver)
     {
-        
-        /*
-         * getInputStreamByName()
-         *      return new BufferedInputStream(new FileInputStream(new File(this.resourcePackFile, p_110591_1_)));
-         * 
-         * public BufferedImage getPackImage() throws IOException
-         *      return ImageIO.read(this.getInputStreamByName("pack.png"));
-         * 
-         * 
-         * private BufferedImage texturePackIcon;
-         * private ResourceLocation locationTexturePackIcon;
-         * 
-         * this.texturePackIcon = this.reResourcePack.getPackImage();
-         * 
-         * this.locationTexturePackIcon = p_110518_1_.getDynamicTextureLocation("texturepackicon", new DynamicTexture(this.texturePackIcon));
-         * TextureManager / p_110518_1_.bindTexture(this.locationTexturePackIcon);
-         * 
-         */
-        
-        String a1 = ConfigurationHandler.config.toString();                 // "C:\\{folder}\\{folder}\\{folder}\\run\\config\\AtelierCanvas.cfg"
-        //String a2 = getAbridgedConfigPath(a1);                            // "/.minecraft/config/AtelierCanvas.cfg"
-        String a3 = this.field_148317_a.mcDataDir.getAbsolutePath();        // "C:\\{folder}\\{folder}\\{fodler}\\run\\."
-
-        
-        
-        String iconPath = "config/AtelierCanvas_Paintings/png24_32.png";
-        iconPath = "config/AtelierCanvas_Paintings/png24_18.png";
-        
+        String iconPath = "config/AtelierCanvas_Paintings/";
         InputStream iconStream;
         BufferedImage paintingIcon;
         ResourceLocation locationPaintingIcon = null;
@@ -98,80 +123,104 @@ public class PaintingSelectorListEntry implements GuiListExtended.IGuiListEntry
         int iconWidth = 0;
         int iconHeight = 0;
         long iconSize = 0;      // bytes
-        // Dimension test = new Dimension(1024, 768);
+        
+        String paintingName = "UNKOWN";
+        String paintingInfo1 = "";
+        String paintingInfo2 = "";
 
-        try {
-            // TODO: Avoid loading files too big. Individually, paintings have up to 4KB. The vanilla "paintings_kristoffer_zetterstrand.png" file has 76 KB
-            File iconFile = new File(this.field_148317_a.mcDataDir, iconPath);
-            iconSize = iconFile.length();
-
-            iconStream = new BufferedInputStream(new FileInputStream(iconFile));
-            paintingIcon = ImageIO.read(iconStream);
-            iconWidth = paintingIcon.getWidth();
-            iconHeight = paintingIcon.getHeight();
+        
+        if (this.isValid()) {
             
-            locationPaintingIcon = this.field_148317_a.getTextureManager().getDynamicTextureLocation("paintingicon", new DynamicTexture(paintingIcon));
-        } catch (IOException e) {
-            e.printStackTrace();
+            iconPath += this.getPaintingFileName();
+            paintingName = this.getPaintingTitle();
+            
+            
+            // TODO: Check if I can avoid reading the file every drawEntry call. Can't I load just on the class constructor?
+            try {
+                // TODO: Avoid loading files too big. Individually, paintings have up to 4KB. The vanilla "paintings_kristoffer_zetterstrand.png" file has 76 KB
+                File iconFile = new File(this.mc.mcDataDir, iconPath);
+                iconSize = iconFile.length();
+                
+                // TODO: validate max dimensions in pixels (mod param)
+                // TODO: Decide about images that don't follow the 16x16 ratio (accept, reject, edit or make optional)
+    
+                iconStream = new BufferedInputStream(new FileInputStream(iconFile));
+                paintingIcon = ImageIO.read(iconStream);
+                iconWidth = paintingIcon.getWidth();
+                iconHeight = paintingIcon.getHeight();
+                
+                locationPaintingIcon = this.mc.getTextureManager().getDynamicTextureLocation("paintingicon", new DynamicTexture(paintingIcon));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            
+            paintingInfo1 = "Artist: " + this.getPaintingAuthor();
+            paintingInfo2 = iconWidth + "x" + iconHeight +  " - Enabled";
+
         }
 
 
         
-        // Painting icon
+        // Painting icon texture
         if (locationPaintingIcon != null) {
-            this.field_148317_a.getTextureManager().bindTexture(locationPaintingIcon);
+            this.mc.getTextureManager().bindTexture(locationPaintingIcon);
         } else {
-            this.field_148317_a.getTextureManager().bindTexture(this.field_148321_e);
+            this.mc.getTextureManager().bindTexture(this.missingTextureLocation);
         }
         
         
-        int sampleWidth = 32, sampleHeight = 32;         // Size of the preview image on the right
+        // Size of the preview image on the right
+        int sampleWidth = 32, sampleHeight = 32;         
         
-        // p_148279_2_ = X coord where the list item starts
-        // p_148279_3_ = Y coord where the list item starts
-        
-        float iconWidthStretchRatio = 0.5F;
+        // Icon ratio for non-square images
+        float iconWidthStretchRatio = 1.0F;
         float iconHeightStretchRatio = 1.0F;
+        int paddingTop = 0;
+        int paddingLeft = 0;
+        
+        if (iconWidth > iconHeight) {
+            iconHeightStretchRatio = (float)iconHeight / (float)iconWidth;
+            paddingTop = (int)((sampleWidth * (1F - iconHeightStretchRatio)) / 2);
+        }
+        else if (iconHeight > iconWidth) {
+            iconWidthStretchRatio = (float)iconWidth / (float)iconHeight;  
+            paddingLeft = (int)((sampleHeight * (1F - iconWidthStretchRatio)) / 2);
+        }
         
         sampleWidth = (int)(sampleWidth * iconWidthStretchRatio);
         sampleHeight = (int)(sampleHeight * iconHeightStretchRatio);
         
-        // TODO: horizontal and vertical center alignment (add 1/2 of the ratio spare space)
         
-        
+        // Draw the icon
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Gui.func_146110_a(p_148279_2_, p_148279_3_, 0.0F, 0.0F, sampleWidth, sampleHeight, 32.0F * iconWidthStretchRatio, 32.0F * iconHeightStretchRatio);
-        int i2;
-        
-        
+        Gui.func_146110_a(listInitialX + paddingLeft, listInitialY + paddingTop, 0.0F, 0.0F, sampleWidth, sampleHeight, 32.0F * iconWidthStretchRatio, 32.0F * iconHeightStretchRatio);
 
-        if ((this.field_148317_a.gameSettings.touchscreen || p_148279_9_))
+        
+        
+        
+        if ((this.mc.gameSettings.touchscreen || mouseOver))
         {
             // Hover
-            this.field_148317_a.getTextureManager().bindTexture(field_148316_c);
-            Gui.drawRect(p_148279_2_, p_148279_3_, p_148279_2_ + 32, p_148279_3_ + 32, -1601138544);
+            this.mc.getTextureManager().bindTexture(resourcePacksTextures);
+            Gui.drawRect(listInitialX, listInitialY, listInitialX + 32, listInitialY + 32, -1601138544);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            i2 = p_148279_8_ - p_148279_3_;
         }
+
+        
+        
+        int textWidth;
 
         
         // Painting name
-        String s = "Painting Name";
-        i2 = this.field_148317_a.fontRenderer.getStringWidth(s);
-
-        if (i2 > 157)
-        {
-            s = this.field_148317_a.fontRenderer.trimStringToWidth(s, 157 - this.field_148317_a.fontRenderer.getStringWidth("...")) + "...";
-        }
-        this.field_148317_a.fontRenderer.drawStringWithShadow(s, p_148279_2_ + 32 + 2, p_148279_3_ + 1, 16777215);
+        textWidth = this.mc.fontRenderer.getStringWidth(paintingName);
+        if (textWidth > 157) paintingName = this.mc.fontRenderer.trimStringToWidth(paintingName, 157 - this.mc.fontRenderer.getStringWidth("...")) + "...";
+        this.mc.fontRenderer.drawStringWithShadow(paintingName, listInitialX + 32 + 2, listInitialY + 1, 16777215);
 
 
         // Painting data (author, size, etc)
-        List list = this.field_148317_a.fontRenderer.listFormattedStringToWidth("Description of the thingy", 157);
-        for (int j2 = 0; j2 < 2 && j2 < list.size(); ++j2)
-        {
-            this.field_148317_a.fontRenderer.drawStringWithShadow((String)list.get(j2), p_148279_2_ + 32 + 2, p_148279_3_ + 12 + 10 * j2, 8421504);
-        }
+        this.mc.fontRenderer.drawStringWithShadow(paintingInfo1, listInitialX + 32 + 2, listInitialY + 12, 8421504);
+        this.mc.fontRenderer.drawStringWithShadow(paintingInfo2, listInitialX + 32 + 2, listInitialY + 22, 8421504);
         
     }
 

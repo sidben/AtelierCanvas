@@ -43,48 +43,44 @@ public class GuiScreenCustomPaintings extends GuiScreen
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void initGui()
     {
-        this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.format("sidben.ateliercanvas.config.painting_selector.add_new", new Object[0])));
+        this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.format("sidben.ateliercanvas.config.painting_selector.add_new", new Object[0])));       // TODO: encapsulate "sidben.ateliercanvas.config" namespace 
         this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.format("gui.done", new Object[0])));
         this.paintingList = new ArrayList();
-        
-        /*
-        ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
-        resourcepackrepository.updateRepositoryEntriesAll();
-        ArrayList arraylist = Lists.newArrayList(resourcepackrepository.getRepositoryEntriesAll());
-        arraylist.removeAll(resourcepackrepository.getRepositoryEntries());
-        Iterator iterator = arraylist.iterator();
-        ResourcePackRepository.Entry entry;
 
-        while (iterator.hasNext())
-        {
-            entry = (ResourcePackRepository.Entry)iterator.next();
-            // this.field_146966_g.add(new ResourcePackListEntryFound(this, entry));
-        }
-        */
-
-        //this.field_146969_h.add(new ResourcePackListEntryDefault(this));
         
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_01.png", "", "1", "1328", "Piggy", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_02.png", "", "1", "1325", "First Shelter", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_03.png", "", "1", "1444", "Quiet Days", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_04.png", "", "1", "1422", "", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_05.png", "", "1", "1394", "Forest", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_06.png", "", "1", "1367", "", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_07.png", "", "1", "1244", "Blazing Hot", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_10.png", "", "1", "1859", "Seasons", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_11.png", "", "1", "1555", "Chickens", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_12.png", "", "1", "1497", "Fishing Lake", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_13.png", "", "1", "1335", "", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_14.png", "", "1", "1682", "Banned Arthropod", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_17.png", "", "1", "1753", "Lost Promisses", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_18.png", "", "1", "1690", "Camouflage", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_20.png", "", "1", "3233", "Witch Hut?", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_21.png", "", "1", "2056", "In the Nether", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_23.png", "", "1", "2292", "Ancient Temple", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_24.png", "", "1", "2359", "Wither Rise", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_25.png", "", "1", "2521", "Zombie Terror", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_26.png", "", "1", "2232", "Abandoned Mines", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_27.png", "", "1", "2403", "Curious Kitty", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_28.png", "", "1", "1349", "Moonlight", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_29.png", "", "1", "1719", "Deep Sea", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_31.png", "", "1", "3121", "The End is Near", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_32.png", "", "1", "3588", "Jungle Mistery", "Pig_Rider" }));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "png24_33.png", "", "1", "2772", "Mooshroom Paradise", "Pig_Rider" }));
         
-        this.paintingList.add(new PaintingSelectorListEntry(this));
-        this.paintingList.add(new PaintingSelectorListEntry(this));
-        this.paintingList.add(new PaintingSelectorListEntry(this));
-        this.paintingList.add(new PaintingSelectorListEntry(this));
-        this.paintingList.add(new PaintingSelectorListEntry(this));
-        this.paintingList.add(new PaintingSelectorListEntry(this));
-        this.paintingList.add(new PaintingSelectorListEntry(this));
-        this.paintingList.add(new PaintingSelectorListEntry(this));
-        this.paintingList.add(new PaintingSelectorListEntry(this));
-        
+        this.paintingList.add(new PaintingSelectorListEntry(this, new String[] { "Lollynl-guardian-(sidben-edit).png", "", "1", "6241", "Guardian", "Lollynl" }));
         
         
         this.guiPaintingList = new GuiCustomPaintingList(this.mc, 200, this.height, this.paintingList);
         this.guiPaintingList.setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
         this.guiPaintingList.registerScrollButtons(7, 8);
-        /*
-        this.field_146967_r = new GuiResourcePackSelected(this.mc, 200, this.height, this.field_146969_h);
-        this.field_146967_r.setSlotXBoundsFromLeft(this.width / 2 + 4);
-        this.field_146967_r.registerScrollButtons(7, 8);
-        */
     }
     
     /*
@@ -97,11 +93,7 @@ public class GuiScreenCustomPaintings extends GuiScreen
     {
         this.drawBackground(0);
         this.guiPaintingList.drawScreen(param1, param2, param3);
-        //this.field_146967_r.drawScreen(param1, param2, param3);
         this.drawCenteredString(this.fontRendererObj, I18n.format("sidben.ateliercanvas.config.painting_selector.title"), this.width / 2, 16, 16777215);
-        // this.drawCenteredString(this.fontRendererObj, I18n.format("sidben.ateliercanvas.config.painting_selector.title", new Object[0]), this.width / 2, 16, 16777215);
-        // this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.folderInfo2", new Object[0]), this.width / 2 - 77, this.height - 26, 8421504);
-        
         this.drawCenteredString(this.fontRendererObj, "_TOTAL_ paintings installed", this.width / 2 - 77, this.height - 26, 8421504);
         super.drawScreen(param1, param2, param3);
     }
