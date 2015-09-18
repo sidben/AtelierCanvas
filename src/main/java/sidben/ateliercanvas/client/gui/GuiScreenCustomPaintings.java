@@ -5,9 +5,14 @@ import java.util.Iterator;
 import java.util.List;
 import sidben.ateliercanvas.client.config.PaintingSelectorListEntry;
 import com.google.common.collect.Lists;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import cpw.mods.fml.client.config.GuiConfigEntries;
+import cpw.mods.fml.client.config.IConfigElement;
+import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,6 +31,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @see sidben.ateliercanvas.client.gui.GuiCustomPaintingList
  * @see sidben.ateliercanvas.client.config.PaintingSelectorListEntry
+ * @see net.minecraft.client.gui.GuiScreenResourcePacks
  * @author sidben
  *
  */
@@ -33,9 +39,23 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiScreenCustomPaintings extends GuiScreen
 {
 
+    public final GuiScreen parentScreen;
+    
     @SuppressWarnings("rawtypes")
     private List paintingList;
     private GuiCustomPaintingList guiPaintingList;
+    
+    private static final int BT_ID_DONE = 1;
+    private static final int BT_ID_ADDNEW = 2;
+
+    
+    
+
+    public GuiScreenCustomPaintings(GuiScreen parentScreen)
+    {
+        this.mc = Minecraft.getMinecraft();
+        this.parentScreen = parentScreen;
+    }
 
     
     
@@ -43,8 +63,8 @@ public class GuiScreenCustomPaintings extends GuiScreen
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void initGui()
     {
-        this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.format("sidben.ateliercanvas.config.painting_selector.add_new", new Object[0])));       // TODO: encapsulate "sidben.ateliercanvas.config" namespace 
-        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.format("gui.done", new Object[0])));
+        this.buttonList.add(new GuiOptionButton(BT_ID_ADDNEW, this.width / 2 - 154, this.height - 48, I18n.format("sidben.ateliercanvas.config.painting_selector.add_new", new Object[0])));       // TODO: encapsulate "sidben.ateliercanvas.config" namespace 
+        this.buttonList.add(new GuiOptionButton(BT_ID_DONE, this.width / 2 + 4, this.height - 48, I18n.format("gui.done", new Object[0])));
         this.paintingList = new ArrayList();
 
         
@@ -83,6 +103,7 @@ public class GuiScreenCustomPaintings extends GuiScreen
         this.guiPaintingList.registerScrollButtons(7, 8);
     }
     
+    
     /*
      * p1 = 187 (98 full screen)
      * p2 = 109 (184 full screen)
@@ -96,6 +117,28 @@ public class GuiScreenCustomPaintings extends GuiScreen
         this.drawCenteredString(this.fontRendererObj, I18n.format("sidben.ateliercanvas.config.painting_selector.title"), this.width / 2, 16, 16777215);
         this.drawCenteredString(this.fontRendererObj, "_TOTAL_ paintings installed", this.width / 2 - 77, this.height - 26, 8421504);
         super.drawScreen(param1, param2, param3);
+    }
+    
+    
+    
+    @Override
+    protected void actionPerformed(GuiButton button)
+    {
+        if (button.enabled)
+        {
+            
+            if (button.id == BT_ID_DONE) 
+            {
+                this.mc.displayGuiScreen(this.parentScreen);
+                
+            }
+            else if (button.id == BT_ID_ADDNEW) 
+            {
+                
+                
+            }
+
+        }            
     }
     
 }

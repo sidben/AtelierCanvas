@@ -30,7 +30,7 @@ public class CustomPaintingCategoryEntry extends CategoryEntry
     {
         
         // TODO: make it GuiConfig
-        return new GuiScreenCustomPaintings();
+        return new GuiScreenCustomPaintings(this.owningScreen);
         
         /*
         // This GuiConfig object specifies the configID of the object and as such will force-save when it is closed. The parent
