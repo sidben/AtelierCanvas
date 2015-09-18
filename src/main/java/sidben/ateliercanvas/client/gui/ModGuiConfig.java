@@ -2,6 +2,7 @@ package sidben.ateliercanvas.client.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import sidben.ateliercanvas.client.config.CustomPaintingCategoryEntry;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.reference.Reference;
 import net.minecraft.client.gui.GuiScreen;
@@ -29,11 +30,13 @@ public class ModGuiConfig extends GuiConfig
 
         // Paintings installed
         paintingsConfigs = new ConfigElement(ConfigurationHandler.config.getCategory(ConfigurationHandler.CATEGORY_PAINTINGS)).getChildElements();
-        list.add(new DummyConfigElement.DummyCategoryElement(ConfigurationHandler.CATEGORY_PAINTINGS, "sidben.ateliercanvas.config.category.paintings", paintingsConfigs));
+        list.add(new DummyConfigElement.DummyCategoryElement(ConfigurationHandler.CATEGORY_PAINTINGS, "sidben.ateliercanvas.config.category.paintings", paintingsConfigs, CustomPaintingCategoryEntry.class));
 
 
         return list;
     }
 
+    
+    // TODO: add custom behaviour to select paintings
     
 }

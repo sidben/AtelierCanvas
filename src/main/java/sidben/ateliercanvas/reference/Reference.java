@@ -9,5 +9,6 @@ public class Reference {
 
     public static final String  ServerProxyClass   	= "sidben.ateliercanvas.proxy.ServerProxy";
     public static final String  ClientProxyClass   	= "sidben.ateliercanvas.proxy.ClientProxy";
+    public static final String  GuiFactoryClass     = "sidben.ateliercanvas.client.gui.GuiFactory";
 
 }
