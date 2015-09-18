@@ -7,7 +7,18 @@ import net.minecraft.client.gui.GuiListExtended;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-// Ref: GuiResourcePackList
+
+
+/**
+ * This class is the ListBox that displays each installed painting, with a little
+ * icon, name and extra info, similar to Recourse Packs.
+ * 
+ * 
+ * @see sidben.ateliercanvas.client.config.PaintingSelectorListEntry
+ * @see net.minecraft.client.gui.GuiResourcePackList
+ * @author sidben
+ *
+ */
 @SideOnly(Side.CLIENT)
 public class GuiCustomPaintingList extends GuiListExtended
 {

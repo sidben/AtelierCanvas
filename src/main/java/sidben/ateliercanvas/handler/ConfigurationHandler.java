@@ -3,14 +3,12 @@ package sidben.ateliercanvas.handler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import sidben.ateliercanvas.client.config.PaintingEntry;
 import sidben.ateliercanvas.reference.Reference;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import cpw.mods.fml.client.config.ConfigGuiType;
 import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.GuiConfigEntries;
-import cpw.mods.fml.client.config.GuiConfigEntries.NumberSliderEntry;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -74,11 +72,13 @@ public class ConfigurationHandler
         prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         propOrder.add(prop.getName());
 
+        /*
         prop = config.get(CATEGORY_PAINTINGS, "dummy_pic", "");
         prop.setLanguageKey("sidben.ateliercanvas.config.dummy_pic");
         dummyPic = prop.getString();
         prop.setConfigEntryClass(PaintingEntry.class);
         propOrder.add(prop.getName());
+        */
 
         prop = config.get(CATEGORY_PAINTINGS, "painting_list", new String[] {});
         prop.setLanguageKey("sidben.ateliercanvas.config.painting_list");

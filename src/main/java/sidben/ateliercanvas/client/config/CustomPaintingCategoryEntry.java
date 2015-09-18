@@ -29,6 +29,7 @@ public class CustomPaintingCategoryEntry extends CategoryEntry
     protected GuiScreen buildChildScreen()
     {
         
+        // TODO: make it GuiConfig
         return new GuiScreenCustomPaintings();
         
         /*

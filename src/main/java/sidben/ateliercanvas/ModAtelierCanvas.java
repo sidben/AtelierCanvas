@@ -17,7 +17,11 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 
-
+/**
+ * Atelier Canvas mod main class.
+ * 
+ * @author sidben
+ */
 @Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, guiFactory = Reference.GuiFactoryClass)
 public class ModAtelierCanvas
 {

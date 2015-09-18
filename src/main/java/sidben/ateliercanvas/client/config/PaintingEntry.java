@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  *      cpw.mods.fml.client.config.GuiConfigEntries.StringEntry
  */
 
-
+/*
 @SideOnly(Side.CLIENT)
 public class PaintingEntry extends ListEntryBase
 {
@@ -137,3 +137,4 @@ public class PaintingEntry extends ListEntryBase
     }
     
 }
+*/
