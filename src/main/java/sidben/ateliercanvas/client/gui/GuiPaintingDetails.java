@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import org.lwjgl.opengl.GL11;
 import sidben.ateliercanvas.client.config.CustomPaintingConfigItem;
+import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.TextFormatTable;
 import net.minecraft.client.Minecraft;
@@ -82,7 +83,7 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
             int textStartY = boxY + boxHeight + titleMaginTop;
     
     
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");          // TODO: make date format a mod config. Default: yyyy-MM-dd
+            SimpleDateFormat dateFormat = new SimpleDateFormat(ConfigurationHandler.paintingDateFormat);
             
             String paintingName = this._entryData.getPaintingTitle();
             String extraInfo = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this._entryData.getPaintingAuthor());

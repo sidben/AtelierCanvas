@@ -5,8 +5,15 @@ entity.ateliercanvas.CustomPainting.name=Custom Painting
 item.ateliercanvas:custom_painting.name=Custom Painting
 
 # Config GUI
-sidben.ateliercanvas.config.category.paintings=Custom Paintings
-sidben.ateliercanvas.config.category.paintings.tooltip=Add, edit or remove the custom paintings to this mod.
+sidben.ateliercanvas.config.category.paintings=Manage Custom Paintings
+sidben.ateliercanvas.config.category.paintings.tooltip=Add, edit or remove custom paintings on this mod.
+
+sidben.ateliercanvas.config.prop.max_filesize_kb=Max file size (KB)
+sidben.ateliercanvas.config.prop.max_filesize_kb.tooltip=Maximum file size accepted (KBytes)
+sidben.ateliercanvas.config.prop.date_format=Date format
+sidben.ateliercanvas.config.prop.date_format.tooltip=Date format for the painting description
+sidben.ateliercanvas.config.prop.max_image_size=Max image size (pixels)
+sidben.ateliercanvas.config.prop.max_image_size.tooltip=Maximum size in pixels accepted by the mod. \nThis value limits both, width and height. \nIn vanilla, the largest painting has 64x64 pixels.
 
 sidben.ateliercanvas.config.painting_selector.title=Custom Paintings Available (Singleplayer)
 sidben.ateliercanvas.config.painting_selector.add_new=Add a new painting

@@ -5,8 +5,15 @@ entity.ateliercanvas.CustomPainting.name=Pintura Personalizada
 item.ateliercanvas:custom_painting.name=Pintura Personalizada
 
 # Config GUI
-sidben.ateliercanvas.config.category.paintings=Pinturas Personalizadas
+sidben.ateliercanvas.config.category.paintings=Gerenciar Pinturas Personalizadas
 sidben.ateliercanvas.config.category.paintings.tooltip=Adicione, altere ou exclua as pinturas personalizadas deste mod.
+
+sidben.ateliercanvas.config.prop.max_filesize_kb=Tamanho máximo (KB)
+sidben.ateliercanvas.config.prop.max_filesize_kb.tooltip=Tamanho de arquivo máximo aceito (em KBytes)
+sidben.ateliercanvas.config.prop.date_format=Formato de data
+sidben.ateliercanvas.config.prop.date_format.tooltip=Formato da data no descritivo das pinturas
+sidben.ateliercanvas.config.prop.max_image_size=Tamanho máximo (pixels)
+sidben.ateliercanvas.config.prop.max_image_size.tooltip=Tamanho máximo, em pixels, das imagens aceitas pelo mod. \nEste valor limita tanto a largura quanto a altura. \nNo Minecraft 'vanilla', a maior pintura tem 64x64 pixels.
 
 sidben.ateliercanvas.config.painting_selector.title=Pinturas Personalizadas Disponíveis (Um jogador)
 sidben.ateliercanvas.config.painting_selector.add_new=Adicionar pintura

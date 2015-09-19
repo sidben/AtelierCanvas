@@ -7,6 +7,7 @@ import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.reference.Reference;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
@@ -17,7 +18,7 @@ public class GuiConfigAtelierCanvas extends GuiConfig
 
 
     public GuiConfigAtelierCanvas(GuiScreen guiScreen) {
-        super(guiScreen, getConfigElements(), Reference.ModID, false, false, GuiConfig.getAbridgedConfigPath(ConfigurationHandler.config.toString()));
+        super(guiScreen, getConfigElements(), Reference.ModID, false, false, Reference.ModName);
     }
 
 
@@ -25,6 +26,7 @@ public class GuiConfigAtelierCanvas extends GuiConfig
     private static List<IConfigElement> getConfigElements()
     {
         final List<IConfigElement> list = new ArrayList<IConfigElement>();
+        List<IConfigElement> generalConfigs = new ArrayList<IConfigElement>();
         List<IConfigElement> paintingsConfigs = new ArrayList<IConfigElement>();
 
 
@@ -32,6 +34,11 @@ public class GuiConfigAtelierCanvas extends GuiConfig
         paintingsConfigs = new ConfigElement(ConfigurationHandler.config.getCategory(ConfigurationHandler.CATEGORY_PAINTINGS)).getChildElements();
         list.add(new DummyConfigElement.DummyCategoryElement(ConfigurationHandler.CATEGORY_PAINTINGS, getLanguageKey("paintings"), paintingsConfigs, CustomPaintingCategoryEntry.class));
 
+        // General config
+        generalConfigs = new ConfigElement(ConfigurationHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements();
+        list.addAll(generalConfigs);
+
+        
 
         return list;
     }

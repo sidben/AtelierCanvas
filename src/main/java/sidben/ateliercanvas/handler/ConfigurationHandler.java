@@ -3,45 +3,49 @@ package sidben.ateliercanvas.handler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import sidben.ateliercanvas.client.config.CustomPaintingConfigItem;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.reference.Reference;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.ConfigElement;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import cpw.mods.fml.client.config.ConfigGuiType;
-import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.GuiConfigEntries;
-import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+
 
 public class ConfigurationHandler
 {
 
-    public static final String  CATEGORY_PAINTINGS         = "paintings";
-    
-    
-    public static final String PAINTINGS_ARRAY_KEY            = "painting_list";
+    public static final String                   CATEGORY_PAINTINGS         = "paintings";
+    public static final String                   PAINTINGS_ARRAY_KEY        = "painting_list";
 
-    
-    /** Array with info of all paintings installed */
-    public static String[]      installedPaintings;
-    
-    
-    public static int           dummy;
-    public static String        dummyPic;
-    
-    
+
+    /** List with info of all paintings installed */
     public static List<CustomPaintingConfigItem> mahPaintings;
-    
-    
-    
-    
-    
+
+    /** Largest file size (in bytes) accepted by the mod */
+    public static int                            maxFileSize;
+
+    /** Format in which the painting dates (created / last updated) will be displayed */
+    public static String                         paintingDateFormat;
+
+    /** Maximum painting size, in pixels, accepted by the mod. */
+    public static int                            maxPaintingSize;
+
+    /** Default resolution of paintings */
+    public static final int                      defaultResolution          = 16;
+
+
+
+    private static final int                     DEFAULT_maxFileSize        = 30;             // NOTE: the default file size is in KBytes to make the property slider more friendly
+    private static final int                     DEFAULT_maxPaintingSize    = 64;
+    private static final String                  DEFAULT_paintingDateFormat = "yyyy-MM-dd";
+
+
+
     // Instance
-    public static Configuration config;
+    public static Configuration                  config;
 
 
 
@@ -65,78 +69,53 @@ public class ConfigurationHandler
         ConfigCategory cat;
 
 
-        /*
-         *             
-            // Numbers category
-            numbersList.add((new DummyConfigElement<Integer>("basicInteger", 42, ConfigGuiType.INTEGER, "fml.config.sample.basicInteger")));
-            numbersList.add((new DummyConfigElement<Integer>("boundedInteger", 42, ConfigGuiType.INTEGER, "fml.config.sample.boundedInteger", -1, 256)));
-            numbersList.add((new DummyConfigElement<Integer>("sliderInteger", 2000, ConfigGuiType.INTEGER, "fml.config.sample.sliderInteger", 100, 10000)).setCustomListEntryClass(NumberSliderEntry.class));
-            numbersList.add(new DummyConfigElement<Double>("basicDouble", 42.4242D, ConfigGuiType.DOUBLE, "fml.config.sample.basicDouble"));
-            numbersList.add(new DummyConfigElement<Double>("boundedDouble", 42.4242D, ConfigGuiType.DOUBLE, "fml.config.sample.boundedDouble", -1.0D, 256.256D));
-            numbersList.add(new DummyConfigElement<Double>("sliderDouble", 42.4242D, ConfigGuiType.DOUBLE, "fml.config.sample.sliderDouble", -1.0D, 256.256D).setCustomListEntryClass(NumberSliderEntry.class));
 
-         */
-        
         // Load properties
-        prop = config.get(Configuration.CATEGORY_GENERAL, "dummy", 7, "", 0, 10);
-        prop.setLanguageKey("sidben.ateliercanvas.config.dummy");
-        dummy = prop.getInt(7);
+        prop = config.get(Configuration.CATEGORY_GENERAL, "max_filesize_kb", DEFAULT_maxFileSize, "", 10, 1024);     // 1048576 bytes == 1024KB == 1 MB
+        prop.setLanguageKey(getLanguageKey("max_filesize_kb"));
+        maxFileSize = (prop.getInt(DEFAULT_maxFileSize) * 1024);
         prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         propOrder.add(prop.getName());
 
+        prop = config.get(Configuration.CATEGORY_GENERAL, "max_image_size", DEFAULT_maxPaintingSize, "", 64, 128);
+        prop.setLanguageKey(getLanguageKey("max_image_size"));
+        maxPaintingSize = prop.getInt(DEFAULT_maxPaintingSize);
+        prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
+        propOrder.add(prop.getName());
+
+        prop = config.get(Configuration.CATEGORY_GENERAL, "date_format", DEFAULT_paintingDateFormat);
+        prop.setLanguageKey(getLanguageKey("date_format"));
+        paintingDateFormat = prop.getString();
+        prop.setValidValues(new String[] { "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "dd-MMM-yyyy", "yyyy-MMM-dd" });
+        propOrder.add(prop.getName());
+
+
         config.setCategoryPropertyOrder(Configuration.CATEGORY_GENERAL, propOrder);
 
-        
-        
-        
+
+
         cat = config.getCategory(CATEGORY_PAINTINGS);
         cat.setComment(CustomPaintingConfigItem.getArrayDescription());
-        
-        
+
+
         // Loads custom paintings
         LogHelper.info("Loading custom paintings config info...");
         mahPaintings = new ArrayList<CustomPaintingConfigItem>();
-        
-        for (Property item : cat.getOrderedValues()) {
+
+        for (final Property item : cat.getOrderedValues()) {
             if (item.getName().startsWith(PAINTINGS_ARRAY_KEY)) {
-                String[] content = item.getStringList();
-                CustomPaintingConfigItem configItem = new CustomPaintingConfigItem(content);
-                
-                if (configItem.isValid()) 
+                final String[] content = item.getStringList();
+                final CustomPaintingConfigItem configItem = new CustomPaintingConfigItem(content);
+
+                if (configItem.isValid()) {
                     mahPaintings.add(configItem);
-                else
+                } else {
                     LogHelper.info("    Error loading a config entry: [" + configItem.getValiadtionErrors() + "]");
+                }
             }
         }
-        
+
         LogHelper.info("Loaded complete, [" + mahPaintings.size() + "] entries found.");
-
-        
-        
-        /*
-        List<IConfigElement> configList = (new ConfigElement(cat)).getChildElements();
-        
-        for (IConfigElement element : configList) {
-            Object x = element.get();
-        }
-        */
-        
-        
-        /*
-        prop = config.get(CATEGORY_PAINTINGS, "dummy_pic", "");
-        prop.setLanguageKey("sidben.ateliercanvas.config.dummy_pic");
-        dummyPic = prop.getString();
-        prop.setConfigEntryClass(PaintingEntry.class);
-        propOrder.add(prop.getName());
-        */
-
-        /*
-        prop = config.get(CATEGORY_PAINTINGS, PAINTINGS_ARRAY_KEY, new String[] {});
-        prop.setLanguageKey("sidben.ateliercanvas.config.painting_list");
-        installedPaintings = prop.getStringList();
-        propOrder.add(prop.getName());
-        */
-
 
 
 
@@ -156,5 +135,16 @@ public class ConfigurationHandler
             loadConfig();
         }
     }
-    
+
+
+
+    /**
+     * Returns the full language key for elements of this GUI.
+     */
+    protected static String getLanguageKey(String name)
+    {
+        return "sidben.ateliercanvas.config.prop." + name;
+    }
+
+
 }

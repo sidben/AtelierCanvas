@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import sidben.ateliercanvas.client.config.CustomPaintingConfigItem;
+import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.helper.LogHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -35,7 +36,7 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
     private int _iconWidth;
     private int _iconHeight;
     private long _fileSize;
-    private int _resolution = 16;           // TODO: support for high-res paintings
+    private int _resolution = ConfigurationHandler.defaultResolution;           // TODO: support for high-res paintings
 
     protected final Minecraft mc;
     protected final GuiScreenCustomPaintings _ownerGui;
