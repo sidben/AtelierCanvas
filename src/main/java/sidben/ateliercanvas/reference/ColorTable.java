@@ -18,7 +18,9 @@ public class ColorTable
      */
     public static final int GRAY        = 0x808080;
 
-
+    /**
+     * Yellow - #FFFF00 - 16776960
+     */
     public static final int YELLOW      = 0xFFFF00;
 
     

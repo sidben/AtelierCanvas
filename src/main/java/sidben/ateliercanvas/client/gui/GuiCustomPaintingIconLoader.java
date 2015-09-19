@@ -138,7 +138,7 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
     }
     
     protected float getFileSizeKBytes() {
-        return this.getFileSizeBytes() / 1024;
+        return (float)this.getFileSizeBytes() / 1024.0F;
     }
 
     

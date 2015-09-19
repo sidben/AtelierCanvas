@@ -35,8 +35,5 @@ public class ModGuiConfig extends GuiConfig
 
         return list;
     }
-
-    
-    // TODO: add custom behaviour to select paintings
     
 }
