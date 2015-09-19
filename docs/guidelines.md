@@ -64,3 +64,7 @@ MAYBE: The easel record the last 5 action, allowing the player to undo mistakes.
 
 Once a painting is signed, it can't be changed anymore (like writen books). It's possible to make a copy of 
 the painting and edit the copy (?).
+
+NOTE: add a way to make public message boards, where all copies of a painting would link to the original.
+Maybe a player can SIGN or MAKE PUBLIC, Public painting can be edited, but only by the author. But with that
+feature, what is the reason to sign a painting and making it read-only?

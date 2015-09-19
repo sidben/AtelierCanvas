@@ -29,7 +29,7 @@ public class GuiCustomPaintingList extends GuiListExtended
     @SuppressWarnings("rawtypes")
     protected final List valueList;
 
-    
+    // TODO: List sorting criteria (mod param?) - DEFAULT: Size (Area > Width) > Name
     
     @SuppressWarnings("rawtypes")
     public GuiCustomPaintingList(Minecraft p_i45055_1_, int p_i45055_2_, int p_i45055_3_, List p_i45055_4_)

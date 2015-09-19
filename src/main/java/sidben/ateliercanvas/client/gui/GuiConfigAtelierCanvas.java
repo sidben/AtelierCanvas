@@ -12,11 +12,11 @@ import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
 
 
-public class ModGuiConfig extends GuiConfig
+public class GuiConfigAtelierCanvas extends GuiConfig
 {
 
 
-    public ModGuiConfig(GuiScreen guiScreen) {
+    public GuiConfigAtelierCanvas(GuiScreen guiScreen) {
         super(guiScreen, getConfigElements(), Reference.ModID, false, false, GuiConfig.getAbridgedConfigPath(ConfigurationHandler.config.toString()));
     }
 
