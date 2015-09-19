@@ -29,6 +29,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
 {
     
+    private String _tooltip; 
+    
+    
+    
     
     public GuiPaintingDetails(GuiScreenCustomPaintings ownerGui, CustomPaintingConfigItem entryData) {
         super(ownerGui, entryData);
@@ -76,16 +80,18 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
             int textStartY = boxY + boxHeight + titleMaginTop;
     
     
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy");          // TODO: make date format a mod config. Default: yyyy-MM-dd
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");          // TODO: make date format a mod config. Default: yyyy-MM-dd
             
             // TODO: Localization of "Artist", "Date added", "File size", etc
             String paintingName = this._entryData.getPaintingTitle();
-            String extraInfo = "Artist: " + this._entryData.getPaintingAuthor();
-            extraInfo += String.format("\nSize: %dx%d (%dx%d pixels)", super.getTileWidth(), super.getTileHeight(), super.getIconWidth(), super.getIconHeight());
-            extraInfo += "\nFile size: " + super.getFileSizeKBytes() + " KB";
-            extraInfo += "\nDate added: " + dateFormat.format(this._entryData.getCreationDate());
+            String extraInfo = String.format("%s: %s", "Artist", this._entryData.getPaintingAuthor());
+            extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", "Size", super.getTileWidth(), super.getTileHeight(), super.getIconWidth(), super.getIconHeight());
             extraInfo += "\n" + (this._entryData.getIsEnabled() ? "Enabled" : "Disabled");
     
+            
+            // TODO: Button EDIT
+            // TODO: Button ENABLED / DISABLED (tooltip: Disabled paintings won't be shown in-game)
+            
     
             // Draw the background box for the painting
             Gui.drawRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x77000000);
@@ -122,9 +128,31 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
                 this.mc.fontRenderer.drawStringWithShadow((String)extraInfoList.get(i), textStartX, textStartY + titleMaginBottom + (i * lineSpacing), ColorTable.GRAY);
             }
             
+            
+            // Tooltip
+            this._tooltip = "";
+            boolean isMouseOverIconArea = (mouseX >= boxX && mouseX <= boxX + boxWidth && mouseY >= boxY && mouseY <= boxY + boxHeight);
+            if (isMouseOverIconArea) {
+                this._tooltip = this._entryData.getPaintingFileName();
+                this._tooltip += String.format("\n%s: %.1f KB", "File size", super.getFileSizeKBytes());
+                this._tooltip += String.format("\n%s: %s", "Date added", dateFormat.format(this._entryData.getCreationDate()));
+                this._tooltip += String.format("\n%s: %s", "Last update", dateFormat.format(this._entryData.getLastUpdateDate()));
+                this._tooltip += "\nUUID: " + this._entryData.getUUID();
+            }
+            
+            
         }
         
         super.drawScreen(mouseX, mouseY, param3);
+    }
+
+    
+    
+    /**
+     * Tooltip for the list item under the mouse. 
+     */
+    public String getTooltip() {
+        return this._tooltip == null ? "" : this._tooltip;
     }
 
 }

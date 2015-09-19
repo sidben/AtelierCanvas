@@ -17,6 +17,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.GuiConfigEntries;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
@@ -46,7 +47,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiScreenCustomPaintings extends GuiScreen
 {
 
-    public final GuiScreen parentScreen;
+    public final GuiConfig parentScreen;
     
     @SuppressWarnings("rawtypes")
     private List paintingList;
@@ -60,7 +61,7 @@ public class GuiScreenCustomPaintings extends GuiScreen
     
     
 
-    public GuiScreenCustomPaintings(GuiScreen parentScreen)
+    public GuiScreenCustomPaintings(GuiConfig parentScreen)
     {
         this.mc = Minecraft.getMinecraft();
         this.parentScreen = parentScreen;
@@ -134,13 +135,22 @@ public class GuiScreenCustomPaintings extends GuiScreen
         
         // Draws the listbox
         this.guiPaintingList.drawScreen(mouseX, mouseY, param3);
-
+        
         // Texts - Title, Total paintings installed 
         this.drawCenteredString(this.fontRendererObj, I18n.format("sidben.ateliercanvas.config.painting_selector.title"), this.width / 2, 16, ColorTable.WHITE);
         this.drawCenteredString(this.fontRendererObj, this.paintingList.size() + " paintings installed", this.width / 2, this.height - 20, ColorTable.GRAY);
         
-        
+        // Parent call (draws buttons)
         super.drawScreen(mouseX, mouseY, param3);
+
+
+        // Tooltips (OBS: this must come after [super.drawScreen], or else the buttons will get a weird gray overlay
+        if (!this.guiPaintingList.getTooltip().isEmpty())
+            this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(this.guiPaintingList.getTooltip(), 300), mouseX, mouseY);
+
+        else if (!this.guiPaintingDetails.getTooltip().isEmpty())
+            this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(this.guiPaintingDetails.getTooltip(), 300), mouseX, mouseY);
+        
     }
     
     
@@ -153,6 +163,22 @@ public class GuiScreenCustomPaintings extends GuiScreen
             
             if (button.id == BT_ID_DONE) 
             {
+                // TODO: save the config - saveConfigElements() - if possible, use a separate file (?)
+                /*
+                     * Saves all properties on this screen / child screens. This method returns true if any elements were changed that require
+                     * a restart for proper handling.
+                
+                    @SuppressWarnings("rawtypes")
+                    public boolean saveConfigElements()
+                    {
+                        boolean requiresRestart = false;
+                        for (IConfigEntry entry : this.listEntries)
+                            if (entry.saveConfigElement())
+                                requiresRestart = true;
+                
+                        return requiresRestart;
+                    }
+                */
                 this.mc.displayGuiScreen(this.parentScreen);
                 
             }
@@ -194,9 +220,7 @@ public class GuiScreenCustomPaintings extends GuiScreen
     @SuppressWarnings("rawtypes")
     public void drawToolTip(List stringList, int x, int y)
     {
-        this.func_146283_a(stringList, x, y);
-        
-        // TODO: ParentGui.DrawTooltip - the tooltip is being drawn inside the listbox
+        this.parentScreen.drawToolTip(stringList, x, y);
     }
 
     

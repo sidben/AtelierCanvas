@@ -4,6 +4,7 @@ import java.util.List;
 import sidben.ateliercanvas.client.config.PaintingSelectorListEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;
+import net.minecraft.client.renderer.Tessellator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -70,6 +71,25 @@ public class GuiCustomPaintingList extends GuiListExtended
     protected int getScrollBarX()
     {
         return this.right - 6;
+    }
+    
+    
+    
+
+
+    /**
+     * Tooltip for the list item under the mouse. 
+     */
+    public String getTooltip() {
+        // Index of the list item below the mouse cursor.
+        int indexMouseHovering = this.func_148124_c(mouseX, mouseY);
+        
+        // If the mouse is above an item, return the tooltip of that item.
+        if (indexMouseHovering >= 0 && indexMouseHovering < this.valueList.size())
+            return this.getListEntry(indexMouseHovering).getTooltip();
+
+        else
+            return "";
     }
 
 }

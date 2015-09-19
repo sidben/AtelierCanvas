@@ -47,6 +47,9 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
     
 
     
+    private String _tooltip;
+    
+    
     
     public PaintingSelectorListEntry(GuiScreenCustomPaintings ownerGui, CustomPaintingConfigItem entryData) {
         super(ownerGui, entryData);
@@ -58,7 +61,7 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
     
     
     @Override
-    public void drawEntry(int itemId, int listInitialX, int listInitialY, int listItemWidth, int listItemHeight, Tessellator p_148279_6_, int mouseX, int mouseY, boolean mouseOver)
+    public void drawEntry(int index, int listInitialX, int listInitialY, int listItemWidth, int listItemHeight, Tessellator p_148279_6_, int mouseX, int mouseY, boolean mouseOver)
     {
         String paintingName = "UNKNOWN";
         String paintingInfo1 = "";
@@ -111,9 +114,7 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             
             // Tooltip
-            String tooltipMessage = this._entryData.getValiadtionErrors();
-            if (!tooltipMessage.isEmpty())
-                super._ownerGui.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(tooltipMessage, 300), mouseX, mouseY);
+            this._tooltip = this._entryData.getValiadtionErrors();
         }
 
         
@@ -150,5 +151,15 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
     public void mouseReleased(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)
     {
     }
+    
+    
+    
+    /**
+     * Tooltip for the list item under the mouse. 
+     */
+    public String getTooltip() {
+        return this._tooltip == null ? "" : this._tooltip;
+    }
+    
 
 }
