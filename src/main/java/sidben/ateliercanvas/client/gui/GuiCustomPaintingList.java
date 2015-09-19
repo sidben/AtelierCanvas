@@ -36,7 +36,7 @@ public class GuiCustomPaintingList extends GuiListExtended
         super(p_i45055_1_, p_i45055_2_, p_i45055_3_, 32, p_i45055_3_ - 55 + 4, 36);
         this.mc = p_i45055_1_;
         this.valueList = p_i45055_4_;
-        this.field_148163_i = false;
+        this.field_148163_i = false;        // ?
     }
 
 
