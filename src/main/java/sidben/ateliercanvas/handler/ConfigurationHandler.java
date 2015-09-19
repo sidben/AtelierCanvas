@@ -3,12 +3,17 @@ package sidben.ateliercanvas.handler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import sidben.ateliercanvas.client.config.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.reference.Reference;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import cpw.mods.fml.client.config.ConfigGuiType;
 import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.GuiConfigEntries;
+import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -16,6 +21,9 @@ public class ConfigurationHandler
 {
 
     public static final String  CATEGORY_PAINTINGS         = "paintings";
+    
+    
+    public static final String PAINTINGS_ARRAY_KEY            = "painting_list";
 
     
     /** Array with info of all paintings installed */
@@ -24,6 +32,9 @@ public class ConfigurationHandler
     
     public static int           dummy;
     public static String        dummyPic;
+    
+    
+    public static List<CustomPaintingConfigItem> mahPaintings;
     
     
     
@@ -51,6 +62,7 @@ public class ConfigurationHandler
     {
         final List<String> propOrder = new ArrayList<String>();
         Property prop;
+        ConfigCategory cat;
 
 
         /*
@@ -66,12 +78,50 @@ public class ConfigurationHandler
          */
         
         // Load properties
-        prop = config.get(CATEGORY_PAINTINGS, "dummy", 7, "", 0, 10);
+        prop = config.get(Configuration.CATEGORY_GENERAL, "dummy", 7, "", 0, 10);
         prop.setLanguageKey("sidben.ateliercanvas.config.dummy");
         dummy = prop.getInt(7);
         prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         propOrder.add(prop.getName());
 
+        config.setCategoryPropertyOrder(Configuration.CATEGORY_GENERAL, propOrder);
+
+        
+        
+        
+        cat = config.getCategory(CATEGORY_PAINTINGS);
+        cat.setComment(CustomPaintingConfigItem.getArrayDescription());
+        
+        
+        // Loads custom paintings
+        LogHelper.info("Loading custom paintings config info...");
+        mahPaintings = new ArrayList<CustomPaintingConfigItem>();
+        
+        for (Property item : cat.getOrderedValues()) {
+            if (item.getName().startsWith(PAINTINGS_ARRAY_KEY)) {
+                String[] content = item.getStringList();
+                CustomPaintingConfigItem configItem = new CustomPaintingConfigItem(content);
+                
+                if (configItem.isValid()) 
+                    mahPaintings.add(configItem);
+                else
+                    LogHelper.info("    Error loading a config entry: [" + configItem.getValiadtionErrors() + "]");
+            }
+        }
+        
+        LogHelper.info("Loaded complete, [" + mahPaintings.size() + "] entries found.");
+
+        
+        
+        /*
+        List<IConfigElement> configList = (new ConfigElement(cat)).getChildElements();
+        
+        for (IConfigElement element : configList) {
+            Object x = element.get();
+        }
+        */
+        
+        
         /*
         prop = config.get(CATEGORY_PAINTINGS, "dummy_pic", "");
         prop.setLanguageKey("sidben.ateliercanvas.config.dummy_pic");
@@ -80,12 +130,13 @@ public class ConfigurationHandler
         propOrder.add(prop.getName());
         */
 
-        prop = config.get(CATEGORY_PAINTINGS, "painting_list", new String[] {});
+        /*
+        prop = config.get(CATEGORY_PAINTINGS, PAINTINGS_ARRAY_KEY, new String[] {});
         prop.setLanguageKey("sidben.ateliercanvas.config.painting_list");
         installedPaintings = prop.getStringList();
         propOrder.add(prop.getName());
+        */
 
-        config.setCategoryPropertyOrder(CATEGORY_PAINTINGS, propOrder);
 
 
 

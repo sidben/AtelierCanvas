@@ -79,6 +79,7 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
                 File iconFile = new File(this.mc.mcDataDir, iconPath);
                 this._fileSize = iconFile.length();
                 
+                // TODO: validate file type (extension)
                 // TODO: validate if the file size matches the config
                 // TODO: validate max dimensions in pixels (mod param)
                 // TODO: Decide about images that don't follow the 16x16 ratio (accept, reject, edit or make optional)

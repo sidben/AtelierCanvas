@@ -71,7 +71,7 @@ public class CustomPaintingConfigItem
 
             this._fileName = _entryData[0];
             this._uuid = _entryData[1];
-            this._enabled = (_entryData[2] == "1");
+            this._enabled = _entryData[2].equals("1");
 
             try {
                 this._sizeBytes = Integer.parseInt(_entryData[3]);
@@ -278,5 +278,28 @@ public class CustomPaintingConfigItem
         return "sidben.ateliercanvas.config.painting_info." + name;
     }
 
+    
+    
+    /**
+     * Returns how the config array is expected to behave. 
+     */
+    public static String getArrayDescription() {
+        String r = "";
+        
+        r += "Each array entry is expected to have the following format.\n";
+        r += "All fields are required, even if blank. Fields with [*] are an exception and can't be empty\n\n";
+        r += "    File name [*] (only PNG files are accepted)\n";
+        r += "    UUID (each entry must have a unique value. leave blank and the mod will create a new UUID)\n";
+        r += "    Enabled (1 or 0) [*]\n";
+        r += "    File size, in bytes (only numbers) [*]\n";
+        r += "    Painting title\n";
+        r += "    Author's name\n";
+        r += "    Creation date (format yyyy-MM-dd)\n";
+        r += "    Last update date (format yyyy-MM-dd)\n";
+        
+        return r;
+    }
+    
+    
 
 }
