@@ -28,8 +28,6 @@ public class CustomPaintingCategoryEntry extends CategoryEntry
     @Override
     protected GuiScreen buildChildScreen()
     {
-        
-        // TODO: make it GuiConfig
         return new GuiScreenCustomPaintings(this.owningScreen);
         
         /*

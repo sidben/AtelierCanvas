@@ -93,22 +93,20 @@ public class GuiScreenCustomPaintings extends GuiScreen
     }
 
 
-    /*
-     * param3 = 0.3861351 (random? frame? varies from 0 to 1)
-     */
+
     @Override
-    public void drawScreen(int mouseX, int mouseY, float param3)
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         // Clear the background
         this.drawBackground(0);
 
         // Selected painting extra info
         if (this.selectedIndex > -1) {
-            this.guiPaintingDetails.drawScreen(mouseX, mouseY, param3);
+            this.guiPaintingDetails.drawScreen(mouseX, mouseY, partialTicks);
         }
 
         // Draws the listbox
-        this.guiPaintingList.drawScreen(mouseX, mouseY, param3);
+        this.guiPaintingList.drawScreen(mouseX, mouseY, partialTicks);
 
         // Texts - Title, Total paintings installed
         this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title")), this.width / 2, 16, ColorTable.WHITE);
@@ -116,7 +114,7 @@ public class GuiScreenCustomPaintings extends GuiScreen
                 ColorTable.GRAY);
 
         // Parent call (draws buttons)
-        super.drawScreen(mouseX, mouseY, param3);
+        super.drawScreen(mouseX, mouseY, partialTicks);
 
 
         // Tooltips (OBS: this must come after [super.drawScreen], or else the buttons will get a weird gray overlay
@@ -136,7 +134,6 @@ public class GuiScreenCustomPaintings extends GuiScreen
         if (button.enabled) {
 
             if (button.id == BT_ID_DONE) {
-                // TODO: save the config - saveConfigElements() - if possible, use a separate file (?)
                 final String configID = ConfigurationHandler.CATEGORY_PAINTINGS;
                 final boolean requiresMcRestart = false;
 
