@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
+import net.minecraft.util.StatCollector;
 import org.apache.commons.lang3.StringUtils;
+import sidben.ateliercanvas.reference.TextFormatTable;
 
 
 /**
@@ -69,7 +71,7 @@ public class CustomPaintingConfigItem
 
             this._fileName = _entryData[0];
             this._uuid = _entryData[1];
-            this._enabled = _entryData[2] == "1";
+            this._enabled = (_entryData[2] == "1");
 
             try {
                 this._sizeBytes = Integer.parseInt(_entryData[3]);
@@ -77,8 +79,8 @@ public class CustomPaintingConfigItem
                 this._sizeBytes = -1;
             }
 
-            this._title = _entryData[4].isEmpty() ? "§oUnnamed§r" : _entryData[4];
-            this._author = _entryData[5].isEmpty() ? "§oUnknown§r" : _entryData[5];
+            this._title = _entryData[4].isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("title_empty")) + TextFormatTable.RESET : _entryData[4];
+            this._author = _entryData[5].isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("author_empty")) + TextFormatTable.RESET : _entryData[5];
 
             try {
                 this._creationDate = sdf.parse(_entryData[6]);
@@ -179,15 +181,15 @@ public class CustomPaintingConfigItem
             return false;
         }
         if (this._fileName.isEmpty()) {
-            validationErrors = "Empty image file name";
+            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_filename"));
             return false;
         }
         if (this._uuid.isEmpty()) {
-            validationErrors = "Empty UUID";
+            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_uuid"));
             return false;
         }
         if (this._sizeBytes <= 0) {
-            validationErrors = "Invalid file size";
+            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_invalid_filesize"));
             return false;
         }
         
@@ -203,7 +205,14 @@ public class CustomPaintingConfigItem
 
     public String[] ToStringArray()
     {
-        return new String[] { this._fileName, this._uuid, this._enabled ? "1" : "0", Integer.toString(this._sizeBytes), this._title, this._author, sdf.format(this._creationDate),
+        return new String[] { 
+                this._fileName, 
+                this._uuid, 
+                (this._enabled ? "1" : "0"), 
+                Integer.toString(this._sizeBytes), 
+                this._title, 
+                this._author, 
+                sdf.format(this._creationDate),
                 sdf.format(this._lastUpdateDate) };
     }
     
@@ -258,6 +267,16 @@ public class CustomPaintingConfigItem
         return this._lastUpdateDate;
     }
 
+
+    
+    
+    
+    /**
+     * Returns the full language key for elements of this GUI. 
+     */
+    protected String getLanguageKey(String name) {
+        return "sidben.ateliercanvas.config.painting_info." + name;
+    }
 
 
 }

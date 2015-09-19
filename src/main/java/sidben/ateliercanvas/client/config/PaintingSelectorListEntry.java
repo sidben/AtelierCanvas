@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 
 /**
@@ -63,7 +64,7 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
     @Override
     public void drawEntry(int index, int listInitialX, int listInitialY, int listItemWidth, int listItemHeight, Tessellator p_148279_6_, int mouseX, int mouseY, boolean mouseOver)
     {
-        String paintingName = "UNKNOWN";
+        String paintingName = "???";
         String paintingInfo1 = "";
         String paintingInfo2 = "";
         
@@ -84,10 +85,9 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
 
         
         if (this._entryData.isValid()) {
-            // TODO: Localization of "Artist", "Date added", "File size", etc
             paintingName = this._entryData.getPaintingTitle();
-            paintingInfo1 = "Artist: " + this._entryData.getPaintingAuthor();
-            paintingInfo2 = String.format("Size: %dx%d", super.getTileWidth(), super.getTileHeight());
+            paintingInfo1 = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this._entryData.getPaintingAuthor());
+            paintingInfo2 = String.format("%s: %dx%d", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight());
 
         
             // Adjusts the width/height ratio and padding to display the painting correctly
@@ -161,5 +161,14 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
         return this._tooltip == null ? "" : this._tooltip;
     }
     
+
+    
+    
+    /**
+     * Returns the full language key for elements of this GUI. 
+     */
+    protected String getLanguageKey(String name) {
+        return "sidben.ateliercanvas.config.painting_info." + name;
+    }
 
 }

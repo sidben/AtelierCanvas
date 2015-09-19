@@ -17,6 +17,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.StatCollector;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.GuiConfigEntries;
 import cpw.mods.fml.client.config.IConfigElement;
@@ -73,8 +74,9 @@ public class GuiScreenCustomPaintings extends GuiScreen
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void initGui()
     {
-        this.buttonList.add(new GuiOptionButton(BT_ID_ADDNEW, this.width / 2 - 154, this.height - 48, I18n.format("sidben.ateliercanvas.config.painting_selector.add_new", new Object[0])));       // TODO: encapsulate "sidben.ateliercanvas.config" namespace 
-        this.buttonList.add(new GuiOptionButton(BT_ID_DONE, this.width / 2 + 4, this.height - 48, I18n.format("gui.done", new Object[0])));
+        
+        this.buttonList.add(new GuiOptionButton(BT_ID_ADDNEW, this.width / 2 - 154, this.height - 48, StatCollector.translateToLocal(getLanguageKey("add_new")))); 
+        this.buttonList.add(new GuiOptionButton(BT_ID_DONE, this.width / 2 + 4, this.height - 48, StatCollector.translateToLocal("gui.done")));
         this.paintingList = new ArrayList();
 
         
@@ -137,8 +139,8 @@ public class GuiScreenCustomPaintings extends GuiScreen
         this.guiPaintingList.drawScreen(mouseX, mouseY, param3);
         
         // Texts - Title, Total paintings installed 
-        this.drawCenteredString(this.fontRendererObj, I18n.format("sidben.ateliercanvas.config.painting_selector.title"), this.width / 2, 16, ColorTable.WHITE);
-        this.drawCenteredString(this.fontRendererObj, this.paintingList.size() + " paintings installed", this.width / 2, this.height - 20, ColorTable.GRAY);
+        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title")), this.width / 2, 16, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, String.format(StatCollector.translateToLocal(getLanguageKey("installed_counter")), this.paintingList.size()), this.width / 2, this.height - 20, ColorTable.GRAY);
         
         // Parent call (draws buttons)
         super.drawScreen(mouseX, mouseY, param3);
@@ -237,5 +239,13 @@ public class GuiScreenCustomPaintings extends GuiScreen
         }
     }
     
+    
+    
+    /**
+     * Returns the full language key for elements of this GUI. 
+     */
+    protected String getLanguageKey(String name) {
+        return "sidben.ateliercanvas.config.painting_selector." + name;
+    }
     
 }

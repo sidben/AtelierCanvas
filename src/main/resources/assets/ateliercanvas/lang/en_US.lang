@@ -1,10 +1,26 @@
 # Entities
-entity.ateliercanvas.CustomPainting.name=Special Painting
+entity.ateliercanvas.CustomPainting.name=Custom Painting
 
 # Items
-item.ateliercanvas:custom_painting.name=Special Painting
+item.ateliercanvas:custom_painting.name=Custom Painting
 
 # Config GUI
 sidben.ateliercanvas.config.category.paintings=Custom Paintings
+sidben.ateliercanvas.config.category.paintings.tooltip=Add, edit or remove the custom paintings to this mod.
+
 sidben.ateliercanvas.config.painting_selector.title=Custom Paintings Available (Singleplayer)
 sidben.ateliercanvas.config.painting_selector.add_new=Add a new painting
+sidben.ateliercanvas.config.painting_selector.installed_counter=%d paintings installed
+
+sidben.ateliercanvas.config.painting_info.title_empty=Unnamed
+sidben.ateliercanvas.config.painting_info.author_empty=Unknown
+sidben.ateliercanvas.config.painting_info.author_label=Artist
+sidben.ateliercanvas.config.painting_info.size_label=Size
+sidben.ateliercanvas.config.painting_info.filesize_label=File size
+sidben.ateliercanvas.config.painting_info.date_created_label=Date added
+sidben.ateliercanvas.config.painting_info.date_updated_label=Last update
+sidben.ateliercanvas.config.painting_info.enabled=Enabled
+sidben.ateliercanvas.config.painting_info.disabled=Disabled
+sidben.ateliercanvas.config.painting_info.error_empty_filename=Empty image file name
+sidben.ateliercanvas.config.painting_info.error_empty_uuid=Empty UUID
+sidben.ateliercanvas.config.painting_info.error_invalid_filesize=Invalid file size

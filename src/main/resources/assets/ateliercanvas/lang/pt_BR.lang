@@ -1,0 +1,26 @@
+# Entities
+entity.ateliercanvas.CustomPainting.name=Pintura Personalizada
+
+# Items
+item.ateliercanvas:custom_painting.name=Pintura Personalizada
+
+# Config GUI
+sidben.ateliercanvas.config.category.paintings=Pinturas Personalizadas
+sidben.ateliercanvas.config.category.paintings.tooltip=Adicione, altere ou exclua as pinturas personalizadas deste mod.
+
+sidben.ateliercanvas.config.painting_selector.title=Pinturas Personalizadas Disponíveis (Um jogador)
+sidben.ateliercanvas.config.painting_selector.add_new=Adicionar pintura
+sidben.ateliercanvas.config.painting_selector.installed_counter=%d pinturas instaladas
+
+sidben.ateliercanvas.config.painting_info.title_empty=Sem nome
+sidben.ateliercanvas.config.painting_info.author_empty=Desconhecido
+sidben.ateliercanvas.config.painting_info.author_label=Artista
+sidben.ateliercanvas.config.painting_info.size_label=Tamanho
+sidben.ateliercanvas.config.painting_info.filesize_label=Tamanho de arquivo
+sidben.ateliercanvas.config.painting_info.date_created_label=Criado em
+sidben.ateliercanvas.config.painting_info.date_updated_label=Atualizado em
+sidben.ateliercanvas.config.painting_info.enabled=Habilitado
+sidben.ateliercanvas.config.painting_info.disabled=Desabilitado
+sidben.ateliercanvas.config.painting_info.error_empty_filename=Nome de arquivo vazio
+sidben.ateliercanvas.config.painting_info.error_empty_uuid=UUID vazio
+sidben.ateliercanvas.config.painting_info.error_invalid_filesize=Tamanho de arquivo inválido

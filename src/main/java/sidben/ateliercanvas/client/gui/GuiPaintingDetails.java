@@ -8,11 +8,13 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import sidben.ateliercanvas.client.config.CustomPaintingConfigItem;
 import sidben.ateliercanvas.reference.ColorTable;
+import sidben.ateliercanvas.reference.TextFormatTable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -82,11 +84,10 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
     
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");          // TODO: make date format a mod config. Default: yyyy-MM-dd
             
-            // TODO: Localization of "Artist", "Date added", "File size", etc
             String paintingName = this._entryData.getPaintingTitle();
-            String extraInfo = String.format("%s: %s", "Artist", this._entryData.getPaintingAuthor());
-            extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", "Size", super.getTileWidth(), super.getTileHeight(), super.getIconWidth(), super.getIconHeight());
-            extraInfo += "\n" + (this._entryData.getIsEnabled() ? "Enabled" : "Disabled");
+            String extraInfo = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this._entryData.getPaintingAuthor());
+            extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight(), super.getIconWidth(), super.getIconHeight());
+            extraInfo += "\n" + (this._entryData.getIsEnabled() ? StatCollector.translateToLocal(this.getLanguageKey("enabled")) : StatCollector.translateToLocal(this.getLanguageKey("disabled")));
     
             
             // TODO: Button EDIT
@@ -133,10 +134,10 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
             this._tooltip = "";
             boolean isMouseOverIconArea = (mouseX >= boxX && mouseX <= boxX + boxWidth && mouseY >= boxY && mouseY <= boxY + boxHeight);
             if (isMouseOverIconArea) {
-                this._tooltip = this._entryData.getPaintingFileName();
-                this._tooltip += String.format("\n%s: %.1f KB", "File size", super.getFileSizeKBytes());
-                this._tooltip += String.format("\n%s: %s", "Date added", dateFormat.format(this._entryData.getCreationDate()));
-                this._tooltip += String.format("\n%s: %s", "Last update", dateFormat.format(this._entryData.getLastUpdateDate()));
+                this._tooltip = TextFormatTable.BOLD + this._entryData.getPaintingFileName() + TextFormatTable.RESET;
+                this._tooltip += String.format("\n%s: %.1f KB", StatCollector.translateToLocal(this.getLanguageKey("filesize_label")), super.getFileSizeKBytes());
+                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_created_label")), dateFormat.format(this._entryData.getCreationDate()));
+                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_updated_label")), dateFormat.format(this._entryData.getLastUpdateDate()));
                 this._tooltip += "\nUUID: " + this._entryData.getUUID();
             }
             
@@ -153,6 +154,15 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
      */
     public String getTooltip() {
         return this._tooltip == null ? "" : this._tooltip;
+    }
+
+
+
+    /**
+     * Returns the full language key for elements of this GUI. 
+     */
+    protected String getLanguageKey(String name) {
+        return "sidben.ateliercanvas.config.painting_info." + name;
     }
 
 }

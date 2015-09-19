@@ -30,10 +30,20 @@ public class ModGuiConfig extends GuiConfig
 
         // Paintings installed
         paintingsConfigs = new ConfigElement(ConfigurationHandler.config.getCategory(ConfigurationHandler.CATEGORY_PAINTINGS)).getChildElements();
-        list.add(new DummyConfigElement.DummyCategoryElement(ConfigurationHandler.CATEGORY_PAINTINGS, "sidben.ateliercanvas.config.category.paintings", paintingsConfigs, CustomPaintingCategoryEntry.class));
+        list.add(new DummyConfigElement.DummyCategoryElement(ConfigurationHandler.CATEGORY_PAINTINGS, getLanguageKey("paintings"), paintingsConfigs, CustomPaintingCategoryEntry.class));
 
 
         return list;
     }
     
+    
+    
+    /**
+     * Returns the full language key for elements of this GUI. 
+     */
+    protected static String getLanguageKey(String name) {
+        return "sidben.ateliercanvas.config.category." + name;
+    }
+
+
 }

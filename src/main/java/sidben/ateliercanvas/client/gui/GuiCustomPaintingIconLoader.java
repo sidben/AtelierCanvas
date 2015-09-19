@@ -87,7 +87,7 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
                 paintingIcon = ImageIO.read(iconStream);
                 this._iconWidth = paintingIcon.getWidth();
                 this._iconHeight = paintingIcon.getHeight();
-                this._locationPaintingIcon = this.mc.getTextureManager().getDynamicTextureLocation("paintingicon", new DynamicTexture(paintingIcon));
+                this._locationPaintingIcon = this.mc.getTextureManager().getDynamicTextureLocation("custompaintingicon", new DynamicTexture(paintingIcon));
                 
             } catch (IOException e) {
                 _locationPaintingIcon = null;
