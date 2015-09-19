@@ -84,7 +84,7 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
             // TODO: Localization of "Artist", "Date added", "File size", etc
             paintingName = this._entryData.getPaintingTitle();
             paintingInfo1 = "Artist: " + this._entryData.getPaintingAuthor();
-            paintingInfo2 = String.format("\nSize: %dx%d", super.getTileWidth(), super.getTileHeight());
+            paintingInfo2 = String.format("Size: %dx%d", super.getTileWidth(), super.getTileHeight());
 
         
             // Adjusts the width/height ratio and padding to display the painting correctly
@@ -139,16 +139,16 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
 
     
     @Override
-    public boolean mousePressed(int p_148278_1_, int p_148278_2_, int p_148278_3_, int p_148278_4_, int p_148278_5_, int p_148278_6_)
+    public boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)
     {
-        return true;
+        this._ownerGui.displayDetails(index);
+        return false;
     }
 
 
     @Override
     public void mouseReleased(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)
     {
-        this._ownerGui.displayDetails(index);
     }
 
 }

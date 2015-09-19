@@ -25,15 +25,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 
 /**
- * Screen where the player can see all custom paintings installed, see details of each
- * painting and open the GUI to add a new painting. 
+ * <p>Screen where the player can see all custom paintings installed, see details of each
+ * painting and open the GUI to add a new painting.</p> 
  * 
- * A custom painting is considered 'installed' when the entry is added to the mod config 
+ * <p>A custom painting is considered 'installed' when the entry is added to the mod config 
  * file, so it's not enough to just add PNG files to the mod config folder. A player will
  * need to use this GUI to notify the mod of the images and also provide more info, like
- * painting name or author.
+ * painting name or author.</p>
  * 
- * This GUI was created using the ResourcePack selector GUI as reference.
+ * <p>This GUI was created using the ResourcePack selector GUI as reference.</p>
  * 
  * 
  * @see sidben.ateliercanvas.client.gui.GuiCustomPaintingList
@@ -92,14 +92,14 @@ public class GuiScreenCustomPaintings extends GuiScreen
         this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_17.png", UUID.randomUUID().toString(), "1", "1753", "Lost Promisses", "Pig_Rider", "", "" })));
         this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_18.png", UUID.randomUUID().toString(), "1", "1690", "Camouflage", "Pig_Rider", "", "" })));
         this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_20.png", UUID.randomUUID().toString(), "1", "3233", "Witch Hut?", "Pig_Rider", "", "" })));
-        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_21.png", UUID.randomUUID().toString(), "1", "2056", "In the Nether", "Pig_Rider", "", "" })));
-        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_23.png", UUID.randomUUID().toString(), "1", "2292", "Ancient Temple", "Pig_Rider", "", "" })));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_21.png", UUID.randomUUID().toString(), "1", "2056", "In the Nether", "Pig_Rider", "2013-05-04", "" })));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_23.png", UUID.randomUUID().toString(), "1", "2292", "Ancient Temple", "Pig_Rider", "2013-05-04", "" })));
         this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_24.png", UUID.randomUUID().toString(), "1", "2359", "Wither Rise", "Pig_Rider", "", "" })));
         this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_25.png", UUID.randomUUID().toString(), "1", "2521", "Zombie Terror", "Pig_Rider", "", "" })));
-        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_26.png", UUID.randomUUID().toString(), "1", "2232", "Abandoned Mines", "Pig_Rider", "", "" })));
-        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_27.png", UUID.randomUUID().toString(), "1", "2403", "Curious Kitty", "Pig_Rider", "", "" })));
-        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_28.png", UUID.randomUUID().toString(), "1", "1349", "Moonlight", "Pig_Rider", "", "" })));
-        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_29.png", UUID.randomUUID().toString(), "1", "1719", "Deep Sea", "Pig_Rider", "", "" })));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_26.png", UUID.randomUUID().toString(), "1", "2232", "Abandoned Mines", "Pig_Rider", "2013-05-04", "" })));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_27.png", UUID.randomUUID().toString(), "1", "2403", "Curious Kitty", "Pig_Rider", "2013-05-04", "" })));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_28.png", UUID.randomUUID().toString(), "1", "1349", "Moonlight", "Pig_Rider", "2013-05-04", "" })));
+        this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_29.png", UUID.randomUUID().toString(), "1", "1719", "Deep Sea", "Pig_Rider", "2013-05-04", "" })));
         this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_31.png", UUID.randomUUID().toString(), "1", "3121", "The End is Near", "Pig_Rider", "", "" })));
         this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_32.png", UUID.randomUUID().toString(), "1", "3588", "Jungle Mistery", "Pig_Rider", "", "" })));
         this.paintingList.add(new PaintingSelectorListEntry(this, new CustomPaintingConfigItem(new String[] { "png24_33.png", UUID.randomUUID().toString(), "1", "2772", "Mooshroom Paradise", "Pig_Rider", "", "" })));
@@ -127,18 +127,17 @@ public class GuiScreenCustomPaintings extends GuiScreen
         // Clear the background
         this.drawBackground(0);
         
+        // Selected painting extra info
+        if (this.selectedIndex > -1) {
+            this.guiPaintingDetails.drawScreen(mouseX, mouseY, param3);
+        }
+        
         // Draws the listbox
         this.guiPaintingList.drawScreen(mouseX, mouseY, param3);
 
         // Texts - Title, Total paintings installed 
         this.drawCenteredString(this.fontRendererObj, I18n.format("sidben.ateliercanvas.config.painting_selector.title"), this.width / 2, 16, ColorTable.WHITE);
-        this.drawCenteredString(this.fontRendererObj, "_TOTAL_ paintings installed", this.width / 2 - 77, this.height - 26, ColorTable.GRAY);
-        
-        
-        // Selected painting extra info
-        if (this.selectedIndex > -1) {
-            this.guiPaintingDetails.drawScreen(mouseX, mouseY, param3);
-        }
+        this.drawCenteredString(this.fontRendererObj, this.paintingList.size() + " paintings installed", this.width / 2, this.height - 20, ColorTable.GRAY);
         
         
         super.drawScreen(mouseX, mouseY, param3);
@@ -168,12 +167,36 @@ public class GuiScreenCustomPaintings extends GuiScreen
     
     
     
+    /**
+     * Called when the mouse is clicked.
+     */
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int clickType)
+    {
+        super.mouseClicked(mouseX, mouseY, clickType);
+        this.guiPaintingList.func_148179_a(mouseX, mouseY, clickType);
+    }
+
+    
+    /**
+     * Called when the mouse is moved or a mouse button is released.  Signature: (mouseX, mouseY, which) which==-1 is
+     * mouseMove, which==0 or which==1 is mouseUp
+     */
+    @Override
+    protected void mouseMovedOrUp(int mouseX, int mouseY, int which)
+    {
+        super.mouseMovedOrUp(mouseX, mouseY, which);
+    }
+
+    
+    
+    
     @SuppressWarnings("rawtypes")
     public void drawToolTip(List stringList, int x, int y)
     {
         this.func_146283_a(stringList, x, y);
         
-        // TODO: ParentGui.DrawTooltip
+        // TODO: ParentGui.DrawTooltip - the tooltip is being drawn inside the listbox
     }
 
     
@@ -183,7 +206,7 @@ public class GuiScreenCustomPaintings extends GuiScreen
     public void displayDetails(int index) {
         this.selectedIndex = -1;
         
-        if (index > 0 && index < this.paintingList.size()) {
+        if (index >= 0 && index < this.paintingList.size()) {
             PaintingSelectorListEntry entry = (PaintingSelectorListEntry) this.paintingList.get(index);
             this.guiPaintingDetails.updateConfigItem(entry._entryData);
             this.selectedIndex = index;
