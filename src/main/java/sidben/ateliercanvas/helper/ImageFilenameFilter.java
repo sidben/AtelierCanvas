@@ -18,5 +18,10 @@ public class ImageFilenameFilter implements FilenameFilter
         String extension = filename.substring(filename.lastIndexOf(".")); 
         return extension.equalsIgnoreCase(".PNG");
     }
+    
+    
+    public static String acceptedExtensions() {
+        return "PNG";
+    }
 
 }
