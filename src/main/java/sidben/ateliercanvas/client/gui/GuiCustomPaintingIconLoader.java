@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -37,6 +38,7 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
     private int _iconHeight;
     private long _fileSize;
     private int _resolution = ConfigurationHandler.defaultResolution;           // TODO: support for high-res paintings
+    private String _warnings;
 
     protected final Minecraft mc;
     protected final GuiScreenCustomPaintings _ownerGui;
@@ -76,20 +78,51 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
             
 
             try {
-                // TODO: Avoid loading files too big. Individually, paintings have up to 4KB. The vanilla "paintings_kristoffer_zetterstrand.png" file has 76 KB
                 File iconFile = new File(this.mc.mcDataDir, iconPath);
                 this._fileSize = iconFile.length();
+                String extension = iconFile.getName().substring(iconFile.getName().lastIndexOf(".")); 
                 
-                // TODO: validate file type (extension)
-                // TODO: validate if the file size matches the config
-                // TODO: validate max dimensions in pixels (mod param)
                 // TODO: Decide about images that don't follow the 16x16 ratio (accept, reject, edit or make optional)
-    
-                iconStream = new BufferedInputStream(new FileInputStream(iconFile));
-                paintingIcon = ImageIO.read(iconStream);
-                this._iconWidth = paintingIcon.getWidth();
-                this._iconHeight = paintingIcon.getHeight();
-                this._locationPaintingIcon = this.mc.getTextureManager().getDynamicTextureLocation("custompaintingicon", new DynamicTexture(paintingIcon));
+                
+                // Validate if the file exists
+                if (!iconFile.exists()) {
+                    this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_not_found"));
+                }
+                
+                // Validate file size
+                else if (this._fileSize > ConfigurationHandler.maxFileSize) {
+                    this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_big_file"));
+                }
+                
+                // Compare file size (actual VS config)
+                else if (this._fileSize != this._entryData.getExpectedSize()) {
+                    this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_size_not_match"));
+                }
+                
+                // Validate file extension
+                else if (!extension.equalsIgnoreCase(".PNG")) {
+                    this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_invalid_extension"));
+                }
+                
+                // Try to load the image
+                else {
+                    iconStream = new BufferedInputStream(new FileInputStream(iconFile));
+                    paintingIcon = ImageIO.read(iconStream);
+                    iconStream.close();
+
+                    this._iconWidth = paintingIcon.getWidth();
+                    this._iconHeight = paintingIcon.getHeight();
+                    
+                    // Validate the max dimensions
+                    if (this._iconWidth > ConfigurationHandler.maxPaintingSize || this._iconHeight > ConfigurationHandler.maxPaintingSize) {
+                        this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_big_pixels"));
+                    }
+                    
+                    else {
+                        _locationPaintingIcon = this.mc.getTextureManager().getDynamicTextureLocation("custom_painting_icon", new DynamicTexture(paintingIcon));
+                    }
+                }
+                
                 
             } catch (IOException e) {
                 _locationPaintingIcon = null;
@@ -105,9 +138,9 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
         if (this._locationPaintingIcon == null) {
             DynamicTexture dynamictexture = TextureUtil.missingTexture;
 
-            this._locationPaintingIcon = this.mc.getTextureManager().getDynamicTextureLocation("texturepackicon", dynamictexture);
-            this._iconHeight = 16;
-            this._iconHeight = 16;
+            this._locationPaintingIcon = this.mc.getTextureManager().getDynamicTextureLocation("missing_icon", dynamictexture);
+            this._iconWidth = 32;
+            this._iconHeight = 32;
         }
     }
     
@@ -145,4 +178,20 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
 
     
     
+    /**
+     * Returns any error/warning messages generated when this class
+     * tried to load the painting image.
+     */
+    protected String getWarningMessage() {
+        return this._warnings == null ? "" : this._warnings;
+    }
+    
+    
+    /**
+     * Returns the full language key for elements of this GUI. 
+     */
+    protected String getLanguageKey(String name) {
+        return "sidben.ateliercanvas.config.painting_info." + name;
+    }
+
 }

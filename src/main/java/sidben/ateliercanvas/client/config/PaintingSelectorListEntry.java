@@ -158,7 +158,7 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
      * Tooltip for the list item under the mouse. 
      */
     public String getTooltip() {
-        return this._tooltip == null ? "" : this._tooltip;
+        return super.getWarningMessage().isEmpty() ? (this._tooltip == null ? "" : this._tooltip) : super.getWarningMessage();
     }
     
 

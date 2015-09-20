@@ -25,7 +25,7 @@ public class ConfigurationHandler
     public static List<CustomPaintingConfigItem> mahPaintings;
 
     /** Largest file size (in bytes) accepted by the mod */
-    public static int                            maxFileSize;
+    public static long                           maxFileSize;
 
     /** Format in which the painting dates (created / last updated) will be displayed */
     public static String                         paintingDateFormat;
