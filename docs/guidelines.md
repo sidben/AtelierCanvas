@@ -68,3 +68,15 @@ the painting and edit the copy (?).
 NOTE: add a way to make public message boards, where all copies of a painting would link to the original.
 Maybe a player can SIGN or MAKE PUBLIC, Public painting can be edited, but only by the author. But with that
 feature, what is the reason to sign a painting and making it read-only?
+
+
+
+## Recipes
+
+C W  -> C = Custom Painting / W = wood plank  -> Back of the painting gets that texture
+
+C G  -> C = Custom Painting / G = any glass  -> Transparent painting (?)
+
+S S S	   S = stick
+P P P  ->  P = paper   ->  Blank Canvas x4
+W W W	   W = Wool

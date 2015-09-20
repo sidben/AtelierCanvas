@@ -12,6 +12,7 @@ import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.TextFormatTable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -37,6 +38,7 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
     
     
     
+    @SuppressWarnings("unchecked")
     public GuiPaintingDetails(GuiScreenCustomPaintings ownerGui, CustomPaintingConfigItem entryData) {
         super(ownerGui, entryData);
     }
@@ -50,6 +52,13 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
     
     
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public void initGui()
+    {
+        // Buttons
+    }
+    
     
     
     @SuppressWarnings("rawtypes")
@@ -64,7 +73,7 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
             int boxWidth = 200;
             int boxHeight = 64;
             int lineSpacing = 11;
-            int titleMaginTop = 10;
+            int titleMaginTop = 35;
             int titleMaginBottom = 15;
             
             // Size of the preview image
@@ -72,7 +81,7 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
             int sampleHeight = super.getIconHeight() > 64 ? 64 : super.getIconHeight();      
             // TODO: support for paintings larger than 64x64 pixels
 
-            // If the GUI is large, allows more info and a bigger pic
+            // If the GUI is large, allows more info and a bigger picture
             if (this._ownerGui.height > 320) {
                 boxHeight = 128;
                 sampleWidth *= 2;
@@ -83,17 +92,12 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
             int textStartY = boxY + boxHeight + titleMaginTop;
     
     
-            SimpleDateFormat dateFormat = new SimpleDateFormat(ConfigurationHandler.paintingDateFormat);
-            
             String paintingName = this._entryData.getPaintingTitle();
             String extraInfo = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this._entryData.getPaintingAuthor());
+            extraInfo += String.format("\n%s: %.1f KB", StatCollector.translateToLocal(this.getLanguageKey("filesize_label")), super.getFileSizeKBytes());
             extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight(), super.getIconWidth(), super.getIconHeight());
-            extraInfo += "\n" + (this._entryData.getIsEnabled() ? StatCollector.translateToLocal(this.getLanguageKey("enabled")) : StatCollector.translateToLocal(this.getLanguageKey("disabled")));
+            // extraInfo += "\n" + (this._entryData.getIsEnabled() ? StatCollector.translateToLocal(this.getLanguageKey("enabled")) : StatCollector.translateToLocal(this.getLanguageKey("disabled")));
     
-            
-            // TODO: Button EDIT
-            // TODO: Button ENABLED / DISABLED (tooltip: Disabled paintings won't be shown in-game)
-            
     
             // Draw the background box for the painting
             Gui.drawRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x77000000);
@@ -136,9 +140,8 @@ public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
             boolean isMouseOverIconArea = (mouseX >= boxX && mouseX <= boxX + boxWidth && mouseY >= boxY && mouseY <= boxY + boxHeight);
             if (isMouseOverIconArea) {
                 this._tooltip = TextFormatTable.BOLD + this._entryData.getPaintingFileName() + TextFormatTable.RESET;
-                this._tooltip += String.format("\n%s: %.1f KB", StatCollector.translateToLocal(this.getLanguageKey("filesize_label")), super.getFileSizeKBytes());
-                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_created_label")), dateFormat.format(this._entryData.getCreationDate()));
-                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_updated_label")), dateFormat.format(this._entryData.getLastUpdateDate()));
+                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_created_label")), this._entryData.getFormatedCreationDate());
+                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_updated_label")), this._entryData.getFormatedLastUpdateDate());
                 this._tooltip += "\nUUID: " + this._entryData.getUUID();
             }
             

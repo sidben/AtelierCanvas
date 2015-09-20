@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 import net.minecraft.util.StatCollector;
 import org.apache.commons.lang3.StringUtils;
+import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.reference.TextFormatTable;
 
 
@@ -21,12 +22,14 @@ public class CustomPaintingConfigItem
 
     private final static int       EXPECTED_LENGTH = 8;
 
-    private final SimpleDateFormat sdf             = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat sdfSave         = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat sdfDisplay      = new SimpleDateFormat(ConfigurationHandler.paintingDateFormat);
+    private final String ancientDate               = "1700-01-01";
 
     private String                 _fileName       = "";
     private String                 _uuid           = "";
     private boolean                _enabled        = false;
-    private int                    _sizeBytes      = -1;
+    private long                   _sizeBytes      = -1;
     private String                 _title          = "";
     private String                 _author         = "";
     private Date                   _creationDate   = new Date();
@@ -74,23 +77,23 @@ public class CustomPaintingConfigItem
             this._enabled = _entryData[2].equals("1");
 
             try {
-                this._sizeBytes = Integer.parseInt(_entryData[3]);
+                this._sizeBytes = Long.parseLong(_entryData[3]);
             } catch (final NumberFormatException e) {
                 this._sizeBytes = -1;
             }
 
-            this._title = _entryData[4].isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("title_empty")) + TextFormatTable.RESET : _entryData[4];
-            this._author = _entryData[5].isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("author_empty")) + TextFormatTable.RESET : _entryData[5];
+            this._title = _entryData[4];
+            this._author = _entryData[5];
 
             try {
-                this._creationDate = sdf.parse(_entryData[6]);
+                this._creationDate = sdfSave.parse(_entryData[6]);
             } catch (final ParseException e) {
                 this._creationDate = ancientTimes;
             }
             try {
-                this._lastUpdateDate = sdf.parse(_entryData[7]);
+                this._lastUpdateDate = sdfSave.parse(_entryData[7]);
             } catch (final ParseException e) {
-                this._lastUpdateDate = ancientTimes;
+                this._lastUpdateDate = this._creationDate;
             }
 
         }
@@ -117,7 +120,7 @@ public class CustomPaintingConfigItem
      * @param updateDate
      *            Last time the painting config was updated.
      */
-    public CustomPaintingConfigItem(String fileName, String uuid, boolean enabled, int fileSize, String title, String author, Date createDate, Date updateDate) {
+    public CustomPaintingConfigItem(String fileName, String uuid, boolean enabled, long fileSize, String title, String author, Date createDate, Date updateDate) {
         this._author = author;
         this._creationDate = createDate;
         this._enabled = enabled;
@@ -144,7 +147,7 @@ public class CustomPaintingConfigItem
      * @param author
      *            Author of the painting.
      */
-    public CustomPaintingConfigItem(String fileName, boolean enabled, int fileSize, String title, String author) {
+    public CustomPaintingConfigItem(String fileName, boolean enabled, long fileSize, String title, String author) {
         this(fileName, UUID.randomUUID().toString(), enabled, fileSize, title, author, new Date(), new Date());
     }
 
@@ -205,15 +208,22 @@ public class CustomPaintingConfigItem
 
     public String[] ToStringArray()
     {
+        String dateCreated = sdfSave.format(this._creationDate);
+        String dateUpdated = sdfSave.format(this._lastUpdateDate);
+        
+        if (dateCreated.equals(ancientDate)) dateCreated = "";
+        if (dateUpdated.equals(ancientDate)) dateUpdated = "";
+        
+        
         return new String[] { 
                 this._fileName, 
                 this._uuid, 
                 (this._enabled ? "1" : "0"), 
-                Integer.toString(this._sizeBytes), 
+                Long.toString(this._sizeBytes), 
                 this._title, 
                 this._author, 
-                sdf.format(this._creationDate),
-                sdf.format(this._lastUpdateDate) };
+                dateCreated,
+                dateUpdated };
     }
     
 
@@ -242,19 +252,19 @@ public class CustomPaintingConfigItem
         return this._enabled;
     }
 
-    public int getExpectedSize()
+    public long getExpectedSize()
     {
         return this._sizeBytes;
     }
 
     public String getPaintingTitle()
     {
-        return this._title;
+        return this._title.isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("title_empty")) + TextFormatTable.RESET : this._title;
     }
 
     public String getPaintingAuthor()
     {
-        return this._author;
+        return this._author.isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("author_empty")) + TextFormatTable.RESET : this._author;
     }
 
     public Date getCreationDate()
@@ -267,7 +277,32 @@ public class CustomPaintingConfigItem
         return this._lastUpdateDate;
     }
 
+    public String getFormatedCreationDate()
+    {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(this.getCreationDate());
 
+        if (cal.get(Calendar.YEAR) > 1700)
+            return this.sdfDisplay.format(this.getCreationDate());
+        else
+            return "-";
+    }
+
+    public String getFormatedLastUpdateDate()
+    {
+        if (this.getLastUpdateDate().equals(this.getCreationDate()))
+            return "-";
+        
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(this.getLastUpdateDate());
+
+        if (cal.get(Calendar.YEAR) > 1700)
+            return this.sdfDisplay.format(this.getCreationDate());
+        else
+            return "-";
+    }
+
+    
     
     
     
