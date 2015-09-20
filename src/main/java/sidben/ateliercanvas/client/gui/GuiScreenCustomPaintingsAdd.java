@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiScreenCustomPaintingsAdd extends GuiScreen
 {
 
-    private static final int                BT_ID_DONE          = 1;
+    private static final int                BT_ID_BACK          = 1;
     private static final int                BT_ID_NEWFILE       = 2;
     private static final int                BT_ID_NEWURL        = 3;
     private static final int                BT_ID_NEWBASE64     = 4;         // OBS: under evaluation
@@ -47,11 +47,12 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
         int buttonX = this.parentScreen.width / 2 - 100;
         int buttonY = 64;
         
-        this.buttonList.add(new GuiButton(BT_ID_DONE, buttonX, this.height - 29, StatCollector.translateToLocal("gui.done")));
+        this.buttonList.add(new GuiButton(BT_ID_BACK, buttonX, this.height - 29, StatCollector.translateToLocal("gui.back")));
         this.buttonList.add(new GuiButton(BT_ID_NEWFILE, buttonX, buttonY, StatCollector.translateToLocal(getLanguageKey("add_new_file"))));
         this.buttonList.add(new GuiButton(BT_ID_NEWURL, buttonX, buttonY + 22, StatCollector.translateToLocal(getLanguageKey("add_new_url"))));
         this.buttonList.add(new GuiButton(BT_ID_NEWBASE64, buttonX, buttonY + 44, StatCollector.translateToLocal(getLanguageKey("add_new_base64"))));
 
+        ((GuiButton) this.buttonList.get(2)).enabled = false;
         ((GuiButton) this.buttonList.get(3)).enabled = false;
         /*
         for (int i = 0; i <= 3; i++) {
@@ -60,7 +61,7 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
         */
 
         // Fake listbox, used only for visual effects
-        this.guiList = new GuiElementPaintingList(this.mc, this.width, this.height, new ArrayList<Object>());
+        this.guiList = new GuiElementPaintingList(this.mc, this.width, this.height + 55 - 32, new ArrayList<Object>(), null);
     }
     
     
@@ -94,11 +95,16 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
     {
         if (button.enabled) {
 
-            if (button.id == BT_ID_DONE) {
+            if (button.id == BT_ID_BACK) {
 
                 // Returns to the parent screen
                 this.mc.displayGuiScreen(this.parentScreen);
 
+            }
+            
+            else if (button.id == BT_ID_NEWFILE) {
+                this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAddFileSelector(this));
+                
             }
 
         }
