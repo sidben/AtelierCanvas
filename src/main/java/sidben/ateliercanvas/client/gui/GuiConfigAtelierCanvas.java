@@ -2,13 +2,14 @@ package sidben.ateliercanvas.client.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import sidben.ateliercanvas.client.config.AddNewPaintingCategoryEntry;
 import sidben.ateliercanvas.client.config.CustomPaintingCategoryEntry;
+import sidben.ateliercanvas.client.config.SimpleCategoryElement;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.reference.Reference;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
-import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.relauncher.Side;
@@ -30,12 +31,17 @@ public class GuiConfigAtelierCanvas extends GuiConfig
     {
         final List<IConfigElement> list = new ArrayList<IConfigElement>();
         List<IConfigElement> generalConfigs = new ArrayList<IConfigElement>();
-        List<IConfigElement> paintingsConfigs = new ArrayList<IConfigElement>();
+        //        List<IConfigElement> paintingsConfigs = new ArrayList<IConfigElement>();
 
 
         // Paintings installed
-        paintingsConfigs = new ConfigElement(ConfigurationHandler.config.getCategory(ConfigurationHandler.CATEGORY_PAINTINGS)).getChildElements();
-        list.add(new DummyConfigElement.DummyCategoryElement(ConfigurationHandler.CATEGORY_PAINTINGS, getLanguageKey("paintings"), paintingsConfigs, CustomPaintingCategoryEntry.class));
+        //        paintingsConfigs = new ConfigElement(ConfigurationHandler.config.getCategory(ConfigurationHandler.CATEGORY_PAINTINGS)).getChildElements();
+        // TODO: possible refactor - pass the painting config here, instead of making direct calls to ConfigurationHandler in the GuiScreenCustomPaintingsManage (initGui)
+        list.add(new SimpleCategoryElement(ConfigurationHandler.CATEGORY_PAINTINGS, getLanguageKey("manage_paintings"), CustomPaintingCategoryEntry.class));
+
+        // Paintings import / export
+        list.add(new SimpleCategoryElement(ConfigurationHandler.CATEGORY_IMPORT, getLanguageKey("import_painting"), AddNewPaintingCategoryEntry.class));
+        list.add(new SimpleCategoryElement(ConfigurationHandler.CATEGORY_EXPORT, getLanguageKey("export_painting"), null));
 
         // General config
         generalConfigs = new ConfigElement(ConfigurationHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements();
@@ -52,7 +58,7 @@ public class GuiConfigAtelierCanvas extends GuiConfig
      * Returns the full language key for elements of this GUI. 
      */
     protected static String getLanguageKey(String name) {
-        return "sidben.ateliercanvas.config.category." + name;
+        return "sidben.ateliercanvas.config." + name;
     }
 
 

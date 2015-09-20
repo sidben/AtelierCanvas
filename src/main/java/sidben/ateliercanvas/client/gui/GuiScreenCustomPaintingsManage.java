@@ -96,6 +96,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         this.hideDetailsButtons();
 
         // TODO: remove when they are implemented
+        ((GuiButton) this.buttonList.get(0)).enabled = false;
         ((GuiButton) this.buttonList.get(3)).enabled = false;
         ((GuiButton) this.buttonList.get(4)).enabled = false;
 
@@ -203,8 +204,9 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                 // Returns to the parent screen
                 this.mc.displayGuiScreen(this.parentScreen);
 
-            } else if (button.id == BT_ID_ADDNEW) {
 
+            } else if (button.id == BT_ID_ADDNEW) {
+                this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAdd(this));
 
             }
 
@@ -284,7 +286,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
      */
     protected String getLanguageKey(String name)
     {
-        return "sidben.ateliercanvas.config.painting_selector." + name;
+        return "sidben.ateliercanvas.config." + name;
     }
 
 }
