@@ -20,6 +20,8 @@ public class ConfigurationHandler
     public static final String                   CATEGORY_IMPORT            = "paintings_import";
     public static final String                   CATEGORY_EXPORT            = "paintings_export";
     public static final String                   PAINTINGS_ARRAY_KEY        = "painting_list";
+    public final static String                   IMAGES_BASE_PATH           = "config/AtelierCanvas_Paintings/";
+    
 
 
     /** List with info of all paintings installed */

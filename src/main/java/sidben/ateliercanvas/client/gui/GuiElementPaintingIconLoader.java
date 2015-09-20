@@ -15,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.ImageFilenameFilter;
 import sidben.ateliercanvas.helper.LogHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -32,8 +33,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class GuiElementPaintingIconLoader extends GuiScreen
 {
 
-    private final static String              ICON_BASE_PATH = "config/AtelierCanvas_Paintings/";
-    
     private ResourceLocation                 _locationPaintingIcon;
     private int                              _iconWidth;
     private int                              _iconHeight;
@@ -42,12 +41,12 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
     private String                           _warnings;
 
     protected final Minecraft                mc;
-    protected final GuiScreenCustomPaintingsManage _ownerGui;
+    protected final GuiScreen _ownerGui;
     protected CustomPaintingConfigItem       _entryData;
 
 
 
-    public GuiElementPaintingIconLoader(GuiScreenCustomPaintingsManage ownerGui, CustomPaintingConfigItem entryData) {
+    public GuiElementPaintingIconLoader(GuiScreen ownerGui, CustomPaintingConfigItem entryData) {
         this.mc = Minecraft.getMinecraft();
         this._ownerGui = ownerGui;
         updateConfigItem(entryData);
@@ -76,13 +75,13 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
             BufferedImage paintingIcon;
 
             // Sets the path of the painting file
-            iconPath = GuiElementPaintingIconLoader.ICON_BASE_PATH + this._entryData.getPaintingFileName();
+            iconPath = ConfigurationHandler.IMAGES_BASE_PATH + this._entryData.getPaintingFileName();
 
 
             try {
                 final File iconFile = new File(this.mc.mcDataDir, iconPath);
                 this._fileSize = iconFile.length();
-                final String extension = iconFile.getName().substring(iconFile.getName().lastIndexOf("."));
+                final ImageFilenameFilter fileExtensionChecker = new ImageFilenameFilter();
 
                 // TODO: Decide about images that don't follow the 16x16 ratio (accept, reject, edit or make optional)
 
@@ -102,7 +101,7 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
                 }
 
                 // Validate file extension
-                else if (!extension.equalsIgnoreCase(".PNG")) {
+                else if (!fileExtensionChecker.accept(iconFile.getParentFile(), iconFile.getName())) {
                     this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_invalid_extension"));
                 }
 

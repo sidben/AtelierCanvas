@@ -2,6 +2,7 @@ package sidben.ateliercanvas.client.gui;
 
 import java.util.List;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
@@ -27,10 +28,11 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
 
 
 
-    public GuiElementPaintingDetails(GuiScreenCustomPaintingsManage ownerGui, CustomPaintingConfigItem entryData) {
+    public GuiElementPaintingDetails(GuiScreen ownerGui, CustomPaintingConfigItem entryData) {
         super(ownerGui, entryData);
     }
 
+    
 
 
     @Override
