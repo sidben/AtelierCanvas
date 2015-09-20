@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.MouseHelper;
 import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.TextFormatTable;
 import cpw.mods.fml.relauncher.Side;
@@ -77,32 +78,38 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
             final String paintingName = this._entryData.getPaintingTitle();
             String extraInfo = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this._entryData.getPaintingAuthor());
             extraInfo += String.format("\n%s: %.1f KB", StatCollector.translateToLocal(this.getLanguageKey("filesize_label")), super.getFileSizeKBytes());
-            extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight(),
-                    super.getIconWidth(), super.getIconHeight());
+            if (super.hasValidImage()) {
+                extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight(), super.getIconWidth(), super.getIconHeight());
+            } else {
+                extraInfo += String.format("\n%s: -", StatCollector.translateToLocal(this.getLanguageKey("size_label")));
+            }
 
 
             // Draw the background box for the painting
             Gui.drawRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x77000000);
 
-            // Painting icon texture
-            this.mc.getTextureManager().bindTexture(super.getPaintingIcon());
+
+            if (super.hasValidImage()) {
+                // Painting icon texture
+                this.mc.getTextureManager().bindTexture(super.getPaintingIcon());
 
 
-            // Icon ratio for non-square images
-            int paddingTop = 0;
-            int paddingLeft = 0;
+                // Icon ratio for non-square images
+                int paddingTop = 0;
+                int paddingLeft = 0;
 
-            if (sampleHeight < boxHeight) {
-                paddingTop = (boxHeight - sampleHeight) / 2;
+                if (sampleHeight < boxHeight) {
+                    paddingTop = (boxHeight - sampleHeight) / 2;
+                }
+                if (sampleWidth < boxWidth) {
+                    paddingLeft = (boxWidth - sampleWidth) / 2;
+                }
+
+
+                // Draw the icon
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                Gui.func_146110_a(boxX + paddingLeft, boxY + paddingTop, 0.0F, 0.0F, sampleWidth, sampleHeight, sampleWidth, sampleHeight);
             }
-            if (sampleWidth < boxWidth) {
-                paddingLeft = (boxWidth - sampleWidth) / 2;
-            }
-
-
-            // Draw the icon
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            Gui.func_146110_a(boxX + paddingLeft, boxY + paddingTop, 0.0F, 0.0F, sampleWidth, sampleHeight, sampleWidth, sampleHeight);
 
 
 
@@ -118,7 +125,7 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
 
             // Tooltip
             this._tooltip = "";
-            final boolean isMouseOverIconArea = (mouseX >= boxX && mouseX <= boxX + boxWidth && mouseY >= boxY && mouseY <= boxY + boxHeight);
+            final boolean isMouseOverIconArea = MouseHelper.isMouseInside(mouseX, mouseY, boxX, boxY, boxWidth, boxHeight);
             if (isMouseOverIconArea) {
                 this._tooltip = TextFormatTable.BOLD + this._entryData.getPaintingFileName() + TextFormatTable.RESET;
                 this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_created_label")), this._entryData.getFormatedCreationDate());

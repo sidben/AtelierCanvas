@@ -2,6 +2,7 @@ package sidben.ateliercanvas.client.gui;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
@@ -32,10 +33,11 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
 
 
     private String _tooltip;
+    
 
 
 
-    public GuiElementPaintingListEntry(GuiScreenCustomPaintingsManage ownerGui, CustomPaintingConfigItem entryData) {
+    public GuiElementPaintingListEntry(GuiScreen ownerGui, CustomPaintingConfigItem entryData) {
         super(ownerGui, entryData);
     }
 
@@ -67,7 +69,11 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
         if (this._entryData.isValid()) {
             paintingName = this._entryData.getPaintingTitle();
             paintingInfo1 = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this._entryData.getPaintingAuthor());
-            paintingInfo2 = String.format("%s: %dx%d", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight());
+            if (super.hasValidImage()) {
+                paintingInfo2 = String.format("%s: %dx%d", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight());
+            } else {
+                paintingInfo2 = String.format("%s: -", StatCollector.translateToLocal(this.getLanguageKey("size_label")));
+            }
 
 
             // Adjusts the width/height ratio and padding to display the painting correctly
@@ -122,8 +128,7 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
     @Override
     public boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)
     {
-        this._ownerGui.displayDetails(index);
-        return false;
+        return false;        // True disables the scroll of the listbox. No idea why.
     }
 
 

@@ -39,6 +39,7 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
     private long                             _fileSize;
     private final int                        _resolution    = ConfigurationHandler.defaultResolution;           // TODO: support for high-res paintings
     private String                           _warnings;
+    private boolean                          _validImage    = false;
 
     protected final Minecraft                mc;
     protected final GuiScreen _ownerGui;
@@ -68,7 +69,8 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
         _iconWidth = 0;
         _iconHeight = 0;
         _fileSize = 0;
-
+        _validImage = false;
+        
         if (this._entryData != null && this._entryData.isValid()) {
             String iconPath;
             InputStream iconStream;
@@ -142,6 +144,8 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
             this._locationPaintingIcon = this.mc.getTextureManager().getDynamicTextureLocation("missing_icon", dynamictexture);
             this._iconWidth = 32;
             this._iconHeight = 32;
+        } else {
+            this._validImage = true;
         }
     }
 
@@ -183,7 +187,11 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
         return this.getFileSizeBytes() / 1024.0F;
     }
 
-
+    protected boolean hasValidImage() {
+        return this._validImage;
+    }
+    
+    
 
     /**
      * Returns any error/warning messages generated when this class
