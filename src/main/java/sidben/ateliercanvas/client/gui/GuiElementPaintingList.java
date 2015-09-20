@@ -3,7 +3,6 @@ package sidben.ateliercanvas.client.gui;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;
-import sidben.ateliercanvas.client.config.PaintingSelectorListEntry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -14,13 +13,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  * icon, name and extra info, similar to Recourse Packs.
  * 
  * 
- * @see sidben.ateliercanvas.client.config.PaintingSelectorListEntry
+ * @see sidben.ateliercanvas.client.gui.GuiElementPaintingListEntry
  * @see net.minecraft.client.gui.GuiResourcePackList
  * @author sidben
  * 
  */
 @SideOnly(Side.CLIENT)
-public class GuiCustomPaintingList extends GuiListExtended
+public class GuiElementPaintingList extends GuiListExtended
 {
 
     protected final Minecraft mc;
@@ -31,7 +30,7 @@ public class GuiCustomPaintingList extends GuiListExtended
     // TODO: List sorting criteria (mod param?) - DEFAULT: Size (Area > Width) > Name
 
     @SuppressWarnings("rawtypes")
-    public GuiCustomPaintingList(Minecraft p_i45055_1_, int p_i45055_2_, int p_i45055_3_, List p_i45055_4_) {
+    public GuiElementPaintingList(Minecraft p_i45055_1_, int p_i45055_2_, int p_i45055_3_, List p_i45055_4_) {
         super(p_i45055_1_, p_i45055_2_, p_i45055_3_, 32, p_i45055_3_ - 55 + 4, 36);
         this.mc = p_i45055_1_;
         this.valueList = p_i45055_4_;
@@ -55,9 +54,9 @@ public class GuiCustomPaintingList extends GuiListExtended
      * Gets the IGuiListEntry object for the given index
      */
     @Override
-    public PaintingSelectorListEntry getListEntry(int p_148180_1_)
+    public GuiElementPaintingListEntry getListEntry(int p_148180_1_)
     {
-        return (PaintingSelectorListEntry) this.func_148201_l().get(p_148180_1_);
+        return (GuiElementPaintingListEntry) this.func_148201_l().get(p_148180_1_);
     }
 
     /**

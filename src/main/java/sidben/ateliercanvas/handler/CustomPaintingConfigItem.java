@@ -1,4 +1,4 @@
-package sidben.ateliercanvas.client.config;
+package sidben.ateliercanvas.handler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.UUID;
 import net.minecraft.util.StatCollector;
 import org.apache.commons.lang3.StringUtils;
-import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.reference.TextFormatTable;
 
 

@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import sidben.ateliercanvas.client.config.CustomPaintingConfigItem;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.helper.LogHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,7 +29,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public abstract class GuiCustomPaintingIconLoader extends GuiScreen
+public abstract class GuiElementPaintingIconLoader extends GuiScreen
 {
 
     private final static String              ICON_BASE_PATH = "config/AtelierCanvas_Paintings/";
@@ -42,12 +42,12 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
     private String                           _warnings;
 
     protected final Minecraft                mc;
-    protected final GuiScreenCustomPaintings _ownerGui;
+    protected final GuiScreenCustomPaintingsManage _ownerGui;
     protected CustomPaintingConfigItem       _entryData;
 
 
 
-    public GuiCustomPaintingIconLoader(GuiScreenCustomPaintings ownerGui, CustomPaintingConfigItem entryData) {
+    public GuiElementPaintingIconLoader(GuiScreenCustomPaintingsManage ownerGui, CustomPaintingConfigItem entryData) {
         this.mc = Minecraft.getMinecraft();
         this._ownerGui = ownerGui;
         updateConfigItem(entryData);
@@ -76,7 +76,7 @@ public abstract class GuiCustomPaintingIconLoader extends GuiScreen
             BufferedImage paintingIcon;
 
             // Sets the path of the painting file
-            iconPath = GuiCustomPaintingIconLoader.ICON_BASE_PATH + this._entryData.getPaintingFileName();
+            iconPath = GuiElementPaintingIconLoader.ICON_BASE_PATH + this._entryData.getPaintingFileName();
 
 
             try {

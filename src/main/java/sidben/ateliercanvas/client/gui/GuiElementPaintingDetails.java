@@ -4,7 +4,7 @@ import java.util.List;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
-import sidben.ateliercanvas.client.config.CustomPaintingConfigItem;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.TextFormatTable;
 import cpw.mods.fml.relauncher.Side;
@@ -15,19 +15,19 @@ import cpw.mods.fml.relauncher.SideOnly;
  * Display details of the selected painting on the custom painting selection GUI.
  * 
  * 
- * @see sidben.ateliercanvas.client.gui.GuiScreenCustomPaintings
+ * @see sidben.ateliercanvas.client.gui.GuiScreenCustomPaintingsManage
  * @author sidben
  * 
  */
 @SideOnly(Side.CLIENT)
-public class GuiPaintingDetails extends GuiCustomPaintingIconLoader
+public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
 {
 
     private String _tooltip;
 
 
 
-    public GuiPaintingDetails(GuiScreenCustomPaintings ownerGui, CustomPaintingConfigItem entryData) {
+    public GuiElementPaintingDetails(GuiScreenCustomPaintingsManage ownerGui, CustomPaintingConfigItem entryData) {
         super(ownerGui, entryData);
     }
 

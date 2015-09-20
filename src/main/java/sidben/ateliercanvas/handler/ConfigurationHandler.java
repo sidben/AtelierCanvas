@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import sidben.ateliercanvas.client.config.CustomPaintingConfigItem;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.reference.Reference;
 import cpw.mods.fml.client.config.GuiConfigEntries;

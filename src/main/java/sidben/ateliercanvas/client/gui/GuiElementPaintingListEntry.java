@@ -1,31 +1,30 @@
-package sidben.ateliercanvas.client.config;
+package sidben.ateliercanvas.client.gui;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
-import sidben.ateliercanvas.client.gui.GuiCustomPaintingIconLoader;
-import sidben.ateliercanvas.client.gui.GuiScreenCustomPaintings;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.reference.ColorTable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
 /**
- * Represents one item of the GuiCustomPaintingList ListBox.
+ * Represents one item of the GuiElementPaintingList ListBox.
  * 
  * 
- * @see sidben.ateliercanvas.client.gui.GuiCustomPaintingList
+ * @see sidben.ateliercanvas.client.gui.GuiElementPaintingList
  * @see net.minecraft.client.resources.ResourcePackListEntry
  * @author sidben
  * 
  */
 @SideOnly(Side.CLIENT)
-public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader implements GuiListExtended.IGuiListEntry
+public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader implements GuiListExtended.IGuiListEntry
 {
     /*
-     * OBS: GuiCustomPaintingIconLoader extends GuiScreen, but this class don't need to be a GuiScreen.
+     * OBS: GuiElementPaintingIconLoader extends GuiScreen, but this class don't need to be a GuiScreen.
      * 
      * Will this cause any problems? Find out on the next episode!
      */
@@ -36,7 +35,7 @@ public class PaintingSelectorListEntry extends GuiCustomPaintingIconLoader imple
 
 
 
-    public PaintingSelectorListEntry(GuiScreenCustomPaintings ownerGui, CustomPaintingConfigItem entryData) {
+    public GuiElementPaintingListEntry(GuiScreenCustomPaintingsManage ownerGui, CustomPaintingConfigItem entryData) {
         super(ownerGui, entryData);
     }
 

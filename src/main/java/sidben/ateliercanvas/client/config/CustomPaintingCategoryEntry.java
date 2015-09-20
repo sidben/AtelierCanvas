@@ -1,7 +1,7 @@
 package sidben.ateliercanvas.client.config;
 
 import net.minecraft.client.gui.GuiScreen;
-import sidben.ateliercanvas.client.gui.GuiScreenCustomPaintings;
+import sidben.ateliercanvas.client.gui.GuiScreenCustomPaintingsManage;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.GuiConfigEntries;
 import cpw.mods.fml.client.config.GuiConfigEntries.CategoryEntry;
@@ -23,7 +23,7 @@ public class CustomPaintingCategoryEntry extends CategoryEntry
     @Override
     protected GuiScreen buildChildScreen()
     {
-        return new GuiScreenCustomPaintings(this.owningScreen);
+        return new GuiScreenCustomPaintingsManage(this.owningScreen);
     }
 
 }

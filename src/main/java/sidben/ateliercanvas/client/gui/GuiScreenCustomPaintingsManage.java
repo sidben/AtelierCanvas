@@ -8,9 +8,8 @@ import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.Property;
-import sidben.ateliercanvas.client.config.CustomPaintingConfigItem;
-import sidben.ateliercanvas.client.config.PaintingSelectorListEntry;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.Reference;
 import cpw.mods.fml.client.config.GuiConfig;
@@ -37,14 +36,14 @@ import cpw.mods.fml.relauncher.SideOnly;
  * </p>
  * 
  * 
- * @see sidben.ateliercanvas.client.gui.GuiCustomPaintingList
- * @see sidben.ateliercanvas.client.config.PaintingSelectorListEntry
+ * @see sidben.ateliercanvas.client.gui.GuiElementPaintingList
+ * @see sidben.ateliercanvas.client.gui.GuiElementPaintingListEntry
  * @see net.minecraft.client.gui.GuiScreenResourcePacks
  * @author sidben
  * 
  */
 @SideOnly(Side.CLIENT)
-public class GuiScreenCustomPaintings extends GuiScreen
+public class GuiScreenCustomPaintingsManage extends GuiScreen
 {
 
     private static final int                BT_ID_DONE    = 1;
@@ -57,14 +56,14 @@ public class GuiScreenCustomPaintings extends GuiScreen
     public final GuiConfig                  parentScreen;
     public final boolean                    isWorldRunning;
 
-    private List<PaintingSelectorListEntry> paintingList;
-    private GuiCustomPaintingList           guiPaintingList;
-    private GuiPaintingDetails              guiPaintingDetails;
+    private List<GuiElementPaintingListEntry> paintingList;
+    private GuiElementPaintingList           guiPaintingList;
+    private GuiElementPaintingDetails              guiElementPaintingDetails;
     private int                             selectedIndex = -1;
 
 
 
-    public GuiScreenCustomPaintings(GuiConfig parentScreen) {
+    public GuiScreenCustomPaintingsManage(GuiConfig parentScreen) {
         this.mc = Minecraft.getMinecraft();
         this.parentScreen = parentScreen;
         this.isWorldRunning = mc.theWorld != null;
@@ -105,16 +104,16 @@ public class GuiScreenCustomPaintings extends GuiScreen
         // Paintings data
         this.paintingList = new ArrayList();
         for (final CustomPaintingConfigItem item : ConfigurationHandler.mahPaintings) {
-            this.paintingList.add(new PaintingSelectorListEntry(this, item));
+            this.paintingList.add(new GuiElementPaintingListEntry(this, item));
         }
 
         // Paintings listbox
-        this.guiPaintingList = new GuiCustomPaintingList(this.mc, 200, this.height, this.paintingList);
+        this.guiPaintingList = new GuiElementPaintingList(this.mc, 200, this.height, this.paintingList);
         this.guiPaintingList.setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
         this.guiPaintingList.registerScrollButtons(7, 8);
 
         // Paintings details screen
-        this.guiPaintingDetails = new GuiPaintingDetails(this, null);
+        this.guiElementPaintingDetails = new GuiElementPaintingDetails(this, null);
     }
 
 
@@ -135,7 +134,7 @@ public class GuiScreenCustomPaintings extends GuiScreen
 
         // Selected painting extra info
         if (this.selectedIndex > -1) {
-            this.guiPaintingDetails.drawScreen(mouseX, mouseY, partialTicks);
+            this.guiElementPaintingDetails.drawScreen(mouseX, mouseY, partialTicks);
         }
 
         // Draws the listbox
@@ -154,8 +153,8 @@ public class GuiScreenCustomPaintings extends GuiScreen
         // Tooltips (OBS: this must come after [super.drawScreen], or else the buttons will get a weird gray overlay
         if (!this.guiPaintingList.getTooltip().isEmpty()) {
             this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(this.guiPaintingList.getTooltip(), 300), mouseX, mouseY);
-        } else if (!this.guiPaintingDetails.getTooltip().isEmpty()) {
-            this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(this.guiPaintingDetails.getTooltip(), 300), mouseX, mouseY);
+        } else if (!this.guiElementPaintingDetails.getTooltip().isEmpty()) {
+            this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(this.guiElementPaintingDetails.getTooltip(), 300), mouseX, mouseY);
         }
 
     }
@@ -187,7 +186,7 @@ public class GuiScreenCustomPaintings extends GuiScreen
                 Property configProp;
                 int c = 0;
 
-                for (final PaintingSelectorListEntry item : this.paintingList) {
+                for (final GuiElementPaintingListEntry item : this.paintingList) {
                     final String configKey = String.format("%s_%03d", ConfigurationHandler.PAINTINGS_ARRAY_KEY, c);
 
                     configProp = ConfigurationHandler.config.get(configID, configKey, new String[] {});
@@ -251,8 +250,8 @@ public class GuiScreenCustomPaintings extends GuiScreen
         this.hideDetailsButtons();
 
         if (index >= 0 && index < this.paintingList.size()) {
-            final PaintingSelectorListEntry entry = this.paintingList.get(index);
-            this.guiPaintingDetails.updateConfigItem(entry._entryData);
+            final GuiElementPaintingListEntry entry = this.paintingList.get(index);
+            this.guiElementPaintingDetails.updateConfigItem(entry._entryData);
             this.selectedIndex = index;
 
             ((GuiButton) this.buttonList.get(4)).displayString = entry._entryData.getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector
