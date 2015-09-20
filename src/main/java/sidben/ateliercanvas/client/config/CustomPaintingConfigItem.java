@@ -20,22 +20,22 @@ import sidben.ateliercanvas.reference.TextFormatTable;
 public class CustomPaintingConfigItem
 {
 
-    private final static int       EXPECTED_LENGTH = 8;
+    private final static int       EXPECTED_LENGTH  = 8;
 
-    private final SimpleDateFormat sdfSave         = new SimpleDateFormat("yyyy-MM-dd");
-    private final SimpleDateFormat sdfDisplay      = new SimpleDateFormat(ConfigurationHandler.paintingDateFormat);
-    private final String ancientDate               = "1700-01-01";
+    private final SimpleDateFormat sdfSave          = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat sdfDisplay       = new SimpleDateFormat(ConfigurationHandler.paintingDateFormat);
+    private final String           ancientDate      = "1700-01-01";
 
-    private String                 _fileName       = "";
-    private String                 _uuid           = "";
-    private boolean                _enabled        = false;
-    private long                   _sizeBytes      = -1;
-    private String                 _title          = "";
-    private String                 _author         = "";
-    private Date                   _creationDate   = new Date();
-    private Date                   _lastUpdateDate = new Date();
+    private String                 _fileName        = "";
+    private String                 _uuid            = "";
+    private boolean                _enabled         = false;
+    private long                   _sizeBytes       = -1;
+    private String                 _title           = "";
+    private String                 _author          = "";
+    private Date                   _creationDate    = new Date();
+    private Date                   _lastUpdateDate  = new Date();
 
-    private String  validationErrors = "";
+    private String                 validationErrors = "";
 
 
 
@@ -152,9 +152,6 @@ public class CustomPaintingConfigItem
     }
 
 
-    
-    
-    
 
     /**
      * @return TRUE if the entryData array has the minimum expected size.
@@ -164,21 +161,20 @@ public class CustomPaintingConfigItem
         if (entryData == null) {
             validationErrors = "Null config string array";
             return false;
-        } 
-        else if (entryData.length < EXPECTED_LENGTH) {
+        } else if (entryData.length < EXPECTED_LENGTH) {
             validationErrors = "Config array shorter than expected";
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
-    
-    
+
+
     /**
      * @return TRUE if this object has the minimum expected values to be used.
      */
-    public boolean isValid() {
+    public boolean isValid()
+    {
         if (!this.validationErrors.isEmpty()) {
             // There are previous validation errors
             return false;
@@ -195,13 +191,14 @@ public class CustomPaintingConfigItem
             validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_invalid_filesize"));
             return false;
         }
-        
+
         return true;
     }
-    
-    
-    public String getValiadtionErrors() {
-        return this.validationErrors; 
+
+
+    public String getValiadtionErrors()
+    {
+        return this.validationErrors;
     }
 
 
@@ -210,11 +207,15 @@ public class CustomPaintingConfigItem
     {
         String dateCreated = sdfSave.format(this._creationDate);
         String dateUpdated = sdfSave.format(this._lastUpdateDate);
-        
-        if (dateCreated.equals(ancientDate)) dateCreated = "";
-        if (dateUpdated.equals(ancientDate)) dateUpdated = "";
-        
-        
+
+        if (dateCreated.equals(ancientDate)) {
+            dateCreated = "";
+        }
+        if (dateUpdated.equals(ancientDate)) {
+            dateUpdated = "";
+        }
+
+
         return new String[] { 
                 this._fileName, 
                 this._uuid, 
@@ -225,15 +226,13 @@ public class CustomPaintingConfigItem
                 dateCreated,
                 dateUpdated };
     }
-    
+
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return StringUtils.join(this.ToStringArray(), "|");
     }
-    
-    
-    
 
 
 
@@ -282,45 +281,48 @@ public class CustomPaintingConfigItem
         final Calendar cal = Calendar.getInstance();
         cal.setTime(this.getCreationDate());
 
-        if (cal.get(Calendar.YEAR) > 1700)
+        if (cal.get(Calendar.YEAR) > 1700) {
             return this.sdfDisplay.format(this.getCreationDate());
-        else
+        } else {
             return "-";
+        }
     }
 
     public String getFormatedLastUpdateDate()
     {
-        if (this.getLastUpdateDate().equals(this.getCreationDate()))
+        if (this.getLastUpdateDate().equals(this.getCreationDate())) {
             return "-";
-        
+        }
+
         final Calendar cal = Calendar.getInstance();
         cal.setTime(this.getLastUpdateDate());
 
-        if (cal.get(Calendar.YEAR) > 1700)
+        if (cal.get(Calendar.YEAR) > 1700) {
             return this.sdfDisplay.format(this.getCreationDate());
-        else
+        } else {
             return "-";
+        }
     }
 
-    
-    
-    
-    
+
+
     /**
-     * Returns the full language key for elements of this GUI. 
+     * Returns the full language key for elements of this GUI.
      */
-    protected String getLanguageKey(String name) {
+    protected String getLanguageKey(String name)
+    {
         return "sidben.ateliercanvas.config.painting_info." + name;
     }
 
-    
-    
+
+
     /**
-     * Returns how the config array is expected to behave. 
+     * Returns how the config array is expected to behave.
      */
-    public static String getArrayDescription() {
+    public static String getArrayDescription()
+    {
         String r = "";
-        
+
         r += "Each array entry is expected to have the following format.\n";
         r += "All fields are required, even if blank. Fields with [*] are an exception and can't be empty\n\n";
         r += "    File name [*] (only PNG files are accepted)\n";
@@ -331,10 +333,10 @@ public class CustomPaintingConfigItem
         r += "    Author's name\n";
         r += "    Creation date (format yyyy-MM-dd)\n";
         r += "    Last update date (format yyyy-MM-dd)\n";
-        
+
         return r;
     }
-    
-    
+
+
 
 }

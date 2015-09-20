@@ -1,10 +1,9 @@
 package sidben.ateliercanvas.client.gui;
 
 import java.util.List;
-import sidben.ateliercanvas.client.config.PaintingSelectorListEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;
-import net.minecraft.client.renderer.Tessellator;
+import sidben.ateliercanvas.client.config.PaintingSelectorListEntry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @see sidben.ateliercanvas.client.config.PaintingSelectorListEntry
  * @see net.minecraft.client.gui.GuiResourcePackList
  * @author sidben
- *
+ * 
  */
 @SideOnly(Side.CLIENT)
 public class GuiCustomPaintingList extends GuiListExtended
@@ -27,13 +26,12 @@ public class GuiCustomPaintingList extends GuiListExtended
     protected final Minecraft mc;
 
     @SuppressWarnings("rawtypes")
-    protected final List valueList;
+    protected final List      valueList;
 
     // TODO: List sorting criteria (mod param?) - DEFAULT: Size (Area > Width) > Name
-    
+
     @SuppressWarnings("rawtypes")
-    public GuiCustomPaintingList(Minecraft p_i45055_1_, int p_i45055_2_, int p_i45055_3_, List p_i45055_4_)
-    {
+    public GuiCustomPaintingList(Minecraft p_i45055_1_, int p_i45055_2_, int p_i45055_3_, List p_i45055_4_) {
         super(p_i45055_1_, p_i45055_2_, p_i45055_3_, 32, p_i45055_3_ - 55 + 4, 36);
         this.mc = p_i45055_1_;
         this.valueList = p_i45055_4_;
@@ -47,6 +45,7 @@ public class GuiCustomPaintingList extends GuiListExtended
         return this.valueList;
     }
 
+    @Override
     protected int getSize()
     {
         return this.func_148201_l().size();
@@ -55,41 +54,43 @@ public class GuiCustomPaintingList extends GuiListExtended
     /**
      * Gets the IGuiListEntry object for the given index
      */
+    @Override
     public PaintingSelectorListEntry getListEntry(int p_148180_1_)
     {
-        return (PaintingSelectorListEntry)this.func_148201_l().get(p_148180_1_);
+        return (PaintingSelectorListEntry) this.func_148201_l().get(p_148180_1_);
     }
 
     /**
      * Gets the width of the list
      */
+    @Override
     public int getListWidth()
     {
         return this.width;
     }
 
+    @Override
     protected int getScrollBarX()
     {
         return this.right - 6;
     }
-    
-    
-    
+
 
 
     /**
-     * Tooltip for the list item under the mouse. 
+     * Tooltip for the list item under the mouse.
      */
-    public String getTooltip() {
+    public String getTooltip()
+    {
         // Index of the list item below the mouse cursor.
-        int indexMouseHovering = this.func_148124_c(mouseX, mouseY);
-        
-        // If the mouse is above an item, return the tooltip of that item.
-        if (indexMouseHovering >= 0 && indexMouseHovering < this.valueList.size())
-            return this.getListEntry(indexMouseHovering).getTooltip();
+        final int indexMouseHovering = this.func_148124_c(mouseX, mouseY);
 
-        else
+        // If the mouse is above an item, return the tooltip of that item.
+        if (indexMouseHovering >= 0 && indexMouseHovering < this.valueList.size()) {
+            return this.getListEntry(indexMouseHovering).getTooltip();
+        } else {
             return "";
+        }
     }
 
 }

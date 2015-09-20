@@ -64,7 +64,6 @@ public class GuiScreenCustomPaintings extends GuiScreen
 
 
 
-
     public GuiScreenCustomPaintings(GuiConfig parentScreen) {
         this.mc = Minecraft.getMinecraft();
         this.parentScreen = parentScreen;
@@ -78,10 +77,10 @@ public class GuiScreenCustomPaintings extends GuiScreen
     public void initGui()
     {
         // Buttons
-        int buttonWidth = 66;
-        int secondColumnX = this.width / 2 + 4;
-        int buttonStartY = 100;
-        int buttonMargin = 1;
+        final int buttonWidth = 66;
+        final int secondColumnX = this.width / 2 + 4;
+        final int buttonStartY = 100;
+        final int buttonMargin = 1;
 
         this.buttonList.add(new GuiOptionButton(BT_ID_ADDNEW, this.width / 2 - 154, this.height - 48, StatCollector.translateToLocal(getLanguageKey("add_new"))));
         this.buttonList.add(new GuiOptionButton(BT_ID_DONE, secondColumnX, this.height - 48, StatCollector.translateToLocal("gui.done")));
@@ -89,19 +88,19 @@ public class GuiScreenCustomPaintings extends GuiScreen
         this.buttonList.add(new GuiButton(BT_ID_CHANGE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("edit"))));
         this.buttonList.add(new GuiButton(BT_ID_REMOVE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("remove"))));
         this.buttonList.add(new GuiButton(BT_ID_ENABLE, secondColumnX, buttonStartY, "---"));
-        
+
         for (int i = 2; i < 5; i++) {
-            ((GuiButton)this.buttonList.get(i)).xPosition = secondColumnX + (buttonWidth * (i-2)) + (buttonMargin * (i-2));
-            ((GuiButton)this.buttonList.get(i)).width = buttonWidth;
+            ((GuiButton) this.buttonList.get(i)).xPosition = secondColumnX + (buttonWidth * (i - 2)) + (buttonMargin * (i - 2));
+            ((GuiButton) this.buttonList.get(i)).width = buttonWidth;
         }
 
         this.hideDetailsButtons();
 
         // TODO: remove when they are implemented
-        ((GuiButton)this.buttonList.get(3)).enabled = false;
-        ((GuiButton)this.buttonList.get(4)).enabled = false;
-        
-        
+        ((GuiButton) this.buttonList.get(3)).enabled = false;
+        ((GuiButton) this.buttonList.get(4)).enabled = false;
+
+
 
         // Paintings data
         this.paintingList = new ArrayList();
@@ -129,11 +128,11 @@ public class GuiScreenCustomPaintings extends GuiScreen
         // If the GUI is large, allows more info and a bigger picture
         if (this.height > 320) {
             for (int i = 2; i < 5; i++) {
-                ((GuiButton)this.buttonList.get(i)).yPosition = 164;
+                ((GuiButton) this.buttonList.get(i)).yPosition = 164;
             }
         }
 
-        
+
         // Selected painting extra info
         if (this.selectedIndex > -1) {
             this.guiPaintingDetails.drawScreen(mouseX, mouseY, partialTicks);
@@ -147,7 +146,7 @@ public class GuiScreenCustomPaintings extends GuiScreen
         this.drawCenteredString(this.fontRendererObj, String.format(StatCollector.translateToLocal(getLanguageKey("installed_counter")), this.paintingList.size()), this.width / 2, this.height - 20,
                 ColorTable.GRAY);
 
-        
+
         // Parent call (draws buttons)
         super.drawScreen(mouseX, mouseY, partialTicks);
 
@@ -256,27 +255,28 @@ public class GuiScreenCustomPaintings extends GuiScreen
             this.guiPaintingDetails.updateConfigItem(entry._entryData);
             this.selectedIndex = index;
 
-            ((GuiButton)this.buttonList.get(4)).displayString = entry._entryData.getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector.translateToLocal(getLanguageKey("disabled"));
-            
+            ((GuiButton) this.buttonList.get(4)).displayString = entry._entryData.getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector
+                    .translateToLocal(getLanguageKey("disabled"));
+
             this.showDetailsButtons();
         }
     }
-    
-    
-    
-    protected void hideDetailsButtons() {
+
+
+
+    protected void hideDetailsButtons()
+    {
         for (int i = 2; i < 5; i++) {
-            ((GuiButton)this.buttonList.get(i)).visible = false;
+            ((GuiButton) this.buttonList.get(i)).visible = false;
         }
     }
-    
-    protected void showDetailsButtons() {
+
+    protected void showDetailsButtons()
+    {
         for (int i = 2; i < 5; i++) {
-            ((GuiButton)this.buttonList.get(i)).visible = true;
+            ((GuiButton) this.buttonList.get(i)).visible = true;
         }
     }
-    
-    
 
 
 
