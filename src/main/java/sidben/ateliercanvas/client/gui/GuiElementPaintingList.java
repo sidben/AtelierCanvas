@@ -23,6 +23,7 @@ public class GuiElementPaintingList extends GuiListExtended
 {
 
     protected final Minecraft mc;
+    protected final IListContainer _callback;
 
     @SuppressWarnings("rawtypes")
     protected final List      valueList;
@@ -30,13 +31,49 @@ public class GuiElementPaintingList extends GuiListExtended
     // TODO: List sorting criteria (mod param?) - DEFAULT: Size (Area > Width) > Name
 
     @SuppressWarnings("rawtypes")
-    public GuiElementPaintingList(Minecraft p_i45055_1_, int p_i45055_2_, int p_i45055_3_, List p_i45055_4_) {
-        super(p_i45055_1_, p_i45055_2_, p_i45055_3_, 32, p_i45055_3_ - 55 + 4, 36);
-        this.mc = p_i45055_1_;
-        this.valueList = p_i45055_4_;
+    public GuiElementPaintingList(Minecraft minecraft, int width, int height, List list, IListContainer callback) {
+        super(minecraft, width, height, 32, height - 55, 36);
+        this.mc = minecraft;
+        this.valueList = list;
         this.field_148163_i = false;        // ?
+        this._callback = callback;
     }
 
+
+    /**
+     * Mouse clicked.
+     */
+    @Override
+    public boolean func_148179_a(int mouseX, int mouseY, int mouseEvent)
+    {
+        if (this.func_148141_e(mouseY))
+        {
+            int index = this.func_148124_c(mouseX, mouseY);
+
+            if (index >= 0)
+            {
+                int i1 = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
+                int j1 = this.top + 4 - this.getAmountScrolled() + index * this.slotHeight + this.headerPadding;
+                int relativeX = mouseX - i1;
+                int relativeY = mouseY - j1;
+
+                // Custom callback
+                if (this._callback != null) {
+                    this._callback.onItemSelected(this, index);
+                }
+                
+                if (this.getListEntry(index).mousePressed(index, mouseX, mouseY, mouseEvent, relativeX, relativeY))
+                {
+                    this.func_148143_b(false);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+   
+    
 
     @SuppressWarnings("rawtypes")
     public List func_148201_l()

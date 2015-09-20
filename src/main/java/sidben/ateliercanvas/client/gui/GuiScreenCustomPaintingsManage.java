@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * <p>
- * Screen where the player can see all custom paintings installed, see details of each painting and open the GUI to add a new painting.
+ * Screen where the player can manage all custom paintings installed.
  * </p>
  * 
  * <p>
@@ -43,23 +43,23 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public class GuiScreenCustomPaintingsManage extends GuiScreen
+public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListContainer
 {
 
-    private static final int                BT_ID_DONE    = 1;
-    private static final int                BT_ID_ADDNEW  = 2;
-    private static final int                BT_ID_CHANGE  = 3;
-    private static final int                BT_ID_REMOVE  = 4;
-    private static final int                BT_ID_ENABLE  = 5;
+    private static final int                  BT_ID_BACK    = 1;
+    private static final int                  BT_ID_ADDNEW  = 2;
+    private static final int                  BT_ID_CHANGE  = 3;
+    private static final int                  BT_ID_REMOVE  = 4;
+    private static final int                  BT_ID_ENABLE  = 5;
 
 
-    public final GuiConfig                  parentScreen;
-    public final boolean                    isWorldRunning;
+    public final GuiConfig                    parentScreen;
+    public final boolean                      isWorldRunning;
 
     private List<GuiElementPaintingListEntry> paintingList;
-    private GuiElementPaintingList           guiPaintingList;
-    private GuiElementPaintingDetails              guiElementPaintingDetails;
-    private int                             selectedIndex = -1;
+    private GuiElementPaintingList            guiPaintingList;
+    private GuiElementPaintingDetails         guiElementPaintingDetails;
+    private int                               selectedIndex = -1;
 
 
 
@@ -82,7 +82,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         final int buttonMargin = 1;
 
         this.buttonList.add(new GuiOptionButton(BT_ID_ADDNEW, this.width / 2 - 154, this.height - 48, StatCollector.translateToLocal(getLanguageKey("add_new"))));
-        this.buttonList.add(new GuiOptionButton(BT_ID_DONE, secondColumnX, this.height - 48, StatCollector.translateToLocal("gui.done")));
+        this.buttonList.add(new GuiOptionButton(BT_ID_BACK, secondColumnX, this.height - 48, StatCollector.translateToLocal("gui.back")));
 
         this.buttonList.add(new GuiButton(BT_ID_CHANGE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("edit"))));
         this.buttonList.add(new GuiButton(BT_ID_REMOVE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("remove"))));
@@ -93,7 +93,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             ((GuiButton) this.buttonList.get(i)).width = buttonWidth;
         }
 
-        this.hideDetailsButtons();
+        this.displayDetailsButtons(false);
 
         // TODO: remove when they are implemented
         ((GuiButton) this.buttonList.get(0)).enabled = false;
@@ -102,14 +102,14 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
 
 
-        // Paintings data
+        // Listbox data (loads from config)
         this.paintingList = new ArrayList();
         for (final CustomPaintingConfigItem item : ConfigurationHandler.mahPaintings) {
             this.paintingList.add(new GuiElementPaintingListEntry(this, item));
         }
 
         // Paintings listbox
-        this.guiPaintingList = new GuiElementPaintingList(this.mc, 200, this.height, this.paintingList);
+        this.guiPaintingList = new GuiElementPaintingList(this.mc, 200, this.height, this.paintingList, this);
         this.guiPaintingList.setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
         this.guiPaintingList.registerScrollButtons(7, 8);
 
@@ -142,7 +142,8 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         this.guiPaintingList.drawScreen(mouseX, mouseY, partialTicks);
 
         // Texts - Title, Total paintings installed
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title")), this.width / 2, 16, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title")), this.width / 2, 8, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("manage_paintings")), this.width / 2, 18, ColorTable.WHITE);
         this.drawCenteredString(this.fontRendererObj, String.format(StatCollector.translateToLocal(getLanguageKey("installed_counter")), this.paintingList.size()), this.width / 2, this.height - 20,
                 ColorTable.GRAY);
 
@@ -167,7 +168,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     {
         if (button.enabled) {
 
-            if (button.id == BT_ID_DONE) {
+            if (button.id == BT_ID_BACK) {
                 final String configID = ConfigurationHandler.CATEGORY_PAINTINGS;
                 final boolean requiresMcRestart = false;
 
@@ -246,38 +247,13 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
 
 
-    public void displayDetails(int index)
-    {
-        this.selectedIndex = -1;
-        this.hideDetailsButtons();
-
-        if (index >= 0 && index < this.paintingList.size()) {
-            final GuiElementPaintingListEntry entry = this.paintingList.get(index);
-            this.guiElementPaintingDetails.updateConfigItem(entry._entryData);
-            this.selectedIndex = index;
-
-            ((GuiButton) this.buttonList.get(4)).displayString = entry._entryData.getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector
-                    .translateToLocal(getLanguageKey("disabled"));
-
-            this.showDetailsButtons();
-        }
-    }
-
-
-
-    protected void hideDetailsButtons()
+    protected void displayDetailsButtons(boolean visible)
     {
         for (int i = 2; i < 5; i++) {
-            ((GuiButton) this.buttonList.get(i)).visible = false;
+            ((GuiButton) this.buttonList.get(i)).visible = visible;
         }
     }
 
-    protected void showDetailsButtons()
-    {
-        for (int i = 2; i < 5; i++) {
-            ((GuiButton) this.buttonList.get(i)).visible = true;
-        }
-    }
 
 
 
@@ -287,6 +263,26 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     protected String getLanguageKey(String name)
     {
         return "sidben.ateliercanvas.config." + name;
+    }
+
+
+
+    @Override
+    public void onItemSelected(GuiElementPaintingList list, int index)
+    {
+        this.selectedIndex = -1;
+        this.displayDetailsButtons(false);
+
+        if (index >= 0 && index < this.paintingList.size()) {
+            final GuiElementPaintingListEntry entry = this.paintingList.get(index);
+            this.guiElementPaintingDetails.updateConfigItem(entry._entryData);
+            this.selectedIndex = index;
+
+            ((GuiButton) this.buttonList.get(4)).displayString = entry._entryData.getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector
+                    .translateToLocal(getLanguageKey("disabled"));
+
+            this.displayDetailsButtons(true);
+        }
     }
 
 }
