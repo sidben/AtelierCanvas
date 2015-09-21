@@ -130,7 +130,7 @@ public class PlayerEventHandler
             LogHelper.info("--Player start tracking custom painting--");
             
             final EntityCustomPainting painting = (EntityCustomPainting)event.target;
-            NetworkHelper.sendPaintingDataMessage(painting.canvasId, painting.worldObj, event.entityPlayer); 
+            NetworkHelper.sendCustomPaintingInfoMessage(painting.getImageUUID(), painting.worldObj, event.entityPlayer); 
         }
 
     }
