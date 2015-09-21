@@ -117,6 +117,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
 
         // Paintings details screen
         this.guiElementPaintingDetails = new GuiElementPaintingDetails(this, null);
+        this.displayDetails(this.selectedIndex);
     }
 
 
@@ -212,9 +213,8 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
 
             } else if (button.id == BT_ID_ADDNEW) {
                 this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAdd(this));
-
+            
             }
-
         }
     }
 
@@ -275,17 +275,27 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
     {
         this.selectedIndex = -1;
         this.displayDetailsButtons(false);
-
+        this.displayDetails(index);
+        this.selectedIndex = index;
+    }
+    
+    
+    /**
+     * Displays the GUI element with the image details and thumbnail.
+     * 
+     * @param index Index of the element on the listbox.
+     */
+    public void displayDetails(int index) {
         if (index >= 0 && index < this.paintingList.size()) {
             final GuiElementPaintingListEntry entry = this.paintingList.get(index);
             this.guiElementPaintingDetails.updateConfigItem(entry._entryData);
-            this.selectedIndex = index;
 
             ((GuiButton) this.buttonList.get(4)).displayString = entry._entryData.getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector
                     .translateToLocal(getLanguageKey("disabled"));
 
             this.displayDetailsButtons(true);
-        }
+        }        
     }
+    
 
 }
