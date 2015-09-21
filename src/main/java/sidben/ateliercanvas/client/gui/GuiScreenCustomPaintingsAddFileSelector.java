@@ -114,6 +114,7 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
 
         // Paintings details screen
         this.guiElementPaintingDetails = new GuiElementPaintingDetails(this, null);
+        this.displayDetails(this.selectedIndex);
     }
 
 
@@ -378,7 +379,17 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
     {
         this.selectedIndex = -1;
         this.displayDetailsButtons(false);
+        this.displayDetails(index);
+        this.selectedIndex = index;
+    }
 
+    
+    /**
+     * Displays the GUI element with the image details and thumbnail.
+     * 
+     * @param index Index of the element on the listbox.
+     */
+    public void displayDetails(int index) {
         if (index >= 0 && index < this.paintingList.size()) {
             final GuiElementPaintingListEntry entry = this.paintingList.get(index);
             this.guiElementPaintingDetails.updateConfigItem(entry._entryData);
