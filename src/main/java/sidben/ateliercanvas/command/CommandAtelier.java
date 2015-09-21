@@ -47,12 +47,18 @@ public class CommandAtelier extends CommandBase
     {
         if (params.length > 1) {
             if (params[0].equals(addKeyword)) {
+
+                
+                throw new WrongUsageException("Command disabled");
+
                 /* 
                  * Adds a custom painting to the current world.
                  * 
                  * expects: /atelier addImage <url> [name] [author]
                  */
                 
+                
+                /*
                 URL url = null;
                 BufferedImage image = null;
                 String name = "";
@@ -113,7 +119,7 @@ public class CommandAtelier extends CommandBase
 
                 }
                 
-                 
+                */
             }
 
         }

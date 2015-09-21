@@ -33,11 +33,18 @@ public class CustomPaintingConfigItem
     private String                 _author          = "";
     private Date                   _creationDate    = new Date();
     private Date                   _lastUpdateDate  = new Date();
+    private int                    _widthTile       = 1;                    // TODO: gather this info when importing paintings
+    private int                    _heightTile      = 1;                    // TODO: update this info on the manager, if don't match with actual picture
 
     private String                 validationErrors = "";
 
 
 
+    
+    //----------------------------------------------------------------
+    // Constructors
+    //----------------------------------------------------------------
+    
     /**
      * Creates a new config info object.
      * 
@@ -54,6 +61,8 @@ public class CustomPaintingConfigItem
      *            <li><b>[5]</b> - Painting author. String, optional.</li>
      *            <li><b>[6]</b> - Creation date. Date (format: YYYY-MM-DD), required.</li>
      *            <li><b>[7]</b> - Last update date. Date (format: YYYY-MM-DD), required. Initially, will be the same as the creation date.</li>
+     *            <li><b>[8]</b> - Tile width. Integer, optional.</li>
+     *            <li><b>[9]</b> - Tile height. Integer, optional.</li>
      * 
      *            <li><b>[?]</b> - Player name that imported / created / uploaded the painting.</li>
      *            <li><b>[?]</b> - Player UUID that imported / created / uploaded the painting.</li>
@@ -73,26 +82,17 @@ public class CustomPaintingConfigItem
 
             this._fileName = _entryData[0];
             this._uuid = _entryData[1];
-            this._enabled = _entryData[2].equals("1");
-
-            try {
-                this._sizeBytes = Long.parseLong(_entryData[3]);
-            } catch (final NumberFormatException e) {
-                this._sizeBytes = -1;
-            }
-
+            this._enabled = parseBoolean(_entryData[2]);
+            this._sizeBytes = parseLongWithDefault(_entryData[3], -1);
             this._title = _entryData[4];
             this._author = _entryData[5];
-
-            try {
-                this._creationDate = sdfSave.parse(_entryData[6]);
-            } catch (final ParseException e) {
-                this._creationDate = ancientTimes;
-            }
-            try {
-                this._lastUpdateDate = sdfSave.parse(_entryData[7]);
-            } catch (final ParseException e) {
-                this._lastUpdateDate = this._creationDate;
+            this._creationDate = parseDateWithDefault(_entryData[6], ancientTimes);
+            this._lastUpdateDate = parseDateWithDefault(_entryData[7], ancientTimes);
+            
+            // Reads optional parameters
+            if (_entryData.length >= 9) {
+                this._widthTile = parseIntWithDefault(_entryData[8], 1, 1);
+                this._heightTile = parseIntWithDefault(_entryData[9], 1, 1);
             }
 
         }
@@ -150,82 +150,13 @@ public class CustomPaintingConfigItem
         this(fileName, UUID.randomUUID().toString(), enabled, fileSize, title, author, new Date(), new Date());
     }
 
-
-
-    /**
-     * @return TRUE if the entryData array has the minimum expected size.
-     */
-    private boolean isValidArray(String[] entryData)
-    {
-        if (entryData == null) {
-            validationErrors = "Null config string array";
-            return false;
-        } else if (entryData.length < EXPECTED_LENGTH) {
-            validationErrors = "Config array shorter than expected";
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-
-    /**
-     * @return TRUE if this object has the minimum expected values to be used.
-     */
-    public boolean isValid()
-    {
-        if (!this.validationErrors.isEmpty()) {
-            // There are previous validation errors
-            return false;
-        }
-        if (this._fileName.isEmpty()) {
-            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_filename"));
-            return false;
-        }
-        if (this._uuid.isEmpty()) {
-            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_uuid"));
-            return false;
-        }
-        if (this._sizeBytes <= 0) {
-            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_invalid_filesize"));
-            return false;
-        }
-
-        return true;
-    }
-
-
-    public String getValiadtionErrors()
-    {
-        return this.validationErrors;
-    }
-
-
-
-    public String[] ToStringArray()
-    {
-        String dateCreated = sdfSave.format(this._creationDate);
-        String dateUpdated = sdfSave.format(this._lastUpdateDate);
-
-        if (dateCreated.equals(ancientDate)) {
-            dateCreated = "";
-        }
-        if (dateUpdated.equals(ancientDate)) {
-            dateUpdated = "";
-        }
-
-
-        return new String[] { this._fileName, this._uuid, (this._enabled ? "1" : "0"), Long.toString(this._sizeBytes), this._title, this._author, dateCreated, dateUpdated };
-    }
-
-
-    @Override
-    public String toString()
-    {
-        return StringUtils.join(this.ToStringArray(), "|");
-    }
-
-
+    
+    
+    
+   
+    //----------------------------------------------------------------
+    // Properties
+    //----------------------------------------------------------------
 
     public String getPaintingFileName()
     {
@@ -308,7 +239,20 @@ public class CustomPaintingConfigItem
             return "-";
         }
     }
+    
+    /** Returns the painting width in tiles. Each 'tile' is a 16x16 block, so a painting with 48x32 size in pixels would occupy 3x2 tiles */
+    public int getTileWidth()
+    {
+        return this._widthTile;
+    }
 
+    /** Returns the painting height in tiles. Each 'tile' is a 16x16 block, so a painting with 48x32 size in pixels would occupy 3x2 tiles */
+    public int getTileHeight()
+    {
+        return this._widthTile;
+    }
+
+    
 
 
     public void setPaintingTitle(String value)
@@ -326,18 +270,82 @@ public class CustomPaintingConfigItem
         this._enabled = value;
     }
 
+    public void setSize(int tileWidth, int tileHeight)
+    {
+        this._widthTile = Math.max(tileWidth, 1);
+        this._heightTile = Math.max(tileHeight, 1);
+    }
 
+    public void setSizePixels(int imageWidth, int imageHeight)
+    {
+        this._widthTile = (int) Math.max((imageWidth / 16.0), 1);
+        this._heightTile = (int) Math.max((imageHeight / 16.0), 1);
+    }
+
+
+    
+    
+    //----------------------------------------------------------------
+    // Information about this entry integrity
+    //----------------------------------------------------------------
 
     /**
-     * Returns the full language key for elements of this GUI.
+     * @return TRUE if this object has the minimum expected values to be used.
      */
-    protected String getLanguageKey(String name)
+    public boolean isValid()
     {
-        return "sidben.ateliercanvas.config.painting_info." + name;
+        if (!this.validationErrors.isEmpty()) {
+            // There are previous validation errors
+            return false;
+        }
+        if (this._fileName.isEmpty()) {
+            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_filename"));
+            return false;
+        }
+        if (this._uuid.isEmpty()) {
+            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_uuid"));
+            return false;
+        }
+        if (this._sizeBytes <= 0) {
+            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_invalid_filesize"));
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public String getValiadtionErrors()
+    {
+        return this.validationErrors;
     }
 
 
 
+    public String[] ToStringArray()
+    {
+        String dateCreated = sdfSave.format(this._creationDate);
+        String dateUpdated = sdfSave.format(this._lastUpdateDate);
+
+        if (dateCreated.equals(ancientDate)) {
+            dateCreated = "";
+        }
+        if (dateUpdated.equals(ancientDate)) {
+            dateUpdated = "";
+        }
+
+
+        return new String[] { this._fileName, this._uuid, (this._enabled ? "1" : "0"), Long.toString(this._sizeBytes), this._title, this._author, dateCreated, dateUpdated, Integer.toString(this._widthTile), Integer.toString(this._heightTile) };
+    }
+
+
+    @Override
+    public String toString()
+    {
+        return StringUtils.join(this.ToStringArray(), "|");
+    }
+    
+    
     /**
      * Returns how the config array is expected to behave.
      */
@@ -359,6 +367,80 @@ public class CustomPaintingConfigItem
         return r;
     }
 
+    
+    
+    
+    
+    
+
+    //----------------------------------------------------------------
+    // Generic helpers
+    //----------------------------------------------------------------
+
+    /**
+     * @return TRUE if the entryData array has the minimum expected size.
+     */
+    private boolean isValidArray(String[] entryData)
+    {
+        if (entryData == null) {
+            validationErrors = "Null config string array";
+            return false;
+        } else if (entryData.length < EXPECTED_LENGTH) {
+            validationErrors = "Config array shorter than expected";
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 
+    /**
+     * Returns the full language key for elements of this GUI.
+     */
+    protected String getLanguageKey(String name)
+    {
+        return "sidben.ateliercanvas.config.painting_info." + name;
+    }
+
+
+    
+    
+    
+
+    
+    //----------------------------------------------------------------
+    // Parser helpers
+    //----------------------------------------------------------------
+    private int parseIntWithDefault(String textValue, int defaultValue, int minimumValue)
+    {
+        try {
+            return Math.max(Integer.parseInt(textValue.trim()), minimumValue);
+        } catch (final NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+    
+    private long parseLongWithDefault(String textValue, long defaultValue)
+    {
+        try {
+            return Long.parseLong(textValue.trim());
+        } catch (final NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    private Date parseDateWithDefault(String textValue, Date defaultValue)
+    {
+        try {
+            return sdfSave.parse(textValue);
+        } catch (final ParseException e) {
+            return defaultValue;
+        }
+    }
+
+    private boolean parseBoolean(String textValue) {
+        return textValue.equals("1");
+    }
+
+    
 }

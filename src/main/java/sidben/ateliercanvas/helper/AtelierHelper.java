@@ -1,190 +1,161 @@
 package sidben.ateliercanvas.helper;
 
-import java.awt.Color;
-import java.util.HashMap;
-import sidben.ateliercanvas.network.MessagePaintingData;
-import sidben.ateliercanvas.world.storage.PaintingData;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.MapData;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import sidben.ateliercanvas.handler.ConfigurationHandler;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 
 
-
+/**
+ * Helper class that can load custom paintings images.
+ * 
+ * @author sidben
+ */
 public class AtelierHelper
 {
 
-    @SideOnly(Side.CLIENT)
-    protected static HashMap<String, DynamicTexture> loadedPaintings = new HashMap<String, DynamicTexture>();
+    private final Minecraft                            mc;
+    private final TextureManager                       texMan;
 
-    
-    public static final String identifier = "canvas";
-
-    private static final Minecraft mc = Minecraft.getMinecraft();
-    private static final TextureManager texMan = mc.renderEngine;
+    private final LoadingCache<UUID, ResourceLocation> paintingsCache;
 
 
-    
-    public static String getPaintingName(int id) {
-        return identifier + "_" + id;
-    }
-    
-    
-    
 
-    // NOTE: How to check if a painting already exists? (TODO)
-    public static int addPaintingData(World world, String author, String name, int[] imageData) {
-        int newId = world.getUniqueDataId(identifier);
-        String s = getPaintingName(newId);
-        
-        LogHelper.info("Hey, I'm adding a painting! -> " + s);
-        
-        PaintingData data = new PaintingData(s);
-        world.setItemData(s, data);
-        
-        data.author = author;
-        data.name = name;
-        data.pixels = imageData;
-        data.markDirty();
-        
-        return newId;
-    }
-    
+    // --------------------------------------------------------------
+    // Constructor
+    // --------------------------------------------------------------
 
-    @SideOnly(Side.CLIENT)
-    public static void addPaintingData(MessagePaintingData message) {
-        WorldClient world = Minecraft.getMinecraft().theWorld;
-        String s = getPaintingName(message.getCanvasId());
-        
-        LogHelper.info("Hey, I'm adding a painting (by message)! -> " + s);
-        
-        PaintingData data = new PaintingData(s);
-        world.setItemData(s, data);
-        
-        data.author = message.getAuthor();
-        data.name = message.getName();
-        data.pixels = message.getPixels();
-        data.markDirty();
-    }
+    public AtelierHelper(Minecraft minecraft) {
+        this.mc = minecraft;
+        this.texMan = mc.renderEngine;
 
-    
-    public static PaintingData getPaintingData(World world, int id) {
-        String s = getPaintingName(id);
-        PaintingData data = (PaintingData)world.loadItemData(PaintingData.class, s);
-        
-        /*
-        LogHelper.info("   => map_0: " + world.loadItemData(MapData.class, "map_0"));
-        LogHelper.info("   => map_1: " + world.loadItemData(MapData.class, "map_1"));
-        LogHelper.info("   => canvas_0: " + world.loadItemData(PaintingData.class, "canvas_0"));
-        LogHelper.info("   => canvas_1: " + world.loadItemData(PaintingData.class, "canvas_1"));
-        LogHelper.info("   => canvas_2: " + world.loadItemData(PaintingData.class, "canvas_2"));
-        LogHelper.info("   => canvas_3: " + world.loadItemData(PaintingData.class, "canvas_3"));
-        LogHelper.info("   => canvas_4: " + world.loadItemData(PaintingData.class, "canvas_4"));
-        */
-        
-
-        /*
-        // Creates a new PaintingData (copy from map, don't think I'll keep it)
-        if (data == null && !world.isRemote)
-        {
-            data = new PaintingData(s);
-            data.author = "";
-            data.name = "";
-            data.pixels = new int[256];
-            data.markDirty();
-            
-            world.setItemData(s, data);
-        }
-        */
-
-        return data;
-    }
-    
-    
-    
-        
-    @SideOnly(Side.CLIENT)
-    public static ResourceLocation getTexture(World world, int id) {
-        String mapName = getPaintingName(id);
-        String uniqueName = identifier + "/" + mapName;
-        DynamicTexture texture = null;
-        int[] pixels = null;
-        
-        
-        LogHelper.info("getTexture() - " + id);
-        LogHelper.info("    name, uniquename: [" + mapName + "] [" + uniqueName + "]");
-
-        
-        // TODO: check if the "loadedPaintings" cache will conflict with multiple worlds
-        // world.getWorldInfo().getWorldName()
-        
-        if (loadedPaintings.containsKey(uniqueName)) {
-            LogHelper.info("    Found in cache");
-            texture = loadedPaintings.get(uniqueName);
-            
-        }
-        else {
-            LogHelper.info("    Creating new...");
-            
-            PaintingData data = getPaintingData(world, id);
-            
-            LogHelper.info("    data = " + data);
-            
-            
-            if (data == null) {
-                LogHelper.info("    Creating random 'art'");
-                
-                // Painting not found, creates a random picture
-                texture = new DynamicTexture(16, 16);
-                pixels = texture.getTextureData();
-
-                pixels[0] = new Color(255, 255, 255).getRGB();
-                for (int i = 1; i < pixels.length; ++i)
+        this.paintingsCache = CacheBuilder.newBuilder().maximumSize(ConfigurationHandler.maxPaintings).expireAfterAccess(ConfigurationHandler.expirationTime, TimeUnit.MINUTES)
+                .build(new CacheLoader<UUID, ResourceLocation>()
                 {
-                    pixels[i] = new Color(world.rand.nextInt(256), world.rand.nextInt(256), world.rand.nextInt(256)).getRGB();
-                }
-                texture.updateDynamicTexture();
-
-            }
-            else {
-                LogHelper.info("    Loading existing art");
-                // TODO: support for bigger paintings
-                
-                texture = new DynamicTexture(16, 16);
-                pixels = texture.getTextureData();
-                
-                if (data.pixels.length != pixels.length) {
-                    LogHelper.error("Wrong painting size, expected " + pixels.length + ", found " + data.pixels.length);
-                }
-                else {
-                    for (int i = 0; i < pixels.length; ++i)
+                    @Override
+                    public ResourceLocation load(UUID key) throws Exception
                     {
-                        pixels[i] = data.pixels[i];
+                        ResourceLocation icon = null;
+                        final CustomPaintingConfigItem entryData = ConfigurationHandler.findPaintingByUUID(key);
+
+                        if (entryData != null && entryData.isValid()) {
+                            String iconPath;
+                            InputStream iconStream;
+                            BufferedImage paintingIcon;
+                            long fileSize;
+
+                            // Sets the path of the painting file
+                            iconPath = ConfigurationHandler.IMAGES_BASE_PATH + entryData.getPaintingFileName();
+
+
+                            try {
+                                final File iconFile = new File(mc.mcDataDir, iconPath);
+                                fileSize = iconFile.length();
+                                final ImageFilenameFilter fileExtensionChecker = new ImageFilenameFilter();
+
+                                // TODO: Decide about images that don't follow the 16x16 ratio (accept, reject, edit or make optional)
+
+                                LogHelper.info(String.format("Adding custom painting to the cache: %s | %s", entryData.getPaintingFileName(), entryData.getUUID()));
+
+                                // Validate if the file exists
+                                if (!iconFile.exists()) {
+                                    LogHelper.error("  File not found.");
+                                }
+
+                                // Validate file size
+                                else if (fileSize > ConfigurationHandler.maxFileSize) {
+                                    LogHelper.error("  File size above the config limit.");
+                                }
+
+                                // Compare file size (actual VS config)
+                                else if (fileSize != entryData.getExpectedSize()) {
+                                    LogHelper.error("  File size don't match the config value.");
+                                }
+
+                                // Validate file extension
+                                else if (!fileExtensionChecker.accept(iconFile.getParentFile(), iconFile.getName())) {
+                                    LogHelper.error("  Invalid file extension.");
+                                }
+
+                                // Try to load the image
+                                else {
+                                    iconStream = new BufferedInputStream(new FileInputStream(iconFile));
+                                    paintingIcon = ImageIO.read(iconStream);
+                                    iconStream.close();
+
+                                    final int iconWidth = paintingIcon.getWidth();
+                                    final int iconHeight = paintingIcon.getHeight();
+                                    entryData.setSizePixels(iconWidth, iconHeight);
+
+                                    // Validate the max dimensions
+                                    if (iconWidth > ConfigurationHandler.maxPaintingSize || iconHeight > ConfigurationHandler.maxPaintingSize) {
+                                        LogHelper.error("  Image dimensions above the config limit.");
+                                    }
+
+                                    else {
+                                        icon = texMan.getDynamicTextureLocation("custom_painting_icon", new DynamicTexture(paintingIcon));
+                                    }
+                                }
+
+                            } catch (final IOException e) {
+                                icon = null;
+                                LogHelper.error("  Error loading custom painting");
+                                e.printStackTrace();
+
+                            }
+                        }
+
+
+                        // Loads the broken icon, if the correct wasn't found
+                        if (icon == null) {
+                            final DynamicTexture dynamictexture = TextureUtil.missingTexture;
+                            icon = texMan.getDynamicTextureLocation("missing_icon", dynamictexture);
+                        }
+
+                        return icon;
                     }
-                    texture.updateDynamicTexture();
-                }
-
-            }
-            
-            loadedPaintings.put(uniqueName, texture);
-        }
-
-        
-        LogHelper.info("    texture = " + texture);
-        
-        if (texture != null) {
-            return texMan.getDynamicTextureLocation(uniqueName, texture);
-        }
-        return null;
+                });
     }
-    
-    
-    
+
+
+
+    // --------------------------------------------------------------
+    // Methods
+    // --------------------------------------------------------------
+
+    public ResourceLocation getCustomPaintingImage(String uuid)
+    {
+        try {
+            UUID realId;
+            realId = UUID.fromString(uuid);
+            return this.paintingsCache.get(realId);
+
+        } catch (final ExecutionException | IllegalArgumentException e) {
+            // LogHelper.error("Error loading custom painting: " + e.getMessage());
+
+        }
+
+        final DynamicTexture dynamictexture = TextureUtil.missingTexture;
+        return texMan.getDynamicTextureLocation("missing_icon", dynamictexture);
+    }
+
+
+
 }

@@ -4,6 +4,7 @@ import net.minecraftforge.common.MinecraftForge;
 import sidben.ateliercanvas.command.CommandAtelier;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.PlayerEventHandler;
+import sidben.ateliercanvas.helper.AtelierHelper;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.proxy.IProxy;
 import sidben.ateliercanvas.reference.Reference;
@@ -15,6 +16,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 
 /**
@@ -38,6 +41,28 @@ public class ModAtelierCanvas
 
     // Used to send information between client / server
     public static SimpleNetworkWrapper NetworkWrapper;
+
+
+    // Helpers
+    @SideOnly(Side.CLIENT)
+    private AtelierHelper              paintingsFileHelper;
+
+
+
+    /**
+     * Returns a singleton instance of the music helper class.
+     */
+    @SideOnly(Side.CLIENT)
+    public AtelierHelper getAtelierHelper()
+    {
+        return paintingsFileHelper;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void setAtelierHelper(AtelierHelper helper)
+    {
+        paintingsFileHelper = helper;
+    }
 
 
 

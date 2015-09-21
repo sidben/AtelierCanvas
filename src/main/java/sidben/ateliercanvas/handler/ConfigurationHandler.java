@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -41,6 +42,11 @@ public class ConfigurationHandler
     /** Default resolution of paintings */
     public static final int                      defaultResolution          = 16;
 
+    /** Maximum amount of paintings cached */
+    public static final int                      maxPaintings               = 256;
+
+    /** Time in minutes a painting will remain in cache */
+    public static int                            expirationTime             = 10;
 
 
     private static final int                     DEFAULT_maxFileSize        = 30;             // NOTE: the default file size is in KBytes to make the property slider more friendly
@@ -173,6 +179,18 @@ public class ConfigurationHandler
         return null;
     }
 
+
+    /**
+     * Looks on the current custom paintings installed for an element with the given UUID. 
+     * 
+     * @param uuid UUID
+     * @return Config element of the given painting or NULL
+     */
+    public static CustomPaintingConfigItem findPaintingByUUID(UUID uuid) {
+        return findPaintingByUUID (uuid.toString());
+    }
+
+    
     
     /**
      * Returns a random item from the current installed custom paintings.
