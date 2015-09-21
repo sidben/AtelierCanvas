@@ -1,7 +1,6 @@
 package sidben.ateliercanvas.item;
 
 import java.util.List;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -32,7 +31,6 @@ public class ItemCustomPainting extends Item
     // Constructors
     // --------------------------------------------------------------------
     public ItemCustomPainting() {
-        // this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setTextureName("painting");
         this.setUnlocalizedName("custom_painting");
     }
@@ -92,6 +90,8 @@ public class ItemCustomPainting extends Item
     public void addInformation(ItemStack stack, EntityPlayer player, List infolist, boolean debugmode)
     {
         if (stack.hasTagCompound()) {
+            // TODO: how to update author and title when the config changes? Maybe I shouldn't store that as NBT at all, or find a way to do a 1-time only check.
+
             final NBTTagCompound nbttagcompound = stack.getTagCompound();
             final String author = nbttagcompound.getString("author");
             final boolean original = nbttagcompound.getBoolean("original");
@@ -99,9 +99,9 @@ public class ItemCustomPainting extends Item
             if (!StringUtils.isNullOrEmpty(author)) {
                 infolist.add(EnumChatFormatting.GRAY + StatCollector.translateToLocalFormatted("sidben.ateliercanvas:item.custom_painting.author_label", new Object[] { author }));
             }
-            
+
             // TODO: copy of a copy is a forgery (use byte instead of boolean)
-            infolist.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal(original ? "sidben.ateliercanvas:item.custom_painting.original" : "sidben.ateliercanvas:item.custom_painting.copy")); 
+            infolist.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal(original ? "sidben.ateliercanvas:item.custom_painting.original" : "sidben.ateliercanvas:item.custom_painting.copy"));
 
             // Debug info (F3 + H), check the UUID and if the painting is installed
             if (debugmode) {
@@ -122,29 +122,28 @@ public class ItemCustomPainting extends Item
             // Debug info (F3 + H), check the UUID and if the painting is installed
             if (debugmode) {
                 infolist.add(EnumChatFormatting.RED + "This painting is empty");
-            }            
+            }
         }
     }
-    
-    
-    
+
+
+
     /**
      * Return an item rarity from EnumRarity
      */
+    @Override
     public EnumRarity getRarity(ItemStack stack)
     {
         if (stack.hasTagCompound()) {
             final NBTTagCompound nbttagcompound = stack.getTagCompound();
             final boolean original = nbttagcompound.getBoolean("original");
-            
-            if (original) return EnumRarity.rare;
+
+            if (original) {
+                return EnumRarity.rare;
+            }
         }
         return EnumRarity.common;
     }
-
-    
-    
-    
 
 
 
@@ -153,27 +152,33 @@ public class ItemCustomPainting extends Item
     // --------------------------------------------------------------------
 
     @Override
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
-        final int auxId = itemstack.getItemDamage();
-
         LogHelper.info("onItemUse()");
         LogHelper.info("    side: " + side);
         LogHelper.info("    pos: " + x + ", " + y + ", " + z);
-        LogHelper.info("    id: " + auxId);
 
 
         // Check if the player clicked on a valid surface (only accept the side of blocks)
         if (side == BlockSide.ABOVE || side == BlockSide.BELOW) {
             return false;
+
         } else {
-            final int i1 = Direction.facingToDirection[side];
-            final EntityHanging entityhanging = this.createHangingEntity(world, x, y, z, i1, auxId);
+            // Find the UUID on the NBT of the painting
+            String uniqueId = "";
+            if (stack.hasTagCompound()) {
+                final NBTTagCompound nbttagcompound = stack.getTagCompound();
+                uniqueId = nbttagcompound.getString("uuid");
+            }
+
+
+            final int facing = Direction.facingToDirection[side];
+            final EntityHanging entityhanging = this.createHangingEntity(world, x, y, z, facing, uniqueId);
 
             // DEBUG
-            LogHelper.info("    direaction: " + i1);
+            LogHelper.info("    direaction: " + facing);
             LogHelper.info("    entity: " + entityhanging);
-            LogHelper.info("    can edit: " + player.canPlayerEdit(x, y, z, side, itemstack));
+            LogHelper.info("    can edit: " + player.canPlayerEdit(x, y, z, side, stack));
 
             if (entityhanging != null) {
                 LogHelper.info("    valid surface: " + entityhanging.onValidSurface());
@@ -181,7 +186,7 @@ public class ItemCustomPainting extends Item
 
 
             // Check if the player can place blocks
-            if (!player.canPlayerEdit(x, y, z, side, itemstack)) {
+            if (!player.canPlayerEdit(x, y, z, side, stack)) {
                 return false;
             } else {
                 if (entityhanging != null && entityhanging.onValidSurface()) {
@@ -192,7 +197,7 @@ public class ItemCustomPainting extends Item
                     }
 
                     // Use the item (reduces stack)
-                    --itemstack.stackSize;
+                    --stack.stackSize;
                 }
 
                 return true;
@@ -203,9 +208,9 @@ public class ItemCustomPainting extends Item
 
 
 
-    private EntityHanging createHangingEntity(World world, int x, int y, int z, int direction, int canvasId)
+    private EntityHanging createHangingEntity(World world, int x, int y, int z, int direction, String uuid)
     {
-        return new EntityCustomPainting(world, x, y, z, direction, canvasId);
+        return new EntityCustomPainting(world, x, y, z, direction, uuid);
     }
 
 
