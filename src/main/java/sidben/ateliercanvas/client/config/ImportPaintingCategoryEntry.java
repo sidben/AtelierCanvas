@@ -11,11 +11,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 
 @SideOnly(Side.CLIENT)
-public class AddNewPaintingCategoryEntry extends CategoryEntry
+public class ImportPaintingCategoryEntry extends CategoryEntry
 {
 
     @SuppressWarnings("rawtypes")
-    public AddNewPaintingCategoryEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
+    public ImportPaintingCategoryEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
         super(owningScreen, owningEntryList, prop);
     }
 

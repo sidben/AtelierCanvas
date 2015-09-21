@@ -1,15 +1,14 @@
 package sidben.ateliercanvas.client.gui;
 
 import static sidben.ateliercanvas.reference.TextFormatTable.GLYPH_BACK;
-
 import java.util.ArrayList;
 import java.util.List;
-import sidben.ateliercanvas.reference.ColorTable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
+import sidben.ateliercanvas.reference.ColorTable;
 import cpw.mods.fml.client.config.GuiUnicodeGlyphButton;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,37 +18,35 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiScreenCustomPaintingsAdd extends GuiScreen
 {
 
-    private static final int                BT_ID_BACK          = 1;
-    private static final int                BT_ID_NEWFILE       = 2;
-    private static final int                BT_ID_NEWURL        = 3;
-    private static final int                BT_ID_NEWBASE64     = 4;         // OBS: under evaluation
-
-    
-    public final GuiScreen                  parentScreen;
-    public final boolean                    isWorldRunning;
-    
-    private GuiListExtended                 guiList;
+    private static final int BT_ID_BACK      = 1;
+    private static final int BT_ID_NEWFILE   = 2;
+    private static final int BT_ID_NEWURL    = 3;
+    private static final int BT_ID_NEWBASE64 = 4;         // OBS: under evaluation
 
 
+    public final GuiScreen   parentScreen;
+    public final boolean     isWorldRunning;
 
-    
+    private GuiListExtended  guiList;
+
+
+
     public GuiScreenCustomPaintingsAdd(GuiScreen parentScreen) {
         this.mc = Minecraft.getMinecraft();
         this.parentScreen = parentScreen;
         this.isWorldRunning = mc.theWorld != null;
     }
 
-    
-    
-    
+
+
     @SuppressWarnings("unchecked")
     @Override
     public void initGui()
     {
         // Buttons
-        int buttonX = this.parentScreen.width / 2 - 100;
-        int buttonY = 64;
-        
+        final int buttonX = this.parentScreen.width / 2 - 100;
+        final int buttonY = 64;
+
         this.buttonList.add(new GuiUnicodeGlyphButton(BT_ID_BACK, buttonX, this.height - 29, 200, 20, " " + StatCollector.translateToLocal("gui.back"), GLYPH_BACK, 2.0F));
         this.buttonList.add(new GuiButton(BT_ID_NEWFILE, buttonX, buttonY, StatCollector.translateToLocal(getLanguageKey("add_new_file"))));
         this.buttonList.add(new GuiButton(BT_ID_NEWURL, buttonX, buttonY + 22, StatCollector.translateToLocal(getLanguageKey("add_new_url"))));
@@ -58,16 +55,16 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
         ((GuiButton) this.buttonList.get(2)).enabled = false;
         ((GuiButton) this.buttonList.get(3)).enabled = false;
         /*
-        for (int i = 0; i <= 3; i++) {
-            ((GuiButton) this.buttonList.get(i)).enabled = false;
-        }
-        */
+         * for (int i = 0; i <= 3; i++) {
+         * ((GuiButton) this.buttonList.get(i)).enabled = false;
+         * }
+         */
 
         // Fake listbox, used only for visual effects
         this.guiList = new GuiElementPaintingList(this.mc, this.width, this.height + 55 - 32, new ArrayList<Object>(), null);
     }
-    
-    
+
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
@@ -104,10 +101,10 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
                 this.mc.displayGuiScreen(this.parentScreen);
 
             }
-            
+
             else if (button.id == BT_ID_NEWFILE) {
                 this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAddFileSelector(this));
-                
+
             }
 
         }
@@ -142,10 +139,9 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
     {
         super.func_146283_a(stringList, x, y);
     }
-    
 
-    
-    
+
+
     /**
      * Returns the full language key for elements of this GUI.
      */

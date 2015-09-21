@@ -2,7 +2,7 @@ package sidben.ateliercanvas.client.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import sidben.ateliercanvas.client.config.AddNewPaintingCategoryEntry;
+import sidben.ateliercanvas.client.config.ImportPaintingCategoryEntry;
 import sidben.ateliercanvas.client.config.CustomPaintingCategoryEntry;
 import sidben.ateliercanvas.client.config.SimpleCategoryElement;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
@@ -40,7 +40,7 @@ public class GuiConfigAtelierCanvas extends GuiConfig
         list.add(new SimpleCategoryElement(ConfigurationHandler.CATEGORY_PAINTINGS, getLanguageKey("manage_paintings"), CustomPaintingCategoryEntry.class));
 
         // Paintings import / export
-        list.add(new SimpleCategoryElement(ConfigurationHandler.CATEGORY_IMPORT, getLanguageKey("import_painting"), AddNewPaintingCategoryEntry.class));
+        list.add(new SimpleCategoryElement(ConfigurationHandler.CATEGORY_IMPORT, getLanguageKey("import_painting"), ImportPaintingCategoryEntry.class));
         list.add(new SimpleCategoryElement(ConfigurationHandler.CATEGORY_EXPORT, getLanguageKey("export_painting"), null));
 
         // General config

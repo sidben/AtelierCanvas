@@ -11,3 +11,5 @@ public interface IListContainer
 {
     public void onItemSelected(GuiElementPaintingList list, int index);
 }
+
+// TODO: Can I use confirmClicked to make this class obsolete?

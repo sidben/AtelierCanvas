@@ -31,17 +31,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class GuiElementPaintingIconLoader extends GuiScreen
 {
 
-    private ResourceLocation                 _locationPaintingIcon;
-    private int                              _iconWidth;
-    private int                              _iconHeight;
-    private long                             _fileSize;
-    private final int                        _resolution    = ConfigurationHandler.defaultResolution;           // TODO: support for high-res paintings
-    private String                           _warnings;
-    private boolean                          _validImage    = false;
+    private ResourceLocation           _locationPaintingIcon;
+    private int                        _iconWidth;
+    private int                        _iconHeight;
+    private long                       _fileSize;
+    private final int                  _resolution = ConfigurationHandler.defaultResolution;           // TODO: support for high-res paintings
+    private String                     _warnings;
+    private boolean                    _validImage = false;
 
-    protected final Minecraft                mc;
-    protected final GuiScreen _ownerGui;
-    protected CustomPaintingConfigItem       _entryData;
+    protected final Minecraft          mc;
+    protected final GuiScreen          _ownerGui;
+    protected CustomPaintingConfigItem _entryData;
 
 
 
@@ -68,7 +68,7 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
         _iconHeight = 0;
         _fileSize = 0;
         _validImage = false;
-        
+
         if (this._entryData != null && this._entryData.isValid()) {
             String iconPath;
             InputStream iconStream;
@@ -145,7 +145,7 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
 
         } else {
             this._validImage = true;
-        
+
         }
     }
 
@@ -187,11 +187,12 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
         return this.getFileSizeBytes() / 1024.0F;
     }
 
-    protected boolean hasValidImage() {
+    protected boolean hasValidImage()
+    {
         return this._validImage;
     }
-    
-    
+
+
 
     /**
      * Returns any error/warning messages generated when this class

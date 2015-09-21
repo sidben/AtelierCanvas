@@ -182,6 +182,8 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
                 }
 
 
+                // TODO: For realz, clean this mess
+                // TODO: Only save if there were changes
 
                 // Clear all content of the category
                 ConfigurationHandler.config.getCategory(configID).clear();
@@ -200,7 +202,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
                 }
 
                 // Saves the config file
-                ConfigurationHandler.config.save();     // TODO: Only save if there were changes (?)
+                ConfigurationHandler.config.save();
 
 
 
@@ -255,7 +257,6 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
             ((GuiButton) this.buttonList.get(i)).visible = visible;
         }
     }
-
 
 
 
