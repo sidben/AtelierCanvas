@@ -20,6 +20,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 
+/**
+ * Renders a custom painting entity.
+ * 
+ * @see net.minecraft.client.renderer.entity.RenderPainting
+ * @author sidben
+ */
 @SideOnly(Side.CLIENT)
 public class RenderCustomPainting extends Render
 {

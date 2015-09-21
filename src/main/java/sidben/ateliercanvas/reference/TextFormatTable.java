@@ -1,5 +1,8 @@
 package sidben.ateliercanvas.reference;
 
+/*
+ * OBS: This class could be made obsolete by EnumChatFormatting
+ */
 public class TextFormatTable
 {
 

@@ -253,6 +253,12 @@ public class CustomPaintingConfigItem
         return this._title.isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("title_empty")) + TextFormatTable.RESET : this._title;
     }
 
+    /** Returns the painting title, even if empty */
+    public String getPaintingTitleRaw()
+    {
+        return this._title;
+    }
+
     /** Returns the painting author. If empty, will return a default text. */
     public String getPaintingAuthor()
     {
