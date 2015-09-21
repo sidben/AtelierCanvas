@@ -215,15 +215,7 @@ public class CustomPaintingConfigItem
         }
 
 
-        return new String[] { 
-                this._fileName, 
-                this._uuid, 
-                (this._enabled ? "1" : "0"), 
-                Long.toString(this._sizeBytes), 
-                this._title, 
-                this._author, 
-                dateCreated,
-                dateUpdated };
+        return new String[] { this._fileName, this._uuid, (this._enabled ? "1" : "0"), Long.toString(this._sizeBytes), this._title, this._author, dateCreated, dateUpdated };
     }
 
 
@@ -255,14 +247,22 @@ public class CustomPaintingConfigItem
         return this._sizeBytes;
     }
 
+    /** Returns the painting title. If empty, will return a default text. */
     public String getPaintingTitle()
     {
         return this._title.isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("title_empty")) + TextFormatTable.RESET : this._title;
     }
 
+    /** Returns the painting author. If empty, will return a default text. */
     public String getPaintingAuthor()
     {
         return this._author.isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("author_empty")) + TextFormatTable.RESET : this._author;
+    }
+
+    /** Returns the painting author, even if empty */
+    public String getPaintingAuthorRaw()
+    {
+        return this._author;
     }
 
     public Date getCreationDate()
@@ -301,6 +301,23 @@ public class CustomPaintingConfigItem
         } else {
             return "-";
         }
+    }
+
+
+
+    public void setPaintingTitle(String value)
+    {
+        this._title = value;
+    }
+
+    public void setPaintingAuthor(String value)
+    {
+        this._author = value;
+    }
+
+    public void setIsEnabled(boolean value)
+    {
+        this._enabled = value;
     }
 
 

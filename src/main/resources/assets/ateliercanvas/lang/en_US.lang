@@ -35,6 +35,7 @@ sidben.ateliercanvas.config.enabled=Enabled
 sidben.ateliercanvas.config.disabled=Disabled
 sidben.ateliercanvas.config.installed_counter=%d paintings installed
 
+sidben.ateliercanvas.config.painting_info.title_label=Painting title
 sidben.ateliercanvas.config.painting_info.title_empty=Unnamed
 sidben.ateliercanvas.config.painting_info.author_empty=Unknown
 sidben.ateliercanvas.config.painting_info.author_label=Artist
