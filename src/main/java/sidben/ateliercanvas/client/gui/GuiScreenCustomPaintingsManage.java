@@ -1,5 +1,6 @@
 package sidben.ateliercanvas.client.gui;
 
+import static sidben.ateliercanvas.reference.TextFormatTable.GLYPH_BACK;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.Reference;
 import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.client.config.GuiUnicodeGlyphButton;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.client.event.ConfigChangedEvent.PostConfigChangedEvent;
@@ -82,7 +84,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
         final int buttonMargin = 1;
 
         this.buttonList.add(new GuiOptionButton(BT_ID_ADDNEW, this.width / 2 - 154, this.height - 48, StatCollector.translateToLocal(getLanguageKey("add_new"))));
-        this.buttonList.add(new GuiOptionButton(BT_ID_BACK, secondColumnX, this.height - 48, StatCollector.translateToLocal("gui.back")));
+        this.buttonList.add(new GuiUnicodeGlyphButton(BT_ID_BACK, secondColumnX, this.height - 48, 150, 20, " " + StatCollector.translateToLocal("gui.back"), GLYPH_BACK, 2.0F));
 
         this.buttonList.add(new GuiButton(BT_ID_CHANGE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("edit"))));
         this.buttonList.add(new GuiButton(BT_ID_REMOVE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("remove"))));

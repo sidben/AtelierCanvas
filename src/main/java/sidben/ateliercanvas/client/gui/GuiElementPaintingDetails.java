@@ -46,7 +46,7 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
 
     @SuppressWarnings("rawtypes")
     @Override
-    public void drawScreen(int mouseX, int mouseY, float param3)
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         if (this._entryData != null && this._entryData.isValid()) {
 
@@ -136,7 +136,7 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
 
         }
 
-        super.drawScreen(mouseX, mouseY, param3);
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
 

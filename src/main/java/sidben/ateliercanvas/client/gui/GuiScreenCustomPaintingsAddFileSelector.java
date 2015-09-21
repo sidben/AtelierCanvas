@@ -1,5 +1,6 @@
 package sidben.ateliercanvas.client.gui;
 
+import static sidben.ateliercanvas.reference.TextFormatTable.GLYPH_BACK;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -20,6 +21,7 @@ import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Util;
+import cpw.mods.fml.client.config.GuiUnicodeGlyphButton;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -79,7 +81,7 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
         btSelect.width = 200;
 
         this.buttonList.add(new GuiOptionButton(BT_ID_OPENFOLDER, this.width / 2 - 154, this.height - 48, StatCollector.translateToLocal(getLanguageKey("open_folder"))));
-        this.buttonList.add(new GuiOptionButton(BT_ID_BACK, secondColumnX, this.height - 48, StatCollector.translateToLocal("gui.back")));
+        this.buttonList.add(new GuiUnicodeGlyphButton(BT_ID_BACK, secondColumnX, this.height - 48, 150, 20, " " + StatCollector.translateToLocal("gui.back"), GLYPH_BACK, 2.0F));
         this.buttonList.add(btSelect);
         
         this.displayDetailsButtons(false);

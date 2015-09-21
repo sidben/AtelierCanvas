@@ -28,5 +28,7 @@ public class TextFormatTable
     public static final String COLOR_LIGHTPURPLE = "\u00a7d";
     public static final String COLOR_YELLOW      = "\u00a7e";
     public static final String COLOR_WHITE       = "\u00a7f";
+    
+    public static final String GLYPH_BACK        = "\u21a9";
 
 }

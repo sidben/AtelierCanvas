@@ -25,9 +25,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * Base class for GUI that loads the custom painting preview icon
  * using information from an CustomPaintingConfigEntry object.
  * 
- * 
  * @author sidben
- * 
  */
 @SideOnly(Side.CLIENT)
 public abstract class GuiElementPaintingIconLoader extends GuiScreen
@@ -144,8 +142,10 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
             this._locationPaintingIcon = this.mc.getTextureManager().getDynamicTextureLocation("missing_icon", dynamictexture);
             this._iconWidth = 32;
             this._iconHeight = 32;
+
         } else {
             this._validImage = true;
+        
         }
     }
 

@@ -1,5 +1,7 @@
 package sidben.ateliercanvas.client.gui;
 
+import static sidben.ateliercanvas.reference.TextFormatTable.GLYPH_BACK;
+
 import java.util.ArrayList;
 import java.util.List;
 import sidben.ateliercanvas.reference.ColorTable;
@@ -8,6 +10,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
+import cpw.mods.fml.client.config.GuiUnicodeGlyphButton;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -47,7 +50,7 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
         int buttonX = this.parentScreen.width / 2 - 100;
         int buttonY = 64;
         
-        this.buttonList.add(new GuiButton(BT_ID_BACK, buttonX, this.height - 29, StatCollector.translateToLocal("gui.back")));
+        this.buttonList.add(new GuiUnicodeGlyphButton(BT_ID_BACK, buttonX, this.height - 29, 200, 20, " " + StatCollector.translateToLocal("gui.back"), GLYPH_BACK, 2.0F));
         this.buttonList.add(new GuiButton(BT_ID_NEWFILE, buttonX, buttonY, StatCollector.translateToLocal(getLanguageKey("add_new_file"))));
         this.buttonList.add(new GuiButton(BT_ID_NEWURL, buttonX, buttonY + 22, StatCollector.translateToLocal(getLanguageKey("add_new_url"))));
         this.buttonList.add(new GuiButton(BT_ID_NEWBASE64, buttonX, buttonY + 44, StatCollector.translateToLocal(getLanguageKey("add_new_base64"))));
