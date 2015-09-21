@@ -110,7 +110,7 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
         if (this._entryData != null && this._entryData.isValid()) {
 
             // Selected painting extra info
-            final int boxX = this._ownerGui.width / 2 + 4;
+            final int boxX = this.width / 2 + 4;
             final int boxY = 32;
             final int boxWidth = 200;
             final int boxHeight = 128;
@@ -127,7 +127,7 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
             sampleWidth *= 2;
             sampleHeight *= 2;
 
-            final int textStartX = this._ownerGui.width / 2 + 4;
+            final int textStartX = this.width / 2 + 4;
             final int textStartY = boxY + boxHeight + titleMaginTop;
 
 

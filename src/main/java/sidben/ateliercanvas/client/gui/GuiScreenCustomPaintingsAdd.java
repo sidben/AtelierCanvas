@@ -44,7 +44,7 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
     public void initGui()
     {
         // Buttons
-        final int buttonX = this.parentScreen.width / 2 - 100;
+        final int buttonX = this.width / 2 - 100;
         final int buttonY = 64;
 
         this.buttonList.add(new GuiUnicodeGlyphButton(BT_ID_BACK, buttonX, this.height - 29, 200, 20, " " + StatCollector.translateToLocal("gui.back"), GLYPH_BACK, 2.0F));
