@@ -2,7 +2,12 @@
 entity.ateliercanvas.CustomPainting.name=Custom Painting
 
 # Items
-item.ateliercanvas:custom_painting.name=Custom Painting
+sidben.ateliercanvas:item.custom_painting.name=Custom Painting
+sidben.ateliercanvas:item.custom_painting.author_label=Artist: %s
+sidben.ateliercanvas:item.custom_painting.original=Authentic
+sidben.ateliercanvas:item.custom_painting.copy=Copy
+sidben.ateliercanvas:item.custom_painting.copy_copy=Forgery
+sidben.ateliercanvas:item.random_painting.name=Mysterious Painting
 
 # Config GUI
 sidben.ateliercanvas.config.prop.max_filesize_kb=Max file size (KB)

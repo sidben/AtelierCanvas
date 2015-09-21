@@ -3,6 +3,8 @@ package sidben.ateliercanvas.handler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -149,5 +151,46 @@ public class ConfigurationHandler
         return "sidben.ateliercanvas.config.prop." + name;
     }
 
+    
+    
+    
+    /**
+     * Looks on the current custom paintings installed for an element with the given UUID. 
+     * 
+     * @param uuid UUID in string format
+     * @return Config element of the given painting or NULL
+     */
+    public static CustomPaintingConfigItem findPaintingByUUID(String uuid) {
+        if (!StringUtils.isNullOrEmpty(uuid) && mahPaintings.size() > 0)
+        {
+            for (CustomPaintingConfigItem item : mahPaintings) {
+                if (item.getUUID().equalsIgnoreCase(uuid)) {
+                    return item;
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    
+    /**
+     * Returns a random item from the current installed custom paintings.
+     * 
+     * @return Config element of a random painting or NULL
+     */
+    public static CustomPaintingConfigItem getRandomPainting() {
+        if (mahPaintings.size() > 0)
+        {
+            // TODO: only search valid and enabled entries
+            
+            Random rand = new Random();
+            int luckyDraw = rand.nextInt(mahPaintings.size());
+            return mahPaintings.get(luckyDraw);
+        }
+        
+        return null;
+    }
+    
 
 }
