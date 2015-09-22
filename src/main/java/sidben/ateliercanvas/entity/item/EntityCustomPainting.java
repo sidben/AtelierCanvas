@@ -33,8 +33,8 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     
     public EntityCustomPainting(World world, int x, int y, int z, int direction, String uuid) {
         super(world, x, y, z, direction);
-        this.setDirection(direction);
         this.setPaintingEntry(uuid);
+        this.setDirection(direction);
         
         LogHelper.info("EntityCustomPainting()");
         LogHelper.info(".   entry null: " + (_entry == null));

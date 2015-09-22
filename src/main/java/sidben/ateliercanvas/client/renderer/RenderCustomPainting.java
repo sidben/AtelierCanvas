@@ -77,11 +77,8 @@ public class RenderCustomPainting extends Render
 
     private void drawPainting(EntityCustomPainting painting, int width, int height, int offsetX, int offsetY)
     {
-        LogHelper.info(width + " | " + height + " | " + offsetX + " | " + offsetY);
-
-
-        final float f = (width) / 2.0F;
-        final float f1 = (height) / 2.0F;
+        final float f = (float)(-width) / 2.0F;
+        final float f1 = (float)(-height) / 2.0F;
         final double zPos = 0.5;
         final float f3 = 0.75F;
         final float f4 = 0.8125F;
@@ -97,89 +94,93 @@ public class RenderCustomPainting extends Render
         final float f14 = 0.0625F;
 
 
-        /*
-         * for (int i = 0; i < width / 16; ++i)
-         * {
-         * for (int j = 0; j < height / 16; ++j)
-         * {
-         */
-
-        final int i = 0;
-        final int j = 0;
-
-        float xEnd = f + (i + 1) * 16;
-        float xStart = f + i * 16;
-        float yEnd = f1 + (j + 1) * 16;
-        float yStart = f1 + j * 16;
-
-        // xEnd = 80;
-        final float xMargin = 8F;
-        final float yMargin = 8F;
-
-        xStart = 0 + xMargin;
-        xEnd = -width + xMargin;
-        yStart = 0 + yMargin;
-        yEnd = -height + yMargin;
-
-        LogHelper.info(xEnd + " | " + xStart + " | " + yEnd + " | " + yStart);
-
-
-        this.setupLightmap(painting, (xEnd + xStart) / 2.0F, (yEnd + yStart) / 2.0F);
-
-        /*
-         * final float uStart = (float)(offsetX + width - i * 16) / 256.0F;;
-         * final float uEnd = (float)(offsetX + width - (i + 1) * 16) / 256.0F;
-         * final float vStart = (float)(offsetY + height - j * 16) / 256.0F;
-         * final float vEnd = (float)(offsetY + height - (j + 1) * 16) / 256.0F;
-         */
-
-        final float uStart = 0F;
-        final float uEnd = 1F;
-        final float vStart = 0F;
-        final float vEnd = 1F;
-
-
-        // LogHelper.info(uStart + " | " + uEnd + " | " + vStart + " | " + vEnd);
-
-
+        float xEnd, xStart, yEnd, yStart;
+        float uStart, uEnd, vStart, vEnd;
         final Tessellator tessellator = Tessellator.instance;
 
+
+        
         bindTexture(vanillaPainting);
-        tessellator.startDrawingQuads();
 
-        // Borders
-        tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        tessellator.addVertexWithUV(xEnd, yEnd, -zPos, f7, f9);
-        tessellator.addVertexWithUV(xStart, yEnd, -zPos, f8, f9);
-        tessellator.addVertexWithUV(xStart, yEnd, zPos, f8, f10);
-        tessellator.addVertexWithUV(xEnd, yEnd, zPos, f7, f10);
+        for (int i = 0; i < width / 16; ++i) {
 
-        tessellator.setNormal(0.0F, -1.0F, 0.0F);
-        tessellator.addVertexWithUV(xEnd, yStart, zPos, f7, f9);
-        tessellator.addVertexWithUV(xStart, yStart, zPos, f8, f9);
-        tessellator.addVertexWithUV(xStart, yStart, -zPos, f8, f10);
-        tessellator.addVertexWithUV(xEnd, yStart, -zPos, f7, f10);
+            for (int j = 0; j < height / 16; ++j) {
 
-        tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-        tessellator.addVertexWithUV(xEnd, yEnd, zPos, f12, f13);
-        tessellator.addVertexWithUV(xEnd, yStart, zPos, f12, f14);
-        tessellator.addVertexWithUV(xEnd, yStart, -zPos, f11, f14);
-        tessellator.addVertexWithUV(xEnd, yEnd, -zPos, f11, f13);
+                xEnd = f + (float)((i + 1) * 16);
+                xStart = f + (float)(i * 16);
+                yEnd = f1 + (float)((j + 1) * 16);
+                yStart = f1 + (float)(j * 16);
 
-        tessellator.setNormal(1.0F, 0.0F, 0.0F);
-        tessellator.addVertexWithUV(xStart, yEnd, -zPos, f12, f13);
-        tessellator.addVertexWithUV(xStart, yStart, -zPos, f12, f14);
-        tessellator.addVertexWithUV(xStart, yStart, zPos, f11, f14);
-        tessellator.addVertexWithUV(xStart, yEnd, zPos, f11, f13);
+                this.setupLightmap(painting, (xEnd + xStart) / 2.0F, (yEnd + yStart) / 2.0F);
 
-        // back
-        tessellator.setNormal(0.0F, 0.0F, 1.0F);
-        tessellator.addVertexWithUV(xEnd, yEnd, zPos, f3, f5);
-        tessellator.addVertexWithUV(xStart, yEnd, zPos, f4, f5);
-        tessellator.addVertexWithUV(xStart, yStart, zPos, f4, f6);
-        tessellator.addVertexWithUV(xEnd, yStart, zPos, f3, f6);
 
-        tessellator.draw();
+                uStart = (offsetX + width - i * 16) / 256.0F;
+                uEnd = (offsetX + width - (i + 1) * 16) / 256.0F;
+                vStart = (offsetY + height - j * 16) / 256.0F;
+                vEnd = (offsetY + height - (j + 1) * 16) / 256.0F;
+
+
+                // DEBUG
+                /*
+                LogHelper.info("{" + i + "," + j +"}: "+ width + "x" + height + " | " + xEnd + " | " + xStart + " | " + yEnd + " | " + yStart);
+                LogHelper.info("{" + i + "," + j +"}: "+ uStart + " | " + uEnd + " | " + vStart + " | " + vEnd);
+                LogHelper.info("");
+                */
+
+
+                tessellator.startDrawingQuads();
+
+                
+                // Back
+                tessellator.setNormal(0.0F, 0.0F, 1.0F);
+                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f3, (double)f5);
+                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f4, (double)f5);
+                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f4, (double)f6);
+                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f3, (double)f6);
+
+                // Borders
+                tessellator.setNormal(0.0F, 1.0F, 0.0F);
+                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)(-zPos), (double)f7, (double)f9);
+                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)(-zPos), (double)f8, (double)f9);
+                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f8, (double)f10);
+                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f7, (double)f10);
+
+                tessellator.setNormal(0.0F, -1.0F, 0.0F);
+                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f7, (double)f9);
+                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f8, (double)f9);
+                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)(-zPos), (double)f8, (double)f10);
+                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)(-zPos), (double)f7, (double)f10);
+
+                tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f12, (double)f13);
+                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f12, (double)f14);
+                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)(-zPos), (double)f11, (double)f14);
+                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)(-zPos), (double)f11, (double)f13);
+
+                tessellator.setNormal(1.0F, 0.0F, 0.0F);
+                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)(-zPos), (double)f12, (double)f13);
+                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)(-zPos), (double)f12, (double)f14);
+                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f11, (double)f14);
+                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f11, (double)f13);
+
+                
+                tessellator.draw();
+
+            }
+        }
+
+        
+        xStart = f;
+        xEnd = f + width;
+        yStart = f1;
+        yEnd = f1 + height;
+
+        uStart = 1F;
+        uEnd = 0F;
+        vStart = 1F;
+        vEnd = 0F;
+
+
 
         // Picture
         this.bindEntityTexture(painting);
@@ -188,16 +189,11 @@ public class RenderCustomPainting extends Render
         tessellator.setNormal(0.0F, 0.0F, -1.0F);
         tessellator.addVertexWithUV(xEnd, yStart, -zPos, uEnd, vStart);
         tessellator.addVertexWithUV(xStart, yStart, -zPos, uStart, vStart);
-        tessellator.addVertexWithUV(xStart, yEnd, zPos, uStart, vEnd);
-        tessellator.addVertexWithUV(xEnd, yEnd, zPos, uEnd, vEnd);
+        tessellator.addVertexWithUV(xStart, yEnd, -zPos, uStart, vEnd);
+        tessellator.addVertexWithUV(xEnd, yEnd, -zPos, uEnd, vEnd);
 
         tessellator.draw();
 
-        /*
-         * 
-         * }
-         * }
-         */
     }
 
 
