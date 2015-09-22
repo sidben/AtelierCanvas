@@ -249,7 +249,7 @@ public class CustomPaintingConfigItem
     /** Returns the painting height in tiles. Each 'tile' is a 16x16 block, so a painting with 48x32 size in pixels would occupy 3x2 tiles */
     public int getTileHeight()
     {
-        return this._widthTile;
+        return this._heightTile;
     }
 
     
