@@ -13,7 +13,12 @@ public class MyItems
     
     public static final ItemCustomPainting customPainting = new ItemCustomPainting();
     public static final ItemRandomPainting randomPainting = new ItemRandomPainting();
-    
+
+    // Icons
+    public static String customPaintingIcon;
+    public static String randomPaintingIcon;
+
+
 
     
     public static void register()
@@ -26,6 +31,8 @@ public class MyItems
     @SideOnly(Side.CLIENT)
     public static void registerRender()
     {
+        MyItems.customPaintingIcon =  "ateliercanvas:" + "painting_custom";  // TODO: create helper class to encapsulate Reference.ResourcesNamespace
+        MyItems.randomPaintingIcon =  "ateliercanvas:" + "painting_random";
     }    
     
     

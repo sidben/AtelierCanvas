@@ -1,8 +1,11 @@
 package sidben.ateliercanvas.item;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.init.MyItems;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -32,6 +35,18 @@ public class ItemRandomPainting extends Item
     // Textures and Rendering
     // --------------------------------------------------------------------
 
+    /*
+     * When this method is called, your item should register all the icons it needs with the given IconRegister. This
+     * is the only chance you get to register icons.
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister iconRegister)
+    {
+        super.itemIcon = iconRegister.registerIcon(MyItems.randomPaintingIcon);
+    }
+
+    
 
 
     // ----------------------------------------------------

@@ -1,6 +1,7 @@
 package sidben.ateliercanvas.item;
 
 import java.util.List;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -16,6 +17,7 @@ import sidben.ateliercanvas.entity.item.EntityCustomPainting;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.helper.LogHelper;
+import sidben.ateliercanvas.init.MyItems;
 import sidben.ateliercanvas.reference.BlockSide;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -40,7 +42,19 @@ public class ItemCustomPainting extends Item
     // Textures and Rendering
     // --------------------------------------------------------------------
 
+    /*
+     * When this method is called, your item should register all the icons it needs with the given IconRegister. This
+     * is the only chance you get to register icons.
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister iconRegister)
+    {
+        super.itemIcon = iconRegister.registerIcon(MyItems.customPaintingIcon);
+    }
 
+    
+    
 
     // ----------------------------------------------------
     // Item name and flavor text
@@ -100,7 +114,7 @@ public class ItemCustomPainting extends Item
             }
 
             // TODO: copy of a copy is a forgery (use byte instead of boolean)
-            infolist.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal(original ? "sidben.ateliercanvas:item.custom_painting.original" : "sidben.ateliercanvas:item.custom_painting.copy"));
+            infolist.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + StatCollector.translateToLocal(original ? "sidben.ateliercanvas:item.custom_painting.original" : "sidben.ateliercanvas:item.custom_painting.copy"));
 
             // Debug info (F3 + H), check the UUID and if the painting is installed
             if (debugmode) {
@@ -138,7 +152,7 @@ public class ItemCustomPainting extends Item
             final boolean original = nbttagcompound.getBoolean("original");
 
             if (original) {
-                return EnumRarity.rare;
+                return EnumRarity.uncommon;
             }
         }
         return EnumRarity.common;
