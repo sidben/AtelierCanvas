@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import sidben.ateliercanvas.ModAtelierCanvas;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
-import sidben.ateliercanvas.helper.LogHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
