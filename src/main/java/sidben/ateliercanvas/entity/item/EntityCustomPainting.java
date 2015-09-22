@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 
@@ -26,7 +27,7 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         super(world);
         
         LogHelper.info("EntityCustomPainting()");
-        LogHelper.info(".   world: " + world);
+        LogHelper.info("-   entry null: " + (_entry == null));
     }
     
     
@@ -36,11 +37,9 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         this.setPaintingEntry(uuid);
         
         LogHelper.info("EntityCustomPainting()");
+        LogHelper.info(".   entry null: " + (_entry == null));
         LogHelper.info(".   uuid: " + uuid);
         LogHelper.info(".   pos: " + x + ", " + y + "," + z);
-        LogHelper.info(".   direaction: " + direction);
-        LogHelper.info(".   pos (this): " + this.posX + ", " + this.posY + "," + this.posZ);
-        LogHelper.info(".   direaction (this): " + this.hangingDirection);
     }
     
     
@@ -52,7 +51,7 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
      * @param uuid
      */
     private void setPaintingEntry(String uuid) {
-        System.out.println("setPaintingEntry('" + uuid + "')");
+        LogHelper.info("setPaintingEntry('" + uuid + "')");
         
         final CustomPaintingConfigItem paintingConfig = ConfigurationHandler.findPaintingByUUID(uuid);
         if (paintingConfig != null) {
@@ -98,33 +97,53 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         this.entityDropItem(new ItemStack(MyItems.customPainting), 0.0F);
     }
 
+    
+    
+    
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound nbtTagCompound)
+    {
+        LogHelper.info("writeEntityToNBT()");
+        LogHelper.info("    :" + this.getImageUUID());
+
+        nbtTagCompound.setString("uuid", this.getImageUUID());
+        super.writeEntityToNBT(nbtTagCompound);
+    }
+
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound nbtTagCompound)
+    {
+        LogHelper.info("readEntityFromNBT()");
+
+        String uniqueId = nbtTagCompound.getString("uuid");
+        
+        LogHelper.info("    :" + uniqueId);
+        
+        this.setPaintingEntry(uniqueId);
+        super.readEntityFromNBT(nbtTagCompound);
+    }
+    
+
     @Override
     public void writeSpawnData(ByteBuf buffer)
     {
         LogHelper.info("writeSpawnData()");
-        LogHelper.info("_    " + this.hangingDirection);
-        
-        buffer.writeInt(this.field_146063_b);       // x
-        buffer.writeInt(this.field_146064_c);       // y
-        buffer.writeInt(this.field_146062_d);       // z
-        buffer.writeByte(this.hangingDirection);
-
+        LogHelper.info("    $" + this.getImageUUID());
         ByteBufUtils.writeUTF8String(buffer, this.getImageUUID());
     }
 
     @Override
     public void readSpawnData(ByteBuf buffer)
     {
-        this.field_146063_b = buffer.readInt();     // x
-        this.field_146064_c = buffer.readInt();     // y
-        this.field_146062_d = buffer.readInt();     // z  TODO: is this needed?
-        this.setDirection(buffer.readByte());
-
-        String uniqueId = ByteBufUtils.readUTF8String(buffer);
-        this.setPaintingEntry(uniqueId);
-
         LogHelper.info("readSpawnData()");
-        LogHelper.info("_    " + this.hangingDirection);
+        String uniqueId = ByteBufUtils.readUTF8String(buffer);
+        LogHelper.info("    $" + uniqueId);
+        this.setPaintingEntry(uniqueId);
     }
+
 
 }

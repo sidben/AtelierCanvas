@@ -176,12 +176,8 @@ public class ItemCustomPainting extends Item
             final EntityHanging entityhanging = this.createHangingEntity(world, x, y, z, facing, uniqueId);
 
             // DEBUG
-            LogHelper.info("    direaction: " + facing);
-            LogHelper.info("    entity: " + entityhanging);
-            LogHelper.info("    can edit: " + player.canPlayerEdit(x, y, z, side, stack));
-
             if (entityhanging != null) {
-                LogHelper.info("    valid surface: " + entityhanging.onValidSurface());
+                LogHelper.info("    valid surface: " + entityhanging.onValidSurface() + " (ItemCustomPainting)");
             }
 
 

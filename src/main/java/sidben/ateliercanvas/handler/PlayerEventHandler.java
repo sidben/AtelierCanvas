@@ -126,12 +126,15 @@ public class PlayerEventHandler
          * Check if the player started tracking a custom painting entity
          * and send the picture image.
          */
+        
+        /*
         if (event.target instanceof EntityCustomPainting && !event.entity.worldObj.isRemote) {
             LogHelper.info("--Player start tracking custom painting--");
             
             final EntityCustomPainting painting = (EntityCustomPainting)event.target;
             NetworkHelper.sendCustomPaintingInfoMessage(painting.getImageUUID(), painting.worldObj, event.entityPlayer); 
         }
+        */
 
     }
         
