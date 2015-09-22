@@ -125,7 +125,6 @@ public class AtelierHelperOld
         LogHelper.info("    name, uniquename: [" + mapName + "] [" + uniqueName + "]");
 
         
-        // TODO: check if the "loadedPaintings" cache will conflict with multiple worlds
         // world.getWorldInfo().getWorldName()
         
         if (loadedPaintings.containsKey(uniqueName)) {
@@ -158,7 +157,6 @@ public class AtelierHelperOld
             }
             else {
                 LogHelper.info("    Loading existing art");
-                // TODO: support for bigger paintings
                 
                 texture = new DynamicTexture(16, 16);
                 pixels = texture.getTextureData();

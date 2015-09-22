@@ -21,7 +21,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-// TODO - add CanvasID (damage value) and render it
 
 public class ItemCustomPainting extends Item
 {

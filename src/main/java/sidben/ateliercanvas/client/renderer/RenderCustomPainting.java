@@ -181,7 +181,6 @@ public class RenderCustomPainting extends Render
         vEnd = 0F;
 
 
-
         // Picture
         this.bindEntityTexture(painting);
         tessellator.startDrawingQuads();

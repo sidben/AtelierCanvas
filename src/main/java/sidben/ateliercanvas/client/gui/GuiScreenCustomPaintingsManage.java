@@ -214,7 +214,23 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
             } else if (button.id == BT_ID_ADDNEW) {
                 this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAdd(this));
             
+            } 
+            
+            
+            else if (button.id == BT_ID_CHANGE) {
+                if (button.enabled && this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
+                    final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
+                    if (entry != null) {
+                        this.mc.displayGuiScreen(new GuiScreenCustomPaintingsEditor(this, entry._entryData));
+                    }
+                }
+                // TODO: Add the editor callback logic (action confirmed)
+    
             }
+
+        
+            
+
         }
     }
 
