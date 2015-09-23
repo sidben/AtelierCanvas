@@ -45,6 +45,7 @@ public abstract class CommonProxy implements IProxy
 
 
         // Recipes
+        MyItems.registerRecipes();
 
 
         // Achievements

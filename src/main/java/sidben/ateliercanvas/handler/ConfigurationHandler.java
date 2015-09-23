@@ -54,11 +54,15 @@ public class ConfigurationHandler
     /** Chance of a random painting giving a forgery */
     public static int                            chanceForgery              = 15;
 
+    /** Activates simpler crafting recipes, if the player plays on peaceful or just wants to use paintings quickly */
+    public static boolean                        simpleRecipes;
+
     
 
     private static final int                     DEFAULT_maxFileSize        = 30;             // NOTE: the default file size is in KBytes to make the property slider more friendly
     private static final int                     DEFAULT_maxPaintingSize    = 64;
     private static final String                  DEFAULT_paintingDateFormat = "yyyy-MM-dd";
+    private static final boolean                 DEFAULT_simpleRecipes      = false;
 
 
 
@@ -89,6 +93,11 @@ public class ConfigurationHandler
 
 
         // Load properties
+        prop = config.get(Configuration.CATEGORY_GENERAL, "simple_recipes", DEFAULT_simpleRecipes);
+        prop.setLanguageKey(getLanguageKey("simple_recipes"));
+        simpleRecipes = prop.getBoolean(DEFAULT_simpleRecipes);
+        propOrder.add(prop.getName());
+
         prop = config.get(Configuration.CATEGORY_GENERAL, "max_filesize_kb", DEFAULT_maxFileSize, "", 10, 1024);     // 1048576 bytes == 1024KB == 1 MB
         prop.setLanguageKey(getLanguageKey("max_filesize_kb"));
         maxFileSize = (prop.getInt(DEFAULT_maxFileSize) * 1024);

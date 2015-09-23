@@ -13,6 +13,8 @@ sidben.ateliercanvas:item.random_painting.name=Mysterious Painting
 itemGroup.tab_atelier_canvas=Atelier Canvas
 
 # Config GUI
+sidben.ateliercanvas.config.prop.simple_recipes=Simple recipes
+sidben.ateliercanvas.config.prop.simple_recipes.tooltip=Enable simple crafting recipes, for players that play in peaceful or just want to get custom paintings easily.
 sidben.ateliercanvas.config.prop.max_filesize_kb=Max file size (KB)
 sidben.ateliercanvas.config.prop.max_filesize_kb.tooltip=Maximum file size accepted (KBytes)
 sidben.ateliercanvas.config.prop.date_format=Date format
