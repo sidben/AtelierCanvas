@@ -4,12 +4,9 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
-import sidben.ateliercanvas.helper.EnumAuthenticity;
 import sidben.ateliercanvas.init.MyItems;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -98,26 +95,7 @@ public class ItemRandomPainting extends Item
 
             // Gets a random painting
             final CustomPaintingConfigItem paintingConfig = ConfigurationHandler.getRandomPainting();
-
-            // Adds custom NBT
-            if (paintingConfig != null) {
-                final String uniqueId = paintingConfig.getUUID();
-                System.out.println(uniqueId);
-                System.out.println(paintingConfig.toString());
-                System.out.println(world.rand.nextInt(100));
-
-                painting.setTagInfo(ItemCustomPainting.NBTPaintingUUID, new NBTTagString(uniqueId));
-
-                if (!paintingConfig.getPaintingTitleRaw().isEmpty()) {
-                    painting.setTagInfo(ItemCustomPainting.NBTPaintingTitle, new NBTTagString(paintingConfig.getPaintingTitleRaw().trim()));
-                }
-
-                if (!paintingConfig.getPaintingAuthorRaw().isEmpty()) {
-                    painting.setTagInfo(ItemCustomPainting.NBTPaintingAuthor, new NBTTagString(paintingConfig.getPaintingAuthorRaw().trim()));
-                }
-
-                painting.setTagInfo(ItemCustomPainting.NBTPaintingAuthenticity, new NBTTagByte(EnumAuthenticity.getRandom().getId()));
-            }
+            MyItems.customPainting.addPaintingData(painting, paintingConfig, true);
 
         }
 

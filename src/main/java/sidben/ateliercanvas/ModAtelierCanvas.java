@@ -1,7 +1,9 @@
 package sidben.ateliercanvas;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import sidben.ateliercanvas.command.CommandAtelier;
+import sidben.ateliercanvas.creativetab.AtelierCanvasCreativeTabs;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.PlayerEventHandler;
 import sidben.ateliercanvas.helper.AtelierHelper;
@@ -42,6 +44,11 @@ public class ModAtelierCanvas
     // Used to send information between client / server
     public static SimpleNetworkWrapper NetworkWrapper;
 
+    
+    // Creative Tabs
+    public static CreativeTabs tabMod = new AtelierCanvasCreativeTabs("tab_atelier_canvas");
+
+    
 
     // Helpers
     @SideOnly(Side.CLIENT)
