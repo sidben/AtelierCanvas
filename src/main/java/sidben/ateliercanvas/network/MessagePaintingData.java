@@ -20,6 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * (including the painting itself, in a byte array). 
  *
  */
+@Deprecated
 public class MessagePaintingData implements IMessage
 {
 

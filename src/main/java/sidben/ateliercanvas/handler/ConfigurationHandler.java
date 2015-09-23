@@ -48,6 +48,13 @@ public class ConfigurationHandler
     /** Time in minutes a painting will remain in cache */
     public static int                            expirationTime             = 10;
 
+    /** Chance of a random painting giving an original/authentic painting */
+    public static int                            chanceAuthentic            = 5;
+
+    /** Chance of a random painting giving a forgery */
+    public static int                            chanceForgery              = 15;
+
+    
 
     private static final int                     DEFAULT_maxFileSize        = 30;             // NOTE: the default file size is in KBytes to make the property slider more friendly
     private static final int                     DEFAULT_maxPaintingSize    = 64;

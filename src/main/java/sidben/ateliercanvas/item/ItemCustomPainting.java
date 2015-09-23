@@ -9,16 +9,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Direction;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.World;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.EnumAuthenticity;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.init.MyItems;
 import sidben.ateliercanvas.reference.BlockSide;
+import sidben.ateliercanvas.reference.TextFormatTable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,13 +28,23 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemCustomPainting extends Item
 {
 
+    // --------------------------------------------------------------------
+    // Constants
+    // --------------------------------------------------------------------
+    public static final String unlocalizedName         = "custom_painting";
+    public static final String NBTPaintingUUID         = "uuid";
+    public static final String NBTPaintingTitle        = "title";
+    public static final String NBTPaintingAuthor       = "author";
+    public static final String NBTPaintingAuthenticity = "quality";
+    public static final String NBTPaintingSize         = "size";
+
+
 
     // --------------------------------------------------------------------
     // Constructors
     // --------------------------------------------------------------------
     public ItemCustomPainting() {
-        this.setTextureName("painting");
-        this.setUnlocalizedName("custom_painting");
+        this.setUnlocalizedName(ItemCustomPainting.unlocalizedName);
     }
 
 
@@ -53,8 +64,7 @@ public class ItemCustomPainting extends Item
         super.itemIcon = iconRegister.registerIcon(MyItems.customPaintingIcon);
     }
 
-    
-    
+
 
     // ----------------------------------------------------
     // Item name and flavor text
@@ -85,7 +95,7 @@ public class ItemCustomPainting extends Item
     {
         if (stack.hasTagCompound()) {
             final NBTTagCompound nbttagcompound = stack.getTagCompound();
-            final String title = nbttagcompound.getString("title");
+            final String title = nbttagcompound.getString(ItemCustomPainting.NBTPaintingTitle);
 
             if (!StringUtils.isNullOrEmpty(title))      // TODO: refactor code where I could use isNullOrEmpty
             {
@@ -106,35 +116,41 @@ public class ItemCustomPainting extends Item
             // TODO: how to update author and title when the config changes? Maybe I shouldn't store that as NBT at all, or find a way to do a 1-time only check.
 
             final NBTTagCompound nbttagcompound = stack.getTagCompound();
-            final String author = nbttagcompound.getString("author");
-            final boolean original = nbttagcompound.getBoolean("original");
+            final String author = nbttagcompound.getString(ItemCustomPainting.NBTPaintingAuthor);
+            final byte qualityId = nbttagcompound.getByte(ItemCustomPainting.NBTPaintingAuthenticity);
 
+            // Author
             if (!StringUtils.isNullOrEmpty(author)) {
-                infolist.add(EnumChatFormatting.GRAY + StatCollector.translateToLocalFormatted("sidben.ateliercanvas:item.custom_painting.author_label", new Object[] { author }));
+                infolist.add(TextFormatTable.COLOR_GRAY + StatCollector.translateToLocalFormatted("sidben.ateliercanvas:item.custom_painting.author_label", new Object[] { author }));
             }
 
-            // TODO: copy of a copy is a forgery (use byte instead of boolean)
-            infolist.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + StatCollector.translateToLocal(original ? "sidben.ateliercanvas:item.custom_painting.original" : "sidben.ateliercanvas:item.custom_painting.copy"));
+            // Authenticity
+            if (qualityId > 0) {
+                final EnumAuthenticity qualityType = EnumAuthenticity.parse(qualityId);
+                if (qualityType != null && !StringUtils.isNullOrEmpty(qualityType.getTranslatedName())) {
+                    infolist.add(TextFormatTable.COLOR_DARKGRAY + TextFormatTable.ITALIC + qualityType.getTranslatedName());
+                }
+            }
 
             // Debug info (F3 + H), check the UUID and if the painting is installed
             if (debugmode) {
-                final String uniqueId = nbttagcompound.getString("uuid");
+                final String uniqueId = nbttagcompound.getString(ItemCustomPainting.NBTPaintingUUID);
 
                 if (StringUtils.isNullOrEmpty(uniqueId)) {
-                    infolist.add(EnumChatFormatting.RED + "This painting is blank");
+                    infolist.add(TextFormatTable.COLOR_RED + "This painting is blank");
                 } else {
-                    infolist.add(EnumChatFormatting.GRAY + "" + EnumChatFormatting.ITALIC + uniqueId);
+                    infolist.add(TextFormatTable.COLOR_GRAY + TextFormatTable.ITALIC + uniqueId);
 
                     final CustomPaintingConfigItem paintingConfig = ConfigurationHandler.findPaintingByUUID(uniqueId);
                     if (paintingConfig == null || !paintingConfig.isValid()) {
-                        infolist.add(EnumChatFormatting.RED + "This painting was not found on the config file");
+                        infolist.add(TextFormatTable.COLOR_RED + "This painting was not found on the config file");
                     }
                 }
             }
         } else {
             // Debug info (F3 + H), check the UUID and if the painting is installed
             if (debugmode) {
-                infolist.add(EnumChatFormatting.RED + "This painting is empty");
+                infolist.add(TextFormatTable.COLOR_RED + "This painting is empty");
             }
         }
     }
@@ -149,9 +165,9 @@ public class ItemCustomPainting extends Item
     {
         if (stack.hasTagCompound()) {
             final NBTTagCompound nbttagcompound = stack.getTagCompound();
-            final boolean original = nbttagcompound.getBoolean("original");
+            final byte quality = nbttagcompound.getByte(ItemCustomPainting.NBTPaintingAuthenticity);
 
-            if (original) {
+            if (quality == EnumAuthenticity.ORIGINAL.getId()) {
                 return EnumRarity.uncommon;
             }
         }
@@ -181,7 +197,7 @@ public class ItemCustomPainting extends Item
             String uniqueId = "";
             if (stack.hasTagCompound()) {
                 final NBTTagCompound nbttagcompound = stack.getTagCompound();
-                uniqueId = nbttagcompound.getString("uuid");
+                uniqueId = nbttagcompound.getString(ItemCustomPainting.NBTPaintingUUID);
             }
 
 

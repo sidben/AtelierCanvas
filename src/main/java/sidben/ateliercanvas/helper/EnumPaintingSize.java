@@ -1,6 +1,7 @@
 package sidben.ateliercanvas.helper;
 
 
+@Deprecated
 public enum EnumPaintingSize
 {
 

@@ -1,36 +1,41 @@
 package sidben.ateliercanvas.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import sidben.ateliercanvas.handler.ConfigurationHandler;
-import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
-import sidben.ateliercanvas.init.MyItems;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
+import sidben.ateliercanvas.handler.ConfigurationHandler;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.EnumAuthenticity;
+import sidben.ateliercanvas.init.MyItems;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 
 public class ItemRandomPainting extends Item
 {
 
-    
+
+    // --------------------------------------------------------------------
+    // Constants
+    // --------------------------------------------------------------------
+    public static final String unlocalizedName = "random_painting";
+
+
+
     // --------------------------------------------------------------------
     // Constructors
     // --------------------------------------------------------------------
     public ItemRandomPainting() {
-        this.setCreativeTab(CreativeTabs.tabDecorations);
-        this.setTextureName("painting");
-        this.setUnlocalizedName("random_painting");
+        this.setUnlocalizedName(ItemRandomPainting.unlocalizedName);
         this.setHasSubtypes(false);
     }
 
-    
-    
+
+
     // --------------------------------------------------------------------
     // Textures and Rendering
     // --------------------------------------------------------------------
@@ -46,7 +51,6 @@ public class ItemRandomPainting extends Item
         super.itemIcon = iconRegister.registerIcon(MyItems.randomPaintingIcon);
     }
 
-    
 
 
     // ----------------------------------------------------
@@ -70,9 +74,9 @@ public class ItemRandomPainting extends Item
     {
         return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
     }
-    
-    
-    
+
+
+
     // --------------------------------------------------------------------
     // Actions
     // --------------------------------------------------------------------
@@ -84,60 +88,57 @@ public class ItemRandomPainting extends Item
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
         System.out.println("onItemRightClick()");
-        
-        // Creates a new custom painting stack
-        ItemStack painting = new ItemStack(MyItems.customPainting, 1, 0);      // args: item, amount, damage
 
-        
+        // Creates a new custom painting stack (args: item, amount, damage)
+        final ItemStack painting = new ItemStack(MyItems.customPainting, 1, 0);
+
+
         // Only on server...
         if (!world.isRemote) {
-            
+
             // Gets a random painting
             final CustomPaintingConfigItem paintingConfig = ConfigurationHandler.getRandomPainting();
-            
+
             // Adds custom NBT
             if (paintingConfig != null) {
-                String uniqueId = paintingConfig.getUUID();
+                final String uniqueId = paintingConfig.getUUID();
                 System.out.println(uniqueId);
                 System.out.println(paintingConfig.toString());
                 System.out.println(world.rand.nextInt(100));
-                
-                painting.setTagInfo("uuid", new NBTTagString(uniqueId));
-                
-                if (!paintingConfig.getPaintingTitleRaw().isEmpty())
-                    painting.setTagInfo("title", new NBTTagString(paintingConfig.getPaintingTitleRaw().trim()));                // TODO: make NBT labels static
-                
-                if (!paintingConfig.getPaintingAuthorRaw().isEmpty())
-                    painting.setTagInfo("author", new NBTTagString(paintingConfig.getPaintingAuthorRaw().trim()));
-    
-                boolean originalWork = world.rand.nextInt(100) > 50;        // TODO: make the chance a config parameter
-                painting.setTagInfo("original", new NBTTagByte((byte) (originalWork ? 1 : 0)));
+
+                painting.setTagInfo(ItemCustomPainting.NBTPaintingUUID, new NBTTagString(uniqueId));
+
+                if (!paintingConfig.getPaintingTitleRaw().isEmpty()) {
+                    painting.setTagInfo(ItemCustomPainting.NBTPaintingTitle, new NBTTagString(paintingConfig.getPaintingTitleRaw().trim()));
+                }
+
+                if (!paintingConfig.getPaintingAuthorRaw().isEmpty()) {
+                    painting.setTagInfo(ItemCustomPainting.NBTPaintingAuthor, new NBTTagString(paintingConfig.getPaintingAuthorRaw().trim()));
+                }
+
+                painting.setTagInfo(ItemCustomPainting.NBTPaintingAuthenticity, new NBTTagByte(EnumAuthenticity.getRandom().getId()));
             }
 
         }
-        
-        
+
+
         // Uses the item (reduces stack)
         --stack.stackSize;
 
-        
+
         /*
          * If the player only had one item, that item gets replaced. If he had a bigger stack,
          * drops the item if the player could not pick it up (because of full inventory).
          */
-        if (stack.stackSize <= 0)
-        {
+        if (stack.stackSize <= 0) {
             return painting;
-        }
-        else
-        {
-            if (!player.inventory.addItemStackToInventory(painting.copy()))
-            {
+        } else {
+            if (!player.inventory.addItemStackToInventory(painting.copy())) {
                 player.dropPlayerItemWithRandomChoice(painting, false);
             }
 
             return stack;
         }
     }
-    
+
 }
