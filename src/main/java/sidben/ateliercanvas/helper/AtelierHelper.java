@@ -140,15 +140,13 @@ public class AtelierHelper
     // Methods
     // --------------------------------------------------------------
 
-    public ResourceLocation getCustomPaintingImage(String uuid)
+    public ResourceLocation getCustomPaintingImage(UUID uuid)
     {
         try {
-            UUID realId;
-            realId = UUID.fromString(uuid);
-            return this.paintingsCache.get(realId);
+            return this.paintingsCache.get(uuid);
 
-        } catch (final ExecutionException | IllegalArgumentException e) {
-            // LogHelper.error("Error loading custom painting: " + e.getMessage());
+        } catch (final ExecutionException e) {
+            // Error loading the painting. Since this would be called every rendering tick, I can't call log methods here.
 
         }
 

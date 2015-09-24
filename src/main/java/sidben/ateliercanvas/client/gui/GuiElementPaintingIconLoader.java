@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -113,6 +115,9 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
 
                     this._iconWidth = paintingIcon.getWidth();
                     this._iconHeight = paintingIcon.getHeight();
+                    
+                    // Updates the config entry with the dimensions 
+                    this._entryData.setSizePixels(_iconWidth, _iconHeight);
 
                     // Validate the max dimensions
                     if (this._iconWidth > ConfigurationHandler.maxPaintingSize || this._iconHeight > ConfigurationHandler.maxPaintingSize) {
@@ -131,7 +136,7 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
                 e.printStackTrace();
 
             }
-
+            
         }
 
 
@@ -147,6 +152,8 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
             this._validImage = true;
 
         }
+        
+        
     }
 
 
@@ -211,5 +218,24 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
     {
         return "sidben.ateliercanvas.config.painting_info." + name;
     }
+    
+    
+    
+    
+    /**
+     * Extracts only the config elements of the given list of GuiElementPaintingIconLoader. 
+     */
+    public static List<CustomPaintingConfigItem> extractConfig(List<? extends GuiElementPaintingIconLoader> list) {
+        List<CustomPaintingConfigItem> configList = new ArrayList<CustomPaintingConfigItem>();
+        
+        for (final GuiElementPaintingIconLoader item : list) {
+            if (item != null && item._entryData != null) {
+                configList.add(item._entryData);
+            }
+        }
+        
+        return configList;
+    }
+    
 
 }

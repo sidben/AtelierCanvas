@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.config.Property;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.reference.ColorTable;
@@ -106,7 +105,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
 
         // Listbox data (loads from config)
         this.paintingList = new ArrayList();
-        for (final CustomPaintingConfigItem item : ConfigurationHandler.mahPaintings) {
+        for (final CustomPaintingConfigItem item : ConfigurationHandler.getAllMahGoodPaintings()) {
             this.paintingList.add(new GuiElementPaintingListEntry(this, item));
         }
 
@@ -183,28 +182,10 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
                 }
 
 
-                // TODO: For realz, clean this mess
                 // TODO: Only save if there were changes
-
-                // Clear all content of the category
-                ConfigurationHandler.config.getCategory(configID).clear();
-
-                // Re-adds all the valid entries
-                Property configProp;
-                int c = 0;
-
-                for (final GuiElementPaintingListEntry item : this.paintingList) {
-                    final String configKey = String.format("%s_%03d", ConfigurationHandler.PAINTINGS_ARRAY_KEY, c);
-
-                    configProp = ConfigurationHandler.config.get(configID, configKey, new String[] {});
-                    configProp.set(item._entryData.ToStringArray());
-
-                    c++;
-                }
-
-                // Saves the config file
-                ConfigurationHandler.config.save();
-
+                // Save the changes to the config file
+                // List<CustomPaintingConfigItem> configEntries = GuiElementPaintingIconLoader.extractConfig(this.paintingList);
+                ConfigurationHandler.updateAndSaveConfig();
 
 
                 // Returns to the parent screen
@@ -213,10 +194,10 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
 
             } else if (button.id == BT_ID_ADDNEW) {
                 this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAdd(this));
-            
-            } 
-            
-            
+
+            }
+
+
             else if (button.id == BT_ID_CHANGE) {
                 if (button.enabled && this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
                     final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
@@ -225,11 +206,10 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
                     }
                 }
                 // TODO: Add the editor callback logic (action confirmed)
-    
+
             }
 
-        
-            
+
 
         }
     }
@@ -294,14 +274,16 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
         this.displayDetails(index);
         this.selectedIndex = index;
     }
-    
-    
+
+
     /**
      * Displays the GUI element with the image details and thumbnail.
      * 
-     * @param index Index of the element on the listbox.
+     * @param index
+     *            Index of the element on the listbox.
      */
-    public void displayDetails(int index) {
+    public void displayDetails(int index)
+    {
         if (index >= 0 && index < this.paintingList.size()) {
             final GuiElementPaintingListEntry entry = this.paintingList.get(index);
             this.guiElementPaintingDetails.updateConfigItem(entry._entryData);
@@ -310,8 +292,8 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
                     .translateToLocal(getLanguageKey("disabled"));
 
             this.displayDetailsButtons(true);
-        }        
+        }
     }
-    
+
 
 }

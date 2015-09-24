@@ -1,6 +1,7 @@
 package sidben.ateliercanvas.item;
 
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityHanging;
@@ -256,8 +257,8 @@ public class ItemCustomPainting extends Item
         if (configItem != null && configItem.isValid()) {
 
             // Adds custom NBT
-            final String uniqueId = configItem.getUUID();
-            stack.setTagInfo(ItemCustomPainting.NBTPaintingUUID, new NBTTagString(uniqueId));
+            final UUID uniqueId = configItem.getUUID();
+            stack.setTagInfo(ItemCustomPainting.NBTPaintingUUID, new NBTTagString(uniqueId.toString()));
 
             if (!configItem.getPaintingTitleRaw().isEmpty()) {
                 stack.setTagInfo(ItemCustomPainting.NBTPaintingTitle, new NBTTagString(configItem.getPaintingTitleRaw().trim()));
@@ -289,13 +290,11 @@ public class ItemCustomPainting extends Item
     {
         ItemStack paintingStack;
 
-        for (final CustomPaintingConfigItem configItem : ConfigurationHandler.mahPaintings) {
-            if (configItem.isValid()) {
-                paintingStack = new ItemStack(item, 1);
-                MyItems.customPainting.addPaintingData(paintingStack, configItem, false);
+        for (final CustomPaintingConfigItem configItem : ConfigurationHandler.getAllMahGoodPaintings()) {
+            paintingStack = new ItemStack(item, 1);
+            MyItems.customPainting.addPaintingData(paintingStack, configItem, false);
 
-                itemList.add(paintingStack);
-            }
+            itemList.add(paintingStack);
         }
     }
 

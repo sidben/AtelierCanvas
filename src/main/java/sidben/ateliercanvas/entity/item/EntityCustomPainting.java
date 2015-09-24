@@ -1,7 +1,10 @@
 package sidben.ateliercanvas.entity.item;
 
+import static sidben.ateliercanvas.handler.ConfigurationHandler.EMPTY_UUID;
+
 import io.netty.buffer.ByteBuf;
 import java.util.Date;
+import java.util.UUID;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,16 +50,16 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         if (paintingConfig != null) {
             this._entry = paintingConfig;
         } else {
-            this._entry = new CustomPaintingConfigItem("", uuid, false, 0, "", "", new Date(), new Date());
+            this._entry = new CustomPaintingConfigItem("", null, false, 0, "", "", new Date(), new Date(), 16, 16);
         }
     }
 
 
 
-    public String getImageUUID()
+    public UUID getImageUUID()
     {
         if (this._entry == null) {
-            return "";
+            return EMPTY_UUID;
         }
         return this._entry.getUUID();
     }
@@ -100,7 +103,7 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     @Override
     public void writeEntityToNBT(NBTTagCompound nbtTagCompound)
     {
-        nbtTagCompound.setString("uuid", this.getImageUUID());
+        nbtTagCompound.setString("uuid", this.getImageUUID().toString());
         super.writeEntityToNBT(nbtTagCompound);
     }
 
@@ -122,13 +125,13 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     {
         /*
          * Sends the painting info to the client. I need to send the direction and
-         * XYZ coordinates because the client won't have the correct data when the 
+         * XYZ coordinates because the client won't have the correct data when the
          * entity spawns.
          * 
-         *  This behaves like the vanilla [handleSpawnPainting], that handles packets
-         *  client-side when an EntityPainting spawns.
+         * This behaves like the vanilla [handleSpawnPainting], that handles packets
+         * client-side when an EntityPainting spawns.
          */
-        ByteBufUtils.writeUTF8String(buffer, this.getImageUUID());
+        ByteBufUtils.writeUTF8String(buffer, this.getImageUUID().toString());
         buffer.writeByte(hangingDirection);
         buffer.writeInt(this.field_146063_b);       // x
         buffer.writeInt(this.field_146064_c);       // y
@@ -144,7 +147,7 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
          * First I need to read the UUID of the painting, so the object can be load by
          * the [setPaintingEntry] method.
          * 
-         * Then I need to set the correct XYZ coordinates and call the [setDirection] 
+         * Then I need to set the correct XYZ coordinates and call the [setDirection]
          * method in order to create the correct bounding box.
          */
         final String uniqueId = ByteBufUtils.readUTF8String(buffer);

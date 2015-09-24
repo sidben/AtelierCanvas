@@ -1,5 +1,7 @@
 package sidben.ateliercanvas.handler;
 
+import static sidben.ateliercanvas.handler.ConfigurationHandler.EMPTY_UUID;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,32 +21,31 @@ import sidben.ateliercanvas.reference.TextFormatTable;
 public class CustomPaintingConfigItem
 {
 
-    private final static int       EXPECTED_LENGTH  = 8;
+    private final static int       EXPECTED_LENGTH  = 10;
 
     private final SimpleDateFormat sdfSave          = new SimpleDateFormat("yyyy-MM-dd");
     private final SimpleDateFormat sdfDisplay       = new SimpleDateFormat(ConfigurationHandler.paintingDateFormat);
     private final String           ancientDate      = "1700-01-01";
 
     private String                 _fileName        = "";
-    private String                 _uuid            = "";
+    private UUID                   _uuid;
     private boolean                _enabled         = false;
     private long                   _sizeBytes       = -1;
     private String                 _title           = "";
     private String                 _author          = "";
     private Date                   _creationDate    = new Date();
     private Date                   _lastUpdateDate  = new Date();
-    private int                    _widthTile       = 1;                    // TODO: gather this info when importing paintings
-    private int                    _heightTile      = 1;                    // TODO: update this info on the manager, if don't match with actual picture
+    private int                    _width           = ConfigurationHandler.minPaintingSize;
+    private int                    _height          = ConfigurationHandler.minPaintingSize;                         // TODO: update this info on the manager, if don't match with actual picture
 
     private String                 validationErrors = "";
 
 
 
-    
-    //----------------------------------------------------------------
+    // ----------------------------------------------------------------
     // Constructors
-    //----------------------------------------------------------------
-    
+    // ----------------------------------------------------------------
+
     /**
      * Creates a new config info object.
      * 
@@ -61,8 +62,8 @@ public class CustomPaintingConfigItem
      *            <li><b>[5]</b> - Painting author. String, optional.</li>
      *            <li><b>[6]</b> - Creation date. Date (format: YYYY-MM-DD), required.</li>
      *            <li><b>[7]</b> - Last update date. Date (format: YYYY-MM-DD), required. Initially, will be the same as the creation date.</li>
-     *            <li><b>[8]</b> - Tile width. Integer, optional.</li>
-     *            <li><b>[9]</b> - Tile height. Integer, optional.</li>
+     *            <li><b>[8]</b> - Image width in pixels. Integer (if not valid, will be set at 16).</li>
+     *            <li><b>[9]</b> - Image height in pixels. Integer (if not valid, will be set at 16).</li>
      * 
      *            <li><b>[?]</b> - Player name that imported / created / uploaded the painting.</li>
      *            <li><b>[?]</b> - Player UUID that imported / created / uploaded the painting.</li>
@@ -81,20 +82,15 @@ public class CustomPaintingConfigItem
 
 
             this._fileName = _entryData[0];
-            this._uuid = _entryData[1];
+            this._uuid = parseUUIDWithRandomDefault(_entryData[1]);
             this._enabled = parseBoolean(_entryData[2]);
             this._sizeBytes = parseLongWithDefault(_entryData[3], -1);
             this._title = _entryData[4];
             this._author = _entryData[5];
             this._creationDate = parseDateWithDefault(_entryData[6], ancientTimes);
             this._lastUpdateDate = parseDateWithDefault(_entryData[7], ancientTimes);
-            
-            // Reads optional parameters
-            if (_entryData.length >= 9) {
-                this._widthTile = parseIntWithDefault(_entryData[8], 1, 1);
-                this._heightTile = parseIntWithDefault(_entryData[9], 1, 1);
-            }
-
+            this._width = parseIntWithDefault(_entryData[8], ConfigurationHandler.minPaintingSize, ConfigurationHandler.minPaintingSize);
+            this._height = parseIntWithDefault(_entryData[9], ConfigurationHandler.minPaintingSize, ConfigurationHandler.minPaintingSize);
         }
     }
 
@@ -119,7 +115,7 @@ public class CustomPaintingConfigItem
      * @param updateDate
      *            Last time the painting config was updated.
      */
-    public CustomPaintingConfigItem(String fileName, String uuid, boolean enabled, long fileSize, String title, String author, Date createDate, Date updateDate) {
+    public CustomPaintingConfigItem(String fileName, UUID uuid, boolean enabled, long fileSize, String title, String author, Date createDate, Date updateDate, int width, int height) {
         this._author = author;
         this._creationDate = createDate;
         this._enabled = enabled;
@@ -128,6 +124,8 @@ public class CustomPaintingConfigItem
         this._lastUpdateDate = updateDate;
         this._sizeBytes = fileSize;
         this._title = title;
+        this._width = width;
+        this._height = height;
     }
 
 
@@ -147,25 +145,28 @@ public class CustomPaintingConfigItem
      *            Author of the painting.
      */
     public CustomPaintingConfigItem(String fileName, boolean enabled, long fileSize, String title, String author) {
-        this(fileName, UUID.randomUUID().toString(), enabled, fileSize, title, author, new Date(), new Date());
+        this(fileName, UUID.randomUUID(), enabled, fileSize, title, author, new Date(), new Date(), ConfigurationHandler.minPaintingSize, ConfigurationHandler.minPaintingSize);
     }
 
-    
-    
-    
-   
-    //----------------------------------------------------------------
+
+
+    // ----------------------------------------------------------------
     // Properties
-    //----------------------------------------------------------------
+    // ----------------------------------------------------------------
 
     public String getPaintingFileName()
     {
         return this._fileName;
     }
 
-    public String getUUID()
+    public UUID getUUID()
     {
-        return this._uuid;
+        return this._uuid == null ? EMPTY_UUID : this._uuid;
+    }
+
+    public String getStringUUID()
+    {
+        return this.getUUID().toString();
     }
 
     public boolean getIsEnabled()
@@ -239,20 +240,19 @@ public class CustomPaintingConfigItem
             return "-";
         }
     }
-    
+
     /** Returns the painting width in tiles. Each 'tile' is a 16x16 block, so a painting with 48x32 size in pixels would occupy 3x2 tiles */
     public int getTileWidth()
     {
-        return this._widthTile;
+        return (int) Math.ceil(this._width / 16);
     }
 
     /** Returns the painting height in tiles. Each 'tile' is a 16x16 block, so a painting with 48x32 size in pixels would occupy 3x2 tiles */
     public int getTileHeight()
     {
-        return this._heightTile;
+        return (int) Math.ceil(this._height / 16);
     }
 
-    
 
 
     public void setPaintingTitle(String value)
@@ -270,24 +270,17 @@ public class CustomPaintingConfigItem
         this._enabled = value;
     }
 
-    public void setSize(int tileWidth, int tileHeight)
+    public void setSizePixels(int width, int height)
     {
-        this._widthTile = Math.max(tileWidth, 1);
-        this._heightTile = Math.max(tileHeight, 1);
-    }
-
-    public void setSizePixels(int imageWidth, int imageHeight)
-    {
-        this._widthTile = (int) Math.max((imageWidth / 16.0), 1);
-        this._heightTile = (int) Math.max((imageHeight / 16.0), 1);
+        this._width = Math.max(width, ConfigurationHandler.minPaintingSize);
+        this._height = Math.max(height, ConfigurationHandler.minPaintingSize);
     }
 
 
-    
-    
-    //----------------------------------------------------------------
+
+    // ----------------------------------------------------------------
     // Information about this entry integrity
-    //----------------------------------------------------------------
+    // ----------------------------------------------------------------
 
     /**
      * @return TRUE if this object has the minimum expected values to be used.
@@ -302,7 +295,7 @@ public class CustomPaintingConfigItem
             validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_filename"));
             return false;
         }
-        if (this._uuid.isEmpty()) {
+        if (this._uuid == null) {
             validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_uuid"));
             return false;
         }
@@ -335,7 +328,8 @@ public class CustomPaintingConfigItem
         }
 
 
-        return new String[] { this._fileName, this._uuid, (this._enabled ? "1" : "0"), Long.toString(this._sizeBytes), this._title, this._author, dateCreated, dateUpdated, Integer.toString(this._widthTile), Integer.toString(this._heightTile) };
+        return new String[] { this._fileName, this._uuid.toString(), (this._enabled ? "1" : "0"), Long.toString(this._sizeBytes), this._title, this._author, dateCreated, dateUpdated,
+                Integer.toString(this._width), Integer.toString(this._height) };
     }
 
 
@@ -344,8 +338,8 @@ public class CustomPaintingConfigItem
     {
         return StringUtils.join(this.ToStringArray(), "|");
     }
-    
-    
+
+
     /**
      * Returns how the config array is expected to behave.
      */
@@ -363,19 +357,17 @@ public class CustomPaintingConfigItem
         r += "    Author's name\n";
         r += "    Creation date (format yyyy-MM-dd)\n";
         r += "    Last update date (format yyyy-MM-dd)\n";
+        r += "    Image width, in pixels\n";
+        r += "    Image height, in pixels\n";
 
         return r;
     }
 
-    
-    
-    
-    
-    
 
-    //----------------------------------------------------------------
+
+    // ----------------------------------------------------------------
     // Generic helpers
-    //----------------------------------------------------------------
+    // ----------------------------------------------------------------
 
     /**
      * @return TRUE if the entryData array has the minimum expected size.
@@ -403,14 +395,10 @@ public class CustomPaintingConfigItem
     }
 
 
-    
-    
-    
 
-    
-    //----------------------------------------------------------------
+    // ----------------------------------------------------------------
     // Parser helpers
-    //----------------------------------------------------------------
+    // ----------------------------------------------------------------
     private int parseIntWithDefault(String textValue, int defaultValue, int minimumValue)
     {
         try {
@@ -419,7 +407,7 @@ public class CustomPaintingConfigItem
             return defaultValue;
         }
     }
-    
+
     private long parseLongWithDefault(String textValue, long defaultValue)
     {
         try {
@@ -438,9 +426,21 @@ public class CustomPaintingConfigItem
         }
     }
 
-    private boolean parseBoolean(String textValue) {
+    private boolean parseBoolean(String textValue)
+    {
         return textValue.equals("1");
     }
 
-    
+    /**
+     * @return A random UUID if the given text is invalid.
+     */
+    private UUID parseUUIDWithRandomDefault(String textValue)
+    {
+        try {
+            return UUID.fromString(textValue);
+        } catch (final IllegalArgumentException e) {
+            return UUID.randomUUID();
+        }
+    }
+
 }

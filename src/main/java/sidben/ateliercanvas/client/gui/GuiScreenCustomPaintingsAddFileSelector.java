@@ -12,9 +12,7 @@ import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Util;
-import net.minecraftforge.common.config.Property;
 import org.lwjgl.Sys;
-import scala.actors.threadpool.Arrays;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.helper.ImageFilenameFilter;
@@ -83,27 +81,13 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
         this.displayDetailsButtons(false);
 
 
-        // Current installed paintings
-        final String[] currentFilesArray = new String[ConfigurationHandler.mahPaintings.size()];
-
-        for (int i = 0; i < ConfigurationHandler.mahPaintings.size(); i++) {
-            currentFilesArray[i] = ConfigurationHandler.mahPaintings.get(i).getPaintingFileName().toLowerCase();
-        }
-
-        final List<String> currentFiles = Arrays.asList(currentFilesArray);
-
 
         // Listbox data (loads the image files that are not already in the mod config)
+        final List<CustomPaintingConfigItem> filesNotInstalled = ConfigurationHandler.getPaintingsInConfigFolderNotInstalled();
         this.paintingList = new ArrayList();
 
-        final File folder = new File(this.mc.mcDataDir, ConfigurationHandler.IMAGES_BASE_PATH);
-        for (final File fileEntry : folder.listFiles(new ImageFilenameFilter())) {
-            final String name = fileEntry.getName().toLowerCase();
-            if (!currentFiles.contains(name)) {
-                // Creates a fake CustomPaintingConfigItem item to display in the listbox
-                final CustomPaintingConfigItem item = new CustomPaintingConfigItem(name, true, fileEntry.length(), name, "");
-                this.paintingList.add(new GuiElementPaintingListEntry(this, item));
-            }
+        for (final CustomPaintingConfigItem configItem : filesNotInstalled) {
+            this.paintingList.add(new GuiElementPaintingListEntry(this, configItem));
         }
 
 
@@ -297,42 +281,9 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
 
         LogHelper.info("Importing painting #" + index + " from the list");
         if (index >= 0 && index < this.paintingList.size()) {
-
-            // TODO: encapsulate a method to add paintings via CustomPaintingConfigItem
             final CustomPaintingConfigItem selectedEntry = this.paintingList.get(index)._entryData;
-
-            if (selectedEntry.isValid()) {
-                ConfigurationHandler.mahPaintings.add(selectedEntry);
-
-                // TODO: Really, really encapsulate this mess (the code should only interact with mahPaintings, config handler should... handle the config)
-                final String configID = ConfigurationHandler.CATEGORY_PAINTINGS;
-
-                // Clear all content of the category
-                ConfigurationHandler.config.getCategory(configID).clear();
-
-                // Re-adds all the valid entries
-                Property configProp;
-                int c = 0;
-
-                for (final CustomPaintingConfigItem item : ConfigurationHandler.mahPaintings) {
-                    final String configKey = String.format("%s_%03d", ConfigurationHandler.PAINTINGS_ARRAY_KEY, c);
-
-                    configProp = ConfigurationHandler.config.get(configID, configKey, new String[] {});
-                    configProp.set(item.ToStringArray());
-
-                    c++;
-                }
-
-                // Saves the config file
-                ConfigurationHandler.config.save();
-
-
-                LogHelper.info("    Successfuly imported a config entry: [" + selectedEntry.toString() + "]");
-                return true;
-            } else {
-                LogHelper.info("    Error importing a config entry: [" + selectedEntry.getValiadtionErrors() + "]");
-            }
-
+            ConfigurationHandler.addNewItemAndSaveConfig(selectedEntry);
+            return true;
 
         } else {
             LogHelper.error("    Invalid painting index");
@@ -383,13 +334,15 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
         this.selectedIndex = index;
     }
 
-    
+
     /**
      * Displays the GUI element with the image details and thumbnail.
      * 
-     * @param index Index of the element on the listbox.
+     * @param index
+     *            Index of the element on the listbox.
      */
-    public void displayDetails(int index) {
+    public void displayDetails(int index)
+    {
         if (index >= 0 && index < this.paintingList.size()) {
             final GuiElementPaintingListEntry entry = this.paintingList.get(index);
             this.guiElementPaintingDetails.updateConfigItem(entry._entryData);
