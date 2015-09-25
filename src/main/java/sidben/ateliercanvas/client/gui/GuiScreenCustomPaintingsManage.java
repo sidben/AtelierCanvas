@@ -44,10 +44,10 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListContainer
+public class GuiScreenCustomPaintingsManage extends GuiScreen
 {
 
-    private static final int                  BT_ID_BACK    = 1;
+    private static final int                  BT_ID_DONE    = 1;
     private static final int                  BT_ID_ADDNEW  = 2;
     private static final int                  BT_ID_CHANGE  = 3;
     private static final int                  BT_ID_REMOVE  = 4;
@@ -83,7 +83,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
         final int buttonMargin = 1;
 
         this.buttonList.add(new GuiOptionButton(BT_ID_ADDNEW, this.width / 2 - 154, this.height - 48, StatCollector.translateToLocal(getLanguageKey("add_new"))));
-        this.buttonList.add(new GuiUnicodeGlyphButton(BT_ID_BACK, secondColumnX, this.height - 48, 150, 20, " " + StatCollector.translateToLocal("gui.back"), GLYPH_BACK, 2.0F));
+        this.buttonList.add(new GuiOptionButton(BT_ID_DONE, secondColumnX, this.height - 48, StatCollector.translateToLocal("gui.done")));
 
         this.buttonList.add(new GuiButton(BT_ID_CHANGE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("edit"))));
         this.buttonList.add(new GuiButton(BT_ID_REMOVE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("remove"))));
@@ -170,7 +170,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
     {
         if (button.enabled) {
 
-            if (button.id == BT_ID_BACK) {
+            if (button.id == BT_ID_DONE) {
                 final String configID = ConfigurationHandler.CATEGORY_PAINTINGS;
                 final boolean requiresMcRestart = false;
 
@@ -182,10 +182,19 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
                 }
 
 
-                // TODO: Only save if there were changes
-                // Save the changes to the config file
-                // List<CustomPaintingConfigItem> configEntries = GuiElementPaintingIconLoader.extractConfig(this.paintingList);
-                ConfigurationHandler.updateAndSaveConfig();
+                // Identifies and update every element that changed
+                boolean elementChanged = false;
+                for (GuiElementPaintingListEntry item : this.paintingList) {
+                    if (item.changed()) {
+                        elementChanged = true;
+                        ConfigurationHandler.addOrUpdateEntry(item._entryData);
+                    }
+                }
+                
+                // Save the changes to the config file, if anything changed
+                if (elementChanged) {
+                    ConfigurationHandler.updateAndSaveConfig();
+                }
 
 
                 // Returns to the parent screen
@@ -266,13 +275,15 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen implements IListCo
 
 
 
-    @Override
-    public void onItemSelected(GuiElementPaintingList list, int index)
+    public void confirmClicked(boolean result, int index)
     {
-        this.selectedIndex = -1;
-        this.displayDetailsButtons(false);
-        this.displayDetails(index);
-        this.selectedIndex = index;
+        // OBS: this event is fired by the GuiElementPaintingList when an item is selected
+        if (result) {
+            this.selectedIndex = -1;
+            this.displayDetailsButtons(false);
+            this.displayDetails(index);
+            this.selectedIndex = index;
+        }
     }
 
 

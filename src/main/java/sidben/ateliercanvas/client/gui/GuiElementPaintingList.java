@@ -3,6 +3,7 @@ package sidben.ateliercanvas.client.gui;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;
+import net.minecraft.client.gui.GuiScreen;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,16 +28,21 @@ public class GuiElementPaintingList extends GuiListExtended
 
     @SuppressWarnings("rawtypes")
     protected final List      valueList;
+    
+    private final GuiScreen _parentGui;
+    
 
     // TODO: List sorting criteria (mod param?) - DEFAULT: Size (Area > Width) > Name
 
     @SuppressWarnings("rawtypes")
-    public GuiElementPaintingList(Minecraft minecraft, int width, int height, List list, IListContainer callback) {
+    public GuiElementPaintingList(Minecraft minecraft, int width, int height, List list, GuiScreen parentGui) {
         super(minecraft, width, height, 32, height - 55, 36);
         this.mc = minecraft;
         this.valueList = list;
         this.field_148163_i = false;        // ?
-        this._callback = callback;
+        // this._callback = callback;
+        this._callback = null;
+        this._parentGui = parentGui;
     }
 
 
@@ -58,9 +64,7 @@ public class GuiElementPaintingList extends GuiListExtended
                 int relativeY = mouseY - j1;
 
                 // Custom callback
-                if (this._callback != null) {
-                    this._callback.onItemSelected(this, index);
-                }
+                this._parentGui.confirmClicked(true, index);
                 
                 if (this.getListEntry(index).mousePressed(index, mouseX, mouseY, mouseEvent, relativeX, relativeY))
                 {

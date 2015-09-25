@@ -40,10 +40,12 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
     private final int                  _resolution = ConfigurationHandler.defaultResolution;           // TODO: support for high-res paintings
     private String                     _warnings;
     private boolean                    _validImage = false;
+    private boolean _changed = false;
 
     protected final Minecraft          mc;
     protected final GuiScreen          _ownerGui;
     protected CustomPaintingConfigItem _entryData;
+
 
 
 
@@ -117,7 +119,10 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
                     this._iconHeight = paintingIcon.getHeight();
                     
                     // Updates the config entry with the dimensions 
-                    this._entryData.setSizePixels(_iconWidth, _iconHeight);
+                    if (_entryData.getWidth() != _iconWidth || _entryData.getHeight() != _iconHeight) {
+                        this._entryData.setSizePixels(_iconWidth, _iconHeight);
+                        this._changed = true;
+                    }
 
                     // Validate the max dimensions
                     if (this._iconWidth > ConfigurationHandler.maxPaintingSize || this._iconHeight > ConfigurationHandler.maxPaintingSize) {
@@ -197,6 +202,19 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
     protected boolean hasValidImage()
     {
         return this._validImage;
+    }
+
+    /**
+     * <p>
+     * Indicates if the config entry of this element changed and needs to be saved.
+     * </p>
+     * <p>
+     * Currently this is used to update the image width/height to match the actual image.
+     * </p>
+     */
+    public boolean changed()
+    {
+        return this._changed;
     }
 
 

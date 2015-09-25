@@ -39,6 +39,9 @@ public class CustomPaintingConfigItem
     private int                    _height          = ConfigurationHandler.minPaintingSize;                         // TODO: update this info on the manager, if don't match with actual picture
 
     private String                 validationErrors = "";
+    
+   
+    
 
 
 
@@ -241,6 +244,18 @@ public class CustomPaintingConfigItem
         }
     }
 
+    /** Returns the painting width in pixels. */
+    public int getWidth()
+    {
+        return _width;
+    }
+
+    /** Returns the painting height in pixels. */
+    public int getHeight()
+    {
+        return _height;
+    }
+
     /** Returns the painting width in tiles. Each 'tile' is a 16x16 block, so a painting with 48x32 size in pixels would occupy 3x2 tiles */
     public int getTileWidth()
     {
@@ -276,6 +291,27 @@ public class CustomPaintingConfigItem
         this._height = Math.max(height, ConfigurationHandler.minPaintingSize);
     }
 
+
+    
+    /**
+     * <p>
+     * Updates this entry with values from the given config entry.
+     * </p>
+     * <p>
+     * Values updates: Title, Author, Enabled, Width, Height
+     * </p>
+     */
+    public void updateEntryFrom(CustomPaintingConfigItem entry)
+    {
+        this.setIsEnabled(entry.getIsEnabled());
+        this.setPaintingAuthor(entry.getPaintingAuthorRaw());
+        this.setPaintingTitle(entry.getPaintingTitleRaw());
+        this.setSizePixels(entry.getWidth(), entry.getHeight());
+        this._lastUpdateDate = new Date();          // current date
+    }
+
+    
+    
 
 
     // ----------------------------------------------------------------

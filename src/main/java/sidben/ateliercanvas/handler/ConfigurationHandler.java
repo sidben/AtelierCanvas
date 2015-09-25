@@ -257,7 +257,7 @@ public class ConfigurationHandler
     }
 
 
-
+    @Deprecated
     public static void addNewItemAndSaveConfig(CustomPaintingConfigItem item)
     {
         if (item == null) {
@@ -273,6 +273,39 @@ public class ConfigurationHandler
             LogHelper.info("    Error importing a config entry: [" + item.getValiadtionErrors() + "]");
         }
     }
+    
+    
+    
+    /**
+     * Updates the item with the same UUID of the given element. If the item UUID
+     * is not found, it's added to the list.
+     */
+    public static void addOrUpdateEntry(CustomPaintingConfigItem item) {
+        if (item == null || item.getUUID() == EMPTY_UUID) {
+            return;
+        }
+        if (item.isValid()) {
+
+            // Tries to find the item
+            CustomPaintingConfigItem currentEntry = findPaintingByUUID(item.getUUID()); 
+            
+            if (currentEntry != null) 
+            {
+                // Updates the existing entry
+                currentEntry.updateEntryFrom(item);
+            }
+            else 
+            {
+                // Adds a new entry
+                ConfigurationHandler.mahPaintings.add(item);
+            }
+
+        } else {
+            LogHelper.info("    Error updating a config entry: [" + item.getValiadtionErrors() + "]");
+            
+        }        
+    }
+    
 
 
 
@@ -281,7 +314,6 @@ public class ConfigurationHandler
      */
     public static void updateAndSaveConfig()
     {
-
         // Clear all content of the category
         ConfigurationHandler.config.getCategory(CATEGORY_PAINTINGS).clear();
 
