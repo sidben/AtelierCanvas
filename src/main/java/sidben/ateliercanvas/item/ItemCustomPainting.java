@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.Direction;
@@ -36,21 +35,18 @@ public class ItemCustomPainting extends Item
     // --------------------------------------------------------------------
     // Constants
     // --------------------------------------------------------------------
-    public static final String unlocalizedName         = "custom_painting";
-    public static final String NBTPaintingUUID         = "uuid";
-    public static final String NBTPaintingTitle        = "title";
-    public static final String NBTPaintingAuthor       = "author";
-    public static final String NBTPaintingSize         = "size";
-    
-    
-    
-    
-    private IIcon[] iconArray;
-    
-    private static final int idxDefaultIcon = 0;
-    private static final int idxShinyIcon = 1;
-    
-    
+    public static final String unlocalizedName   = "custom_painting";
+    public static final String NBTPaintingUUID   = "uuid";
+    public static final String NBTPaintingTitle  = "title";
+    public static final String NBTPaintingAuthor = "author";
+    public static final String NBTPaintingSize   = "size";
+
+
+
+    private IIcon[]            iconArray;
+
+    private static final int   idxDefaultIcon    = 0;
+    private static final int   idxShinyIcon      = 1;
 
 
 
@@ -77,7 +73,7 @@ public class ItemCustomPainting extends Item
     public void registerIcons(IIconRegister iconRegister)
     {
         iconArray = new IIcon[2];
-        
+
         iconArray[idxDefaultIcon] = iconRegister.registerIcon(MyItems.customPaintingIcon);
         iconArray[idxShinyIcon] = iconRegister.registerIcon(MyItems.customPaintingShinyIcon);
     }
@@ -86,6 +82,7 @@ public class ItemCustomPainting extends Item
     /**
      * Gets an icon index based on an item's damage value
      */
+    @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage)
     {
@@ -94,9 +91,8 @@ public class ItemCustomPainting extends Item
         }
         return this.iconArray[idxDefaultIcon];
     }
-    
-    
-    
+
+
 
     // ----------------------------------------------------
     // Item name and flavor text
@@ -233,7 +229,7 @@ public class ItemCustomPainting extends Item
 
 
             final int facing = Direction.facingToDirection[side];
-            final EntityHanging entityhanging = this.createHangingEntity(world, x, y, z, facing, uniqueId);
+            final EntityHanging entityhanging = this.createHangingEntity(world, x, y, z, facing, uniqueId, stack.getItemDamage());
 
             // DEBUG
             if (entityhanging != null) {
@@ -264,9 +260,9 @@ public class ItemCustomPainting extends Item
 
 
 
-    private EntityHanging createHangingEntity(World world, int x, int y, int z, int direction, String uuid)
+    private EntityHanging createHangingEntity(World world, int x, int y, int z, int direction, String uuid, int damageValue)
     {
-        return new EntityCustomPainting(world, x, y, z, direction, uuid);
+        return new EntityCustomPainting(world, x, y, z, direction, uuid, damageValue);
     }
 
 
@@ -305,7 +301,6 @@ public class ItemCustomPainting extends Item
     }
 
 
-    
 
     // --------------------------------------------------------------------
     // Creative Tab

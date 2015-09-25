@@ -1,7 +1,6 @@
 package sidben.ateliercanvas.entity.item;
 
 import static sidben.ateliercanvas.handler.ConfigurationHandler.EMPTY_UUID;
-
 import io.netty.buffer.ByteBuf;
 import java.util.Date;
 import java.util.UUID;
@@ -22,7 +21,16 @@ import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 public class EntityCustomPainting extends EntityHanging implements IEntityAdditionalSpawnData
 {
 
+    // ------------------------------------------------------------------------------
+    // Constants
+    // ------------------------------------------------------------------------------
+    public static final String       NBTPaintingUUID    = "uuid";
+    public static final String       NBTItemDamageValue = "damage";
+
+
+
     private CustomPaintingConfigItem _entry;
+    private int                      _itemDamageValue;
 
 
     public EntityCustomPainting(World world) {
@@ -30,10 +38,11 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     }
 
 
-    public EntityCustomPainting(World world, int x, int y, int z, int direction, String uuid) {
+    public EntityCustomPainting(World world, int x, int y, int z, int direction, String uuid, int damageValue) {
         super(world, x, y, z, direction);
         this.setPaintingEntry(uuid);
         this.setDirection(direction);
+        this._itemDamageValue = damageValue;
     }
 
 
@@ -55,6 +64,10 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     }
 
 
+
+    // ------------------------------------------------------------------------------
+    // Info
+    // ------------------------------------------------------------------------------
 
     public UUID getImageUUID()
     {
@@ -82,6 +95,12 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         return this._entry.getTileHeight() * ConfigurationHandler.defaultResolution;
     }
 
+
+
+    // ------------------------------------------------------------------------------
+    // Behavior
+    // ------------------------------------------------------------------------------
+
     @Override
     public void onBroken(Entity entity)
     {
@@ -92,10 +111,21 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
             }
         }
 
-        this.entityDropItem(new ItemStack(MyItems.customPainting), 0.0F);
+        // Gets an item stack with the current painting data
+        final ItemStack its_a_me_Painting = new ItemStack(MyItems.customPainting);
+        MyItems.customPainting.addPaintingData(its_a_me_Painting, this._entry, false);
+
+        // Adds the authenticity
+        its_a_me_Painting.setItemDamage(this._itemDamageValue);
+
+        this.entityDropItem(its_a_me_Painting, 0.0F);
     }
 
 
+
+    // ------------------------------------------------------------------------------
+    // Data Persistence
+    // ------------------------------------------------------------------------------
 
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
@@ -103,7 +133,8 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     @Override
     public void writeEntityToNBT(NBTTagCompound nbtTagCompound)
     {
-        nbtTagCompound.setString("uuid", this.getImageUUID().toString());
+        nbtTagCompound.setString(EntityCustomPainting.NBTPaintingUUID, this.getImageUUID().toString());
+        nbtTagCompound.setInteger(EntityCustomPainting.NBTItemDamageValue, this._itemDamageValue);
         super.writeEntityToNBT(nbtTagCompound);
     }
 
@@ -113,7 +144,8 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     @Override
     public void readEntityFromNBT(NBTTagCompound nbtTagCompound)
     {
-        final String uniqueId = nbtTagCompound.getString("uuid");
+        final String uniqueId = nbtTagCompound.getString(EntityCustomPainting.NBTPaintingUUID);
+        this._itemDamageValue = nbtTagCompound.getInteger(EntityCustomPainting.NBTItemDamageValue);
 
         this.setPaintingEntry(uniqueId);
         super.readEntityFromNBT(nbtTagCompound);
