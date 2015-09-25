@@ -108,7 +108,7 @@ public class ItemRandomPainting extends Item
         // player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
 
         // Sound
-        player.playSound("ateliercanvas:painting_open", 1.0F, 1.0F);
+        player.playSound("ateliercanvas:painting_open", 3.0F, 1.0F);
         
         return this.giveRandomPainting(stack, world, player);
     }

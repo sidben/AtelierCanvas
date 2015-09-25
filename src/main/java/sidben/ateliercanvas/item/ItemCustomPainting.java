@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.World;
@@ -39,8 +40,17 @@ public class ItemCustomPainting extends Item
     public static final String NBTPaintingUUID         = "uuid";
     public static final String NBTPaintingTitle        = "title";
     public static final String NBTPaintingAuthor       = "author";
-    public static final String NBTPaintingAuthenticity = "quality";
     public static final String NBTPaintingSize         = "size";
+    
+    
+    
+    
+    private IIcon[] iconArray;
+    
+    private static final int idxDefaultIcon = 0;
+    private static final int idxShinyIcon = 1;
+    
+    
 
 
 
@@ -49,6 +59,7 @@ public class ItemCustomPainting extends Item
     // --------------------------------------------------------------------
     public ItemCustomPainting() {
         this.setUnlocalizedName(ItemCustomPainting.unlocalizedName);
+        this.setHasSubtypes(true);
     }
 
 
@@ -65,10 +76,27 @@ public class ItemCustomPainting extends Item
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
-        super.itemIcon = iconRegister.registerIcon(MyItems.customPaintingIcon);
+        iconArray = new IIcon[2];
+        
+        iconArray[idxDefaultIcon] = iconRegister.registerIcon(MyItems.customPaintingIcon);
+        iconArray[idxShinyIcon] = iconRegister.registerIcon(MyItems.customPaintingShinyIcon);
     }
 
 
+    /**
+     * Gets an icon index based on an item's damage value
+     */
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconFromDamage(int damage)
+    {
+        if (damage == EnumAuthenticity.ORIGINAL.getId()) {
+            return this.iconArray[idxShinyIcon];
+        }
+        return this.iconArray[idxDefaultIcon];
+    }
+    
+    
+    
 
     // ----------------------------------------------------
     // Item name and flavor text
@@ -121,7 +149,7 @@ public class ItemCustomPainting extends Item
 
             final NBTTagCompound nbttagcompound = stack.getTagCompound();
             final String author = nbttagcompound.getString(ItemCustomPainting.NBTPaintingAuthor);
-            final byte qualityId = nbttagcompound.getByte(ItemCustomPainting.NBTPaintingAuthenticity);
+            final byte qualityId = (byte) stack.getItemDamage();
 
             // Author
             if (!StringUtils.isNullOrEmpty(author)) {
@@ -168,8 +196,7 @@ public class ItemCustomPainting extends Item
     public EnumRarity getRarity(ItemStack stack)
     {
         if (stack.hasTagCompound()) {
-            final NBTTagCompound nbttagcompound = stack.getTagCompound();
-            final byte quality = nbttagcompound.getByte(ItemCustomPainting.NBTPaintingAuthenticity);
+            final int quality = stack.getItemDamage();
 
             if (quality == EnumAuthenticity.ORIGINAL.getId()) {
                 return EnumRarity.uncommon;
@@ -269,17 +296,16 @@ public class ItemCustomPainting extends Item
             }
 
             if (getRandomAuthenticity) {
-                stack.setTagInfo(ItemCustomPainting.NBTPaintingAuthenticity, new NBTTagByte(EnumAuthenticity.getRandom().getId()));
+                stack.setItemDamage(EnumAuthenticity.getRandom().getId());
             } else {
-                stack.setTagInfo(ItemCustomPainting.NBTPaintingAuthenticity, new NBTTagByte(EnumAuthenticity.COPY.getId()));
+                stack.setItemDamage(EnumAuthenticity.COPY.getId());
             }
 
         }
     }
 
-    // TODO: authenticity as metadata
-    // TODO: Glint effect on authentic
 
+    
 
     // --------------------------------------------------------------------
     // Creative Tab

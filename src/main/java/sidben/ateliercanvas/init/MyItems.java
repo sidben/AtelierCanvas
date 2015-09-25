@@ -1,8 +1,5 @@
 package sidben.ateliercanvas.init;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.item.ItemCustomPainting;
 import sidben.ateliercanvas.item.ItemRandomPainting;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -19,6 +16,7 @@ public class MyItems
 
     // Icons
     public static String customPaintingIcon;
+    public static String customPaintingShinyIcon;
     public static String randomPaintingIcon;
 
 
@@ -38,7 +36,8 @@ public class MyItems
     @SideOnly(Side.CLIENT)
     public static void registerRender()
     {
-        MyItems.customPaintingIcon =  "ateliercanvas:" + "painting_custom";  // TODO: create helper class to encapsulate Reference.ResourcesNamespace
+        MyItems.customPaintingIcon =  "ateliercanvas:" + "painting_custom";
+        MyItems.customPaintingShinyIcon =  "ateliercanvas:" + "painting_custom_shiny";  // TODO: create helper class to encapsulate Reference.ResourcesNamespace
         MyItems.randomPaintingIcon =  "ateliercanvas:" + "painting_random";
     }    
     
