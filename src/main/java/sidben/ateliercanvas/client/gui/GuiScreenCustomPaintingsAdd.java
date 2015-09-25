@@ -60,7 +60,7 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
          * }
          */
 
-        // Fake listbox, used only for visual effects
+        // Fake listbox, used only for visual effects  TODO: use a regular list
         this.guiList = new GuiElementPaintingList(this.mc, this.width, this.height + 55 - 32, new ArrayList<Object>(), null);
     }
 

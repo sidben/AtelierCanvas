@@ -277,6 +277,8 @@ public class ItemCustomPainting extends Item
         }
     }
 
+    // TODO: authenticity as metadata
+    // TODO: Glint effect on authentic
 
 
     // --------------------------------------------------------------------

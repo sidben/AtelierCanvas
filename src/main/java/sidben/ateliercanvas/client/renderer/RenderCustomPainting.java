@@ -128,7 +128,6 @@ public class RenderCustomPainting extends Render
 
 
                 tessellator.startDrawingQuads();
-
                 
                 // Back
                 tessellator.setNormal(0.0F, 0.0F, 1.0F);
@@ -136,6 +135,9 @@ public class RenderCustomPainting extends Render
                 tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f4, (double)f5);
                 tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f4, (double)f6);
                 tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f3, (double)f6);
+
+
+                // TODO: avoid rendering unnecessary geometry
 
                 // Borders
                 tessellator.setNormal(0.0F, 1.0F, 0.0F);
