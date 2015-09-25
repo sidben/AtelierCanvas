@@ -6,6 +6,7 @@ import sidben.ateliercanvas.ModAtelierCanvas;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.init.MyItems;
+import sidben.ateliercanvas.init.MyRecipes;
 import sidben.ateliercanvas.network.MessageCustomPaintingInfo;
 import sidben.ateliercanvas.network.NetworkHelper;
 import sidben.ateliercanvas.reference.Reference;
@@ -45,7 +46,7 @@ public abstract class CommonProxy implements IProxy
 
 
         // Recipes
-        MyItems.registerRecipes();
+        MyRecipes.registerRecipes();
 
 
         // Achievements
