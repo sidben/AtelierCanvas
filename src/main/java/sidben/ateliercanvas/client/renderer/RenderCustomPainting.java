@@ -100,10 +100,13 @@ public class RenderCustomPainting extends Render
 
         
         bindTexture(vanillaPainting);
+        
+        int iMax = width / 16;
+        int jMax = height / 16;
 
-        for (int i = 0; i < width / 16; ++i) {
+        for (int i = 0; i < iMax; ++i) {
 
-            for (int j = 0; j < height / 16; ++j) {
+            for (int j = 0; j < jMax; ++j) {
 
                 xEnd = f + (float)((i + 1) * 16);
                 xStart = f + (float)(i * 16);
@@ -137,32 +140,41 @@ public class RenderCustomPainting extends Render
                 tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f3, (double)f6);
 
 
-                // TODO: avoid rendering unnecessary geometry
+                // Borders - top
+                if (j == jMax - 1) {
+                    tessellator.setNormal(0.0F, 1.0F, 0.0F);
+                    tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)(-zPos), (double)f7, (double)f9);
+                    tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)(-zPos), (double)f8, (double)f9);
+                    tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f8, (double)f10);
+                    tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f7, (double)f10);
+                }
+                
+                // Borders - bottom
+                if (j == 0) {
+                    tessellator.setNormal(0.0F, -1.0F, 0.0F);
+                    tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f7, (double)f9);
+                    tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f8, (double)f9);
+                    tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)(-zPos), (double)f8, (double)f10);
+                    tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)(-zPos), (double)f7, (double)f10);
+                }
 
-                // Borders
-                tessellator.setNormal(0.0F, 1.0F, 0.0F);
-                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)(-zPos), (double)f7, (double)f9);
-                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)(-zPos), (double)f8, (double)f9);
-                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f8, (double)f10);
-                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f7, (double)f10);
+                // Borders - left
+                if (i == iMax - 1) {
+                    tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+                    tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f12, (double)f13);
+                    tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f12, (double)f14);
+                    tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)(-zPos), (double)f11, (double)f14);
+                    tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)(-zPos), (double)f11, (double)f13);
+                }    
 
-                tessellator.setNormal(0.0F, -1.0F, 0.0F);
-                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f7, (double)f9);
-                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f8, (double)f9);
-                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)(-zPos), (double)f8, (double)f10);
-                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)(-zPos), (double)f7, (double)f10);
-
-                tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f12, (double)f13);
-                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f12, (double)f14);
-                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)(-zPos), (double)f11, (double)f14);
-                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)(-zPos), (double)f11, (double)f13);
-
-                tessellator.setNormal(1.0F, 0.0F, 0.0F);
-                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)(-zPos), (double)f12, (double)f13);
-                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)(-zPos), (double)f12, (double)f14);
-                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f11, (double)f14);
-                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f11, (double)f13);
+                // Borders - right
+                if (i == 0) {
+                    tessellator.setNormal(1.0F, 0.0F, 0.0F);
+                    tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)(-zPos), (double)f12, (double)f13);
+                    tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)(-zPos), (double)f12, (double)f14);
+                    tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f11, (double)f14);
+                    tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f11, (double)f13);
+                }
 
                 
                 tessellator.draw();
