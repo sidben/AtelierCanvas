@@ -1,0 +1,6 @@
+{
+	"painting_open": {
+		"category": "player",
+		"sounds": ["painting_open1", "painting_open2", "painting_open3", "painting_open4"]
+	}
+}

@@ -2,6 +2,7 @@ package sidben.ateliercanvas.item;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -75,6 +76,26 @@ public class ItemRandomPainting extends Item
 
 
     // --------------------------------------------------------------------
+    // Behavior
+    // --------------------------------------------------------------------
+
+    /*
+     * TODO: create an animation for unwrapping the painting. Right now there is a bug where the item is used twice.
+    public int getMaxItemUseDuration(ItemStack stack)
+    {
+        return 10;
+    }
+
+    public EnumAction getItemUseAction(ItemStack stack)
+    {
+        return EnumAction.none;
+    }
+    */
+    
+    
+    
+    
+    // --------------------------------------------------------------------
     // Actions
     // --------------------------------------------------------------------
 
@@ -85,7 +106,31 @@ public class ItemRandomPainting extends Item
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
         System.out.println("onItemRightClick()");
+        // player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
 
+        // Sound
+        player.playSound("ateliercanvas:painting_open", 1.0F, 1.0F);
+        
+        return this.giveRandomPainting(stack, world, player);
+    }
+    
+    
+    /**
+     * Called when an item finished the useDuration time.
+     */
+    public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player)
+    {
+        return super.onEaten(stack, world, player);
+    }
+    
+    
+    private ItemStack giveRandomPainting(ItemStack stack, World world, EntityPlayer player)
+    {
+
+        // Uses the item (reduces stack)
+        --stack.stackSize;
+
+        
         // Creates a new custom painting stack (args: item, amount, damage)
         final ItemStack painting = new ItemStack(MyItems.customPainting, 1, 0);
 
@@ -98,10 +143,6 @@ public class ItemRandomPainting extends Item
             MyItems.customPainting.addPaintingData(painting, paintingConfig, true);
 
         }
-
-
-        // Uses the item (reduces stack)
-        --stack.stackSize;
 
 
         /*
