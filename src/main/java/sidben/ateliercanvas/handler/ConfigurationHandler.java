@@ -314,20 +314,37 @@ public class ConfigurationHandler
      */
     public static void updateAndSaveConfig()
     {
+        List<UUID> uniqueEntries = new ArrayList<UUID>();
+        
         // Clear all content of the category
         ConfigurationHandler.config.getCategory(CATEGORY_PAINTINGS).clear();
+        visiblePaintings.clear();
 
         // Re-adds all the valid entries
         Property configProp;
         int c = 0;
 
         for (final CustomPaintingConfigItem item : mahPaintings) {
-            final String configKey = String.format("%s_%03d", ConfigurationHandler.PAINTINGS_ARRAY_KEY, c);
+            // Check for duplicate UUIDs
+            if (!uniqueEntries.contains(item.getUUID())) {
 
-            configProp = ConfigurationHandler.config.get(CATEGORY_PAINTINGS, configKey, new String[] {});
-            configProp.set(item.ToStringArray());
+                // Updates the config
+                final String configKey = String.format("%s_%03d", ConfigurationHandler.PAINTINGS_ARRAY_KEY, c);
+                
+                configProp = ConfigurationHandler.config.get(CATEGORY_PAINTINGS, configKey, new String[] {});
+                configProp.set(item.ToStringArray());
+                
+                // Updates the visible paintings array
+                if (item.getIsEnabled()) {
+                    visiblePaintings.add(item.getUUID());
+                }
 
-            c++;
+                uniqueEntries.add(item.getUUID());
+                c++;
+                
+            }
+            
+            // TODO: remove the duplicate entries from mahPaintings
         }
 
         // Saves the config file
@@ -347,7 +364,7 @@ public class ConfigurationHandler
     {
         if (uuid != null && mahPaintings.size() > 0) {
             for (final CustomPaintingConfigItem item : mahPaintings) {
-                if (item.getUUID() == uuid) {
+                if (item.getUUID().equals(uuid)) {
                     return item;
                 }
             }
