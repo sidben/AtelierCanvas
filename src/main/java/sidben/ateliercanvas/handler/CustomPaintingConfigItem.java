@@ -36,7 +36,7 @@ public class CustomPaintingConfigItem
     private Date                   _creationDate    = new Date();
     private Date                   _lastUpdateDate  = new Date();
     private int                    _width           = ConfigurationHandler.minPaintingSize;
-    private int                    _height          = ConfigurationHandler.minPaintingSize;                         // TODO: update this info on the manager, if don't match with actual picture
+    private int                    _height          = ConfigurationHandler.minPaintingSize;
 
     private String                 validationErrors = "";
     

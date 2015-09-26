@@ -42,7 +42,9 @@ public class AtelierHelperOld
     
     
 
-    // NOTE: How to check if a painting already exists? (TODO)
+    // NOTE: How to check if a painting already exists?
+    // NOTE 2: I can check comparing UUID and file size, but this logic is disabled for now. 
+    // Will be revisited later, if SMP requires it.
     public static int addPaintingData(World world, String author, String name, int[] imageData) {
         int newId = world.getUniqueDataId(identifier);
         String s = getPaintingName(newId);

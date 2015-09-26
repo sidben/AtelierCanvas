@@ -256,9 +256,6 @@ public class RenderCustomPainting extends Render
      */
     protected void func_147914_a(EntityCustomPainting painting, double x, double y, double z)
     {
-        System.out.println("func_147914_a()");
-        System.out.println("    " + Minecraft.isGuiEnabled());
-        
             
         if (Minecraft.isGuiEnabled() && this.renderManager.livingPlayer.isSneaking())
         {
@@ -269,12 +266,15 @@ public class RenderCustomPainting extends Render
             float actualHeight = (float) (painting.boundingBox.maxY - painting.boundingBox.minY);
             float directionAngle = 0F;
             float titleBoxOpacity = 0.5F;
-            
+
+            // DEBUG
+            /*
             System.out.println(String.format("    %.3f | %.3f | %.3f   (%.1f)", (float)x, (float)y, (float)z, actualHeight));
             System.out.println("    " + playerDistance + " of " + displayDistance);
             System.out.println("    " + this.renderManager.livingPlayer.isSneaking());
             System.out.println("    " + this.renderManager.playerViewX + " / " + this.renderManager.playerViewY);
             System.out.println("    " + painting.hangingDirection + ": " + Direction.offsetX[painting.hangingDirection] + " x " + Direction.offsetZ[painting.hangingDirection]);
+            */
             
 
             if (playerDistance < displayDistance)
