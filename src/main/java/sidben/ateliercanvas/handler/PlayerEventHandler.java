@@ -1,20 +1,12 @@
 package sidben.ateliercanvas.handler;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import sidben.ateliercanvas.entity.item.EntityCustomPainting;
-import sidben.ateliercanvas.helper.LogHelper;
-import sidben.ateliercanvas.network.NetworkHelper;
-import sidben.ateliercanvas.world.storage.PaintingData;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.entity.monster.EntityIronGolem;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.entity.EntityHanging;
+import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.WorldSavedData;
-import net.minecraft.world.storage.MapStorage;
+import net.minecraft.util.Direction;
+import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
@@ -23,95 +15,108 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 public class PlayerEventHandler
 {
 
-    private static final String debugName = "Sidben's Stick of Debuginess";
     
     
-    
-    @SuppressWarnings("rawtypes")
     @SubscribeEvent
     public void onPlayerInteractEvent(PlayerInteractEvent event)
     {
-     
-        if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
-            ItemStack itemInHand = event.entityPlayer.getHeldItem();
-            
-            if (itemInHand != null && itemInHand.getItem() == Items.stick && itemInHand.getDisplayName().equals(debugName)) {
-                LogHelper.info("==Debuginess in Progress==");
-                
-                if (event.world.getBlock(event.x, event.y, event.z) == Blocks.glass){
-                    
-                    LogHelper.info("    Loading canvas 0 to 5...");
-                    
-                    WorldSavedData data;
-                    for (int i = 0; i < 5; i++) {
-                        String name = "canvas_" + i;
-                        data = event.world.loadItemData(PaintingData.class, name);
-                        LogHelper.info("        " + name + " : " + data);
-                    }
-                  
-                    
-                }
-                else 
-                {
-                    
-                    MapStorage mapStore = event.world.mapStorage;
-    
-                    Field fLoadedMaps, fLoadedLists, fIds;
-                    Map<String, WorldSavedData> loadedDataMap = null;
-                    List<WorldSavedData> loadedDataList = null;
-                    Map<String, Short> idCounts = null;
-                    
-                    try 
-                    {
-                        fLoadedMaps = mapStore.getClass().getDeclaredField("loadedDataMap");
-                        fLoadedLists = mapStore.getClass().getDeclaredField("loadedDataList");
-                        fIds = mapStore.getClass().getDeclaredField("idCounts");
-                        
-                        fLoadedMaps.setAccessible(true);
-                        fLoadedLists.setAccessible(true);
-                        fIds.setAccessible(true);
-                        
-                        loadedDataMap = (Map)fLoadedMaps.get(mapStore);
-                        loadedDataList = (List)fLoadedLists.get(mapStore);
-                        idCounts = (Map)fIds.get(mapStore);
-                    } 
-                    catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) 
-                    {
-                        e.printStackTrace();
-                    }
-                    
-                    
-                    
-                    
-                    LogHelper.info("    MapStorage: " + mapStore);
-    
-                    LogHelper.info("    |- loadedDataMap (" + loadedDataMap.size() + ")");
-                    for(Entry e : loadedDataMap.entrySet()) {
-                        LogHelper.info("        " + e.getKey() + " / " + e.getValue());   
-                    }
-    
-                    LogHelper.info("    |- loadedDataList (" + loadedDataList.size() + ")");
-                    for(WorldSavedData w : loadedDataList) {
-                        LogHelper.info("        " + w.mapName + " / " + w.toString());   
-                    }
-    
-                    LogHelper.info("    |- idCounts (" + idCounts.size() + ")");
-                    for(Entry e : idCounts.entrySet()) {
-                        LogHelper.info("        " + e.getKey() + " / " + e.getValue());    
-                    }
-                    
-                    
-                }
-                
-                
-                LogHelper.info(" ");
-            }
-            
-        }
-        
     }
     
     
+    
+    @SubscribeEvent
+    public void onEntityInteractEvent(EntityInteractEvent event)
+    {
+        boolean clientSide = event.target.worldObj.isRemote;
+        
+        
+        if (!clientSide) {
+            
+            // Checks if the player right-clicked a painting
+            if (event.target instanceof EntityPainting) {
+
+                // Check if the play has an empty hand
+                final ItemStack handItem = event.entityPlayer.inventory.getCurrentItem();
+                if (handItem == null) {
+                    
+                    EntityPainting currentPainting = (EntityPainting) event.target;
+                    boolean isSneaking = event.entityPlayer.isSneaking();
+                    World world = event.target.worldObj;
+
+                    
+                    // Creates an array with all vanilla paintings
+                    EntityPainting.EnumArt[] artArray = EntityPainting.EnumArt.values();
+                    
+                    // Finds out the index of the current art
+                    int currentIndex = -1;
+                    for (int i = 0; i < artArray.length; ++i)
+                    {
+                        if (artArray[i].equals(currentPainting.art)) {
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    
+                    if (currentIndex > -1) {
+
+                        // Creates a new painting to replace the old one
+                        EntityPainting newPainting = new EntityPainting(world, currentPainting.field_146063_b, currentPainting.field_146064_c, currentPainting.field_146062_d, currentPainting.hangingDirection);
+
+                        // Finds out what is the next valid index. 
+                        int newIndex = currentIndex;
+
+                        /* 
+                         * This loop intends to make a limited number of checks for a valid index. In case 
+                         * something goes wrong, at least it wont create an infinite loop.
+                         * 
+                         * It's supposed to give a try for every painting, at least one should be valid.
+                         */
+                        for (int j = 0; j < artArray.length; j++) {
+
+                            // RIGHT-CLICK move up, SHIFT + RIGHT-CLICK moves down
+                            if (isSneaking) {
+                                newIndex--;
+                            } else {
+                                newIndex++;
+                            }
+                            
+                            // Loops the array index, if needed
+                            if (newIndex >= artArray.length) newIndex = 0;
+                            if (newIndex < 0) newIndex = artArray.length - 1;
+                            
+
+                            // Check if the surface is valid
+                            newPainting.art = artArray[newIndex];
+                            newPainting.setDirection(currentPainting.hangingDirection);
+                            
+
+                            if (newPainting.onValidSurface())
+                            {
+                                // Deletes the current painting entity
+                                world.removeEntity(currentPainting);
+                                
+                                // Spawns a new painting at that place
+                                world.spawnEntityInWorld(newPainting);
+                                
+                                break;
+                            }
+
+                        }
+                        
+
+                    }
+                    
+
+                    
+                }
+                
+            }
+
+        }
+        
+        
+    }
     
     
     
@@ -119,23 +124,6 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerStartTracking(PlayerEvent.StartTracking event)
     {
-        
-        // TODO: Update so only sends once per player / Only sends if the player don't have the painting
-        
-        /*
-         * Check if the player started tracking a custom painting entity
-         * and send the picture image.
-         */
-        
-        /*
-        if (event.target instanceof EntityCustomPainting && !event.entity.worldObj.isRemote) {
-            LogHelper.info("--Player start tracking custom painting--");
-            
-            final EntityCustomPainting painting = (EntityCustomPainting)event.target;
-            NetworkHelper.sendCustomPaintingInfoMessage(painting.getImageUUID(), painting.worldObj, event.entityPlayer); 
-        }
-        */
-
     }
         
 }
