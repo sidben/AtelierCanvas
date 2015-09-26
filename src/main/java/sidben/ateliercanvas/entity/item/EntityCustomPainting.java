@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.EnumAuthenticity;
 import sidben.ateliercanvas.init.MyItems;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
@@ -76,6 +77,29 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         }
         return this._entry.getUUID();
     }
+
+    public String getTitle()
+    {
+        if (this._entry == null) {
+            return "";
+        }
+        return this._entry.getPaintingTitleRaw();
+    }
+
+    public String getAuthor()
+    {
+        if (this._entry == null) {
+            return "";
+        }
+        return this._entry.getPaintingAuthor();
+    }
+
+    public boolean getIsAuthentic()
+    {
+        return this._itemDamageValue == EnumAuthenticity.ORIGINAL.getId();
+    }
+
+
 
     @Override
     public int getWidthPixels()
@@ -168,6 +192,7 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         buffer.writeInt(this.field_146063_b);       // x
         buffer.writeInt(this.field_146064_c);       // y
         buffer.writeInt(this.field_146062_d);       // z
+        buffer.writeInt(this._itemDamageValue);
     }
 
     @Override
@@ -187,6 +212,7 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         this.field_146063_b = buffer.readInt();     // x
         this.field_146064_c = buffer.readInt();     // y
         this.field_146062_d = buffer.readInt();     // z
+        this._itemDamageValue = buffer.readInt();
 
         this.setPaintingEntry(uniqueId);
         this.setDirection(direction);
