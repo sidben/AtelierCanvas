@@ -171,6 +171,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         if (button.enabled) {
 
             if (button.id == BT_ID_DONE) {
+                // Saves config (if needed) and return
                 final String configID = ConfigurationHandler.CATEGORY_PAINTINGS;
                 final boolean requiresMcRestart = false;
 
@@ -179,35 +180,43 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                 FMLCommonHandler.instance().bus().post(event);
                 if (!event.getResult().equals(Result.DENY)) {
                     FMLCommonHandler.instance().bus().post(new PostConfigChangedEvent(Reference.ModID, configID, isWorldRunning, requiresMcRestart));
-                }
 
-
-                // Identifies and update every element that changed
-                boolean elementChanged = false;
-                for (GuiElementPaintingListEntry item : this.paintingList) {
-                    if (item.changed()) {
-                        elementChanged = true;
-                        ConfigurationHandler.addOrUpdateEntry(item._entryData);
+    
+                    // Identifies and update every element that changed
+                    boolean elementChanged = false;
+                    for (GuiElementPaintingListEntry item : this.paintingList) {
+                        if (item.changed()) {
+                            elementChanged = true;
+                            ConfigurationHandler.addOrUpdateEntry(item._entryData);
+                        }
                     }
+                    
+                    // Save the changes to the config file, if anything changed
+                    if (elementChanged) {
+                        ConfigurationHandler.updateAndSaveConfig();
+                    }
+
                 }
+
                 
-                // Save the changes to the config file, if anything changed
-                if (elementChanged) {
-                    ConfigurationHandler.updateAndSaveConfig();
-                }
-
-
                 // Returns to the parent screen
                 this.mc.displayGuiScreen(this.parentScreen);
 
 
-            } else if (button.id == BT_ID_ADDNEW) {
+            } 
+            
+            
+            
+            else if (button.id == BT_ID_ADDNEW) {
+                // Open add GUI
                 this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAdd(this));
 
             }
 
+            
 
             else if (button.id == BT_ID_CHANGE) {
+                // Open editor for current painting
                 if (button.enabled && this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
                     final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
                     if (entry != null) {
@@ -216,10 +225,27 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                 }
                 // TODO: Add the editor callback logic (action confirmed)
 
+            } 
+            
+            
+            
+            else if (button.id == BT_ID_ENABLE) {
+                // Enable / Disable painting
+                // this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAdd(this));
+
             }
 
+            
+            
+            
+            else if (button.id == BT_ID_REMOVE) {
+                // Removes the selected painting from the config (TODO: confirmation screen)
+                // this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAdd(this));
 
+            }
 
+            
+            
         }
     }
 
