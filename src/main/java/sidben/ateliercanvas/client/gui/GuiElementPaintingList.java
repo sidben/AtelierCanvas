@@ -63,15 +63,27 @@ public class GuiElementPaintingList extends GuiListExtended
                 int relativeX = mouseX - i1;
                 int relativeY = mouseY - j1;
 
-                // Custom callback
-                this._parentGui.confirmClicked(true, index);
+                // Check if the selected item is marked for removal. In that case, no callback is called
+                boolean markedToRemove = this.getListEntry(index).removed();
                 
-                if (this.getListEntry(index).mousePressed(index, mouseX, mouseY, mouseEvent, relativeX, relativeY))
-                {
-                    this.func_148143_b(false);
-                    return true;
+                if (!markedToRemove) {
+                    
+                    // Custom callback
+                    this._parentGui.confirmClicked(true, index);
+                    
+                    if (this.getListEntry(index).mousePressed(index, mouseX, mouseY, mouseEvent, relativeX, relativeY))
+                    {
+                        this.func_148143_b(false);
+                        return true;
+                    }
+
+                } // (!markedToRemove)
+                
+                else {
+                    this._parentGui.confirmClicked(true, -1);
                 }
-            }
+                
+            } // (index >= 0)
         }
 
         return false;

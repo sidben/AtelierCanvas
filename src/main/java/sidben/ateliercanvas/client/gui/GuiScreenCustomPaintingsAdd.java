@@ -54,6 +54,7 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
 
         ((GuiButton) this.buttonList.get(2)).enabled = false;
         ((GuiButton) this.buttonList.get(3)).enabled = false;
+        
         /*
          * for (int i = 0; i <= 3; i++) {
          * ((GuiButton) this.buttonList.get(i)).enabled = false;

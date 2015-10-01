@@ -306,6 +306,23 @@ public class ConfigurationHandler
         }        
     }
     
+    
+    /**
+     * Removes the item with the informed UUID from the config file.
+     */
+    public static void removeEntry(UUID uuid) {
+
+        // Tries to find the item
+        CustomPaintingConfigItem targetEntry = findPaintingByUUID(uuid);
+        
+        if (targetEntry != null) 
+        {
+            // Removes the existing entry
+            ConfigurationHandler.mahPaintings.remove(targetEntry);
+        }
+
+    }
+    
 
 
 
