@@ -312,6 +312,7 @@ public class CustomPaintingConfigItem
         this.setPaintingAuthor(entry.getPaintingAuthorRaw());
         this.setPaintingTitle(entry.getPaintingTitleRaw());
         this.setSizePixels(entry.getWidth(), entry.getHeight());
+        this.setActualFileSize(entry.getExpectedSize());
         this._lastUpdateDate = new Date();          // current date
     }
 
