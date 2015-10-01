@@ -3,6 +3,7 @@ package sidben.ateliercanvas.client.gui;
 import static sidben.ateliercanvas.reference.TextFormatTable.GLYPH_BACK;
 import java.util.ArrayList;
 import java.util.List;
+import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
@@ -48,7 +49,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 {
 
     private static final int                  BT_ID_DONE    = 1;
-    private static final int                  BT_ID_ADDNEW  = 2;
+    // private static final int                  BT_ID_ADDNEW  = 2;
     private static final int                  BT_ID_CHANGE  = 3;
     private static final int                  BT_ID_REMOVE  = 4;
     private static final int                  BT_ID_ENABLE  = 5;
@@ -60,6 +61,10 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     private List<GuiElementPaintingListEntry> paintingList;
     private GuiElementPaintingList            guiPaintingList;
     private GuiElementPaintingDetails         guiElementPaintingDetails;
+    private GuiButton btEdit;
+    private GuiButton btRemove;
+    private GuiButton btEnable;
+    private GuiButton[] btsEditor;
     private int                               selectedIndex = -1;
 
 
@@ -82,23 +87,26 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         final int buttonStartY = 100;
         final int buttonMargin = 1;
 
-        this.buttonList.add(new GuiOptionButton(BT_ID_ADDNEW, this.width / 2 - 154, this.height - 48, StatCollector.translateToLocal(getLanguageKey("add_new"))));
-        this.buttonList.add(new GuiOptionButton(BT_ID_DONE, secondColumnX, this.height - 48, StatCollector.translateToLocal("gui.done")));
+        btEdit = new GuiButton(BT_ID_CHANGE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("edit")));
+        btRemove = new GuiButton(BT_ID_REMOVE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("remove")));
+        btEnable = new GuiButton(BT_ID_ENABLE, secondColumnX, buttonStartY, "---");
+        
+        btsEditor = new GuiButton[] {btEdit, btRemove, btEnable};
+        
+        
+        
+        this.buttonList.add(new GuiButton(BT_ID_DONE, this.width / 2 - 100, this.height - 48, StatCollector.translateToLocal("gui.done")));
 
-        this.buttonList.add(new GuiButton(BT_ID_CHANGE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("edit"))));
-        this.buttonList.add(new GuiButton(BT_ID_REMOVE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("remove"))));
-        this.buttonList.add(new GuiButton(BT_ID_ENABLE, secondColumnX, buttonStartY, "---"));
-
-        for (int i = 2; i < 5; i++) {
-            ((GuiButton) this.buttonList.get(i)).xPosition = secondColumnX + (buttonWidth * (i - 2)) + (buttonMargin * (i - 2));
-            ((GuiButton) this.buttonList.get(i)).width = buttonWidth;
+        for (int i = 0; i < btsEditor.length; i++) {
+            this.buttonList.add(btsEditor[i]);
+            btsEditor[i].xPosition = secondColumnX + (buttonWidth * (i)) + (buttonMargin * (i));
+            btsEditor[i].width = buttonWidth;
         }
-
+        
         this.displayDetailsButtons(false);
 
         // TODO: remove when they are implemented
-        ((GuiButton) this.buttonList.get(0)).enabled = false;
-        ((GuiButton) this.buttonList.get(3)).enabled = false;
+        btRemove.enabled = false;
 
 
 
@@ -114,7 +122,6 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         this.guiPaintingList.registerScrollButtons(7, 8);
 
         // Paintings details screen
-        this.selectedIndex = -1;
         this.guiElementPaintingDetails = new GuiElementPaintingDetails(this, null);
         this.displayDetails(this.selectedIndex);
     }
@@ -129,8 +136,8 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
         // If the GUI is large, allows more info and a bigger picture
         if (this.height > 320) {
-            for (int i = 2; i < 5; i++) {
-                ((GuiButton) this.buttonList.get(i)).yPosition = 164;
+            for (GuiButton button : this.btsEditor) {
+                button.yPosition = 164;
             }
         }
 
@@ -207,14 +214,6 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             
             
             
-            else if (button.id == BT_ID_ADDNEW) {
-                // Open add GUI
-                this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAdd(this));
-
-            }
-
-            
-
             else if (button.id == BT_ID_CHANGE) {
                 // Open editor for current painting
                 if (this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
@@ -223,7 +222,6 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                         this.mc.displayGuiScreen(new GuiScreenCustomPaintingsEditor(this, entry.getConfigItem()));
                     }
                 }
-                // TODO: Add the editor callback logic (action confirmed)
 
             } 
             
@@ -240,7 +238,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                         entry.swapIsEnabled();
                         
                         // Update the button display
-                        ((GuiButton) this.buttonList.get(4)).displayString = entry.getConfigItem().getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector.translateToLocal(getLanguageKey("disabled"));
+                        btEnable.displayString = StatCollector.translateToLocal(getLanguageKey(entry.getConfigItem().getIsEnabled() ? "enabled" : "disabled"));
 
                         
                     }
@@ -264,6 +262,31 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     }
 
 
+    
+    /**
+     * Called when the screen is unloaded. Used to disable keyboard repeat events
+     */
+    @Override
+    public void onGuiClosed()
+    {
+        /*
+        this.entryList.onGuiClosed();
+        
+        if (this.configID != null && this.parentScreen instanceof GuiConfig)
+        {
+            GuiConfig parentGuiConfig = (GuiConfig) this.parentScreen;
+            parentGuiConfig.needsRefresh = true;
+            parentGuiConfig.initGui();
+        }
+        
+        if (!(this.parentScreen instanceof GuiConfig))
+            Keyboard.enableRepeatEvents(false);
+        */
+        this.selectedIndex = -1;
+    }
+
+    
+    
 
     /**
      * Called when the mouse is clicked.
@@ -298,8 +321,8 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
     protected void displayDetailsButtons(boolean visible)
     {
-        for (int i = 2; i < 5; i++) {
-            ((GuiButton) this.buttonList.get(i)).visible = visible;
+        for (GuiButton button : this.btsEditor) {
+            button.visible = visible;
         }
     }
 
@@ -339,8 +362,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             final GuiElementPaintingListEntry entry = this.paintingList.get(index);
             this.guiElementPaintingDetails.updateConfigItem(entry.getConfigItem());
 
-            ((GuiButton) this.buttonList.get(4)).displayString = entry.getConfigItem().getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector
-                    .translateToLocal(getLanguageKey("disabled"));
+            btEnable.displayString = StatCollector.translateToLocal(getLanguageKey(entry.getConfigItem().getIsEnabled() ? "enabled" : "disabled"));
 
             this.displayDetailsButtons(true);
         }

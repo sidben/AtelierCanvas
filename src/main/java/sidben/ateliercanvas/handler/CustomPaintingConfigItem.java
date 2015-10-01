@@ -291,6 +291,11 @@ public class CustomPaintingConfigItem
         this._height = Math.max(height, ConfigurationHandler.minPaintingSize);
     }
 
+    public void setActualFileSize(long value)
+    {
+        this._sizeBytes = value;
+    }
+
 
     
     /**
@@ -323,7 +328,7 @@ public class CustomPaintingConfigItem
      */
     public boolean isValid()
     {
-        if (!this.validationErrors.isEmpty()) {
+        if (!StringUtils.isBlank(this.validationErrors)) {
             // There are previous validation errors
             return false;
         }

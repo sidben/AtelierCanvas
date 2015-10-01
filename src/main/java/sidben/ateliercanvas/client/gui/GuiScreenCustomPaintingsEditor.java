@@ -83,7 +83,7 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
         this.txtName.setMaxStringLength(50);
         this.txtName.setEnableBackgroundDrawing(true);
         this.txtName.setTextColor(ColorTable.WHITE);
-        this.txtName.setText(super.getConfigItem().getPaintingTitle().equalsIgnoreCase(super.getConfigItem().getPaintingFileName()) ? "" : super.getConfigItem().getPaintingTitle());
+        this.txtName.setText(super.getConfigItem().getPaintingTitleRaw());
         this.txtName.setFocused(true);
 
         this.txtAuthor = new GuiTextField(this.fontRendererObj, this.width / 2 - 4 - 200, 67, 200, 20);
@@ -201,7 +201,12 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
         // Text fields labels
         this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("painting_info.title_label")), this.width / 2 - 4 - 200, 37, ColorTable.LIGHT_GRAY);
         this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("painting_info.author_label")), this.width / 2 - 4 - 200, 81, ColorTable.LIGHT_GRAY);
-
+        this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("painting_info.enabled_label")), this.width / 2 - 4 - 200, 125, ColorTable.LIGHT_GRAY);
+        if (this.getConfigItem().getIsEnabled())
+            this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("enabled")), this.width / 2 - 4 - 200, 138, ColorTable.WHITE);
+        else 
+            this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("disabled")), this.width / 2 - 4 - 200, 138, ColorTable.WHITE);
+        
         // Text fields
         this.txtName.yPosition = 50;
         this.txtAuthor.yPosition = 94;
@@ -240,8 +245,8 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
                 this.getConfigItem().setPaintingTitle(this.txtName.getText());
                 this.getConfigItem().setPaintingAuthor(this.txtAuthor.getText());
 
-                // Confirms the file import
-                this._ownerGui.confirmClicked(true, 0);
+                // Returns to the parent screen
+                this.mc.displayGuiScreen(this._ownerGui);
 
             }
 

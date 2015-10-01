@@ -51,6 +51,7 @@ sidben.ateliercanvas.config.painting_info.author_empty=Unknown
 sidben.ateliercanvas.config.painting_info.author_label=Artist
 sidben.ateliercanvas.config.painting_info.size_label=Size
 sidben.ateliercanvas.config.painting_info.filesize_label=File size
+sidben.ateliercanvas.config.painting_info.enabled_label=Painting enabled
 sidben.ateliercanvas.config.painting_info.date_created_label=Date created
 sidben.ateliercanvas.config.painting_info.date_updated_label=Last update
 sidben.ateliercanvas.config.painting_info.error_empty_filename=Empty image file name

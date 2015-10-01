@@ -111,10 +111,12 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
                     this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_big_file"));
                 }
 
-                // Compare file size (actual VS config)
+                /*
+                // Compare file size (actual VS config)     TODO: Maybe make it an option for the implemented class to auto-update file size "Size don't match, edit to update"
                 else if (this._fileSize != this._entryData.getExpectedSize()) {
                     this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_size_not_match"));
                 }
+                */
 
                 // Validate file extension
                 else if (!fileExtensionChecker.accept(iconFile.getParentFile(), iconFile.getName())) {
@@ -133,6 +135,12 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
                     // Updates the config entry with the dimensions 
                     if (_entryData.getWidth() != _iconWidth || _entryData.getHeight() != _iconHeight) {
                         this._entryData.setSizePixels(_iconWidth, _iconHeight);
+                        this._changed = true;
+                    }
+                    
+                    // Updates the config entry with the size
+                    if (this._fileSize != this._entryData.getExpectedSize()) {
+                        this._entryData.setActualFileSize(_fileSize);
                         this._changed = true;
                     }
 
