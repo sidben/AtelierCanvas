@@ -44,7 +44,7 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
 
     protected final Minecraft          mc;
     protected final GuiScreen          _ownerGui;
-    protected CustomPaintingConfigItem _entryData;
+    private CustomPaintingConfigItem _entryData;
 
 
 
@@ -63,6 +63,18 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
         this.loadPaintingIcon();
     }
 
+    
+    public CustomPaintingConfigItem getConfigItem() 
+    {
+        return this._entryData;
+    }
+    
+    
+    public void swapIsEnabled() {
+        this._entryData.setIsEnabled(!this._entryData.getIsEnabled());
+        this._changed = true;
+    }
+    
 
 
     private void loadPaintingIcon()
@@ -217,7 +229,8 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
         return this._changed;
     }
 
-
+    
+    
 
     /**
      * Returns any error/warning messages generated when this class

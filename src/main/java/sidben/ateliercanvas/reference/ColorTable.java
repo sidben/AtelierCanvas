@@ -14,6 +14,11 @@ public class ColorTable
     public static final int WHITE       = 0xFFFFFF;
     
     /**
+     * 80% black - #333333
+     */
+    public static final int GRAY20        = 0x333333;
+
+    /**
      * 50% black - #808080 - 8421504
      */
     public static final int GRAY        = 0x808080;

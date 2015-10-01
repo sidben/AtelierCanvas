@@ -48,7 +48,7 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        if (this._entryData != null && this._entryData.isValid()) {
+        if (this.getConfigItem() != null && this.getConfigItem().isValid()) {
 
             // Selected painting extra info
             final int boxX = this._ownerGui.width / 2 + 4;
@@ -75,8 +75,8 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
             final int textStartY = boxY + boxHeight + titleMaginTop;
 
 
-            final String paintingName = this._entryData.getPaintingTitle();
-            String extraInfo = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this._entryData.getPaintingAuthor());
+            final String paintingName = this.getConfigItem().getPaintingTitle();
+            String extraInfo = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this.getConfigItem().getPaintingAuthor());
             extraInfo += String.format("\n%s: %.1f KB", StatCollector.translateToLocal(this.getLanguageKey("filesize_label")), super.getFileSizeKBytes());
             if (super.hasValidImage()) {
                 extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight(), super.getIconWidth(), super.getIconHeight());
@@ -127,10 +127,10 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
             this._tooltip = "";
             final boolean isMouseOverIconArea = MouseHelper.isMouseInside(mouseX, mouseY, boxX, boxY, boxWidth, boxHeight);
             if (isMouseOverIconArea) {
-                this._tooltip = TextFormatTable.BOLD + this._entryData.getPaintingFileName() + TextFormatTable.RESET;
-                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_created_label")), this._entryData.getFormatedCreationDate());
-                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_updated_label")), this._entryData.getFormatedLastUpdateDate());
-                this._tooltip += "\nUUID: " + this._entryData.getUUID();
+                this._tooltip = TextFormatTable.BOLD + this.getConfigItem().getPaintingFileName() + TextFormatTable.RESET;
+                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_created_label")), this.getConfigItem().getFormatedCreationDate());
+                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_updated_label")), this.getConfigItem().getFormatedLastUpdateDate());
+                this._tooltip += "\nUUID: " + this.getConfigItem().getUUID();
             }
 
 

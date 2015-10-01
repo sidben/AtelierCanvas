@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.Util;
 import org.lwjgl.Sys;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
@@ -134,9 +135,9 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
 
 
         // Tooltips (OBS: this must come after [super.drawScreen], or else the buttons will get a weird gray overlay
-        if (!this.guiPaintingList.getTooltip().isEmpty()) {
+        if (!StringUtils.isNullOrEmpty(this.guiPaintingList.getTooltip())) {
             this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(this.guiPaintingList.getTooltip(), 300), mouseX, mouseY);
-        } else if (!this.guiElementPaintingDetails.getTooltip().isEmpty()) {
+        } else if (!StringUtils.isNullOrEmpty(this.guiElementPaintingDetails.getTooltip())) {
             this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(this.guiElementPaintingDetails.getTooltip(), 300), mouseX, mouseY);
         } else {
             final GuiButton bt = (GuiButton) this.buttonList.get(0);
@@ -176,7 +177,7 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
                 if (button.enabled && this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
                     final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
                     if (entry != null) {
-                        this.mc.displayGuiScreen(new GuiScreenCustomPaintingsEditor(this, entry._entryData));
+                        this.mc.displayGuiScreen(new GuiScreenCustomPaintingsEditor(this, entry.getConfigItem()));
                     }
                 }
             }
@@ -281,7 +282,7 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
 
         LogHelper.info("Importing painting #" + index + " from the list");
         if (index >= 0 && index < this.paintingList.size()) {
-            final CustomPaintingConfigItem selectedEntry = this.paintingList.get(index)._entryData;
+            final CustomPaintingConfigItem selectedEntry = this.paintingList.get(index).getConfigItem();
             ConfigurationHandler.addNewItemAndSaveConfig(selectedEntry);
             return true;
 
@@ -345,10 +346,10 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
     {
         if (index >= 0 && index < this.paintingList.size()) {
             final GuiElementPaintingListEntry entry = this.paintingList.get(index);
-            this.guiElementPaintingDetails.updateConfigItem(entry._entryData);
+            this.guiElementPaintingDetails.updateConfigItem(entry.getConfigItem());
             this.selectedIndex = index;
 
-            this.displayDetailsButtons(true, entry.getWarningMessage().isEmpty());
+            this.displayDetailsButtons(true, StringUtils.isNullOrEmpty(entry.getWarningMessage()));
         }
     }
 

@@ -125,7 +125,7 @@ public class ItemCustomPainting extends Item
             final NBTTagCompound nbttagcompound = stack.getTagCompound();
             final String title = nbttagcompound.getString(ItemCustomPainting.NBTPaintingTitle);
 
-            if (!StringUtils.isNullOrEmpty(title))      // TODO: refactor code where I could use isNullOrEmpty
+            if (!StringUtils.isNullOrEmpty(title))
             {
                 return title;
             }

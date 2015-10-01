@@ -99,7 +99,6 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         // TODO: remove when they are implemented
         ((GuiButton) this.buttonList.get(0)).enabled = false;
         ((GuiButton) this.buttonList.get(3)).enabled = false;
-        ((GuiButton) this.buttonList.get(4)).enabled = false;
 
 
 
@@ -115,6 +114,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         this.guiPaintingList.registerScrollButtons(7, 8);
 
         // Paintings details screen
+        this.selectedIndex = -1;
         this.guiElementPaintingDetails = new GuiElementPaintingDetails(this, null);
         this.displayDetails(this.selectedIndex);
     }
@@ -187,7 +187,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                     for (GuiElementPaintingListEntry item : this.paintingList) {
                         if (item.changed()) {
                             elementChanged = true;
-                            ConfigurationHandler.addOrUpdateEntry(item._entryData);
+                            ConfigurationHandler.addOrUpdateEntry(item.getConfigItem());
                         }
                     }
                     
@@ -217,10 +217,10 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
             else if (button.id == BT_ID_CHANGE) {
                 // Open editor for current painting
-                if (button.enabled && this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
+                if (this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
                     final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
                     if (entry != null) {
-                        this.mc.displayGuiScreen(new GuiScreenCustomPaintingsEditor(this, entry._entryData));
+                        this.mc.displayGuiScreen(new GuiScreenCustomPaintingsEditor(this, entry.getConfigItem()));
                     }
                 }
                 // TODO: Add the editor callback logic (action confirmed)
@@ -231,7 +231,21 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             
             else if (button.id == BT_ID_ENABLE) {
                 // Enable / Disable painting
-                // this.mc.displayGuiScreen(new GuiScreenCustomPaintingsAdd(this));
+                if (this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
+                    final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
+                    if (entry != null) {
+                        // final CustomPaintingConfigItem entryData = entry.getConfigItem();
+                        
+                        // Changes the config
+                        entry.swapIsEnabled();
+                        
+                        // Update the button display
+                        ((GuiButton) this.buttonList.get(4)).displayString = entry.getConfigItem().getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector.translateToLocal(getLanguageKey("disabled"));
+
+                        
+                    }
+                    
+                }
 
             }
 
@@ -323,9 +337,9 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     {
         if (index >= 0 && index < this.paintingList.size()) {
             final GuiElementPaintingListEntry entry = this.paintingList.get(index);
-            this.guiElementPaintingDetails.updateConfigItem(entry._entryData);
+            this.guiElementPaintingDetails.updateConfigItem(entry.getConfigItem());
 
-            ((GuiButton) this.buttonList.get(4)).displayString = entry._entryData.getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector
+            ((GuiButton) this.buttonList.get(4)).displayString = entry.getConfigItem().getIsEnabled() ? StatCollector.translateToLocal(getLanguageKey("enabled")) : StatCollector
                     .translateToLocal(getLanguageKey("disabled"));
 
             this.displayDetailsButtons(true);

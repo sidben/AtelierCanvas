@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
@@ -82,14 +83,14 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
         this.txtName.setMaxStringLength(50);
         this.txtName.setEnableBackgroundDrawing(true);
         this.txtName.setTextColor(ColorTable.WHITE);
-        this.txtName.setText(super._entryData.getPaintingTitle().equalsIgnoreCase(super._entryData.getPaintingFileName()) ? "" : super._entryData.getPaintingTitle());
+        this.txtName.setText(super.getConfigItem().getPaintingTitle().equalsIgnoreCase(super.getConfigItem().getPaintingFileName()) ? "" : super.getConfigItem().getPaintingTitle());
         this.txtName.setFocused(true);
 
         this.txtAuthor = new GuiTextField(this.fontRendererObj, this.width / 2 - 4 - 200, 67, 200, 20);
         this.txtAuthor.setMaxStringLength(50);
         this.txtAuthor.setEnableBackgroundDrawing(true);
         this.txtAuthor.setTextColor(ColorTable.WHITE);
-        this.txtAuthor.setText(super._entryData.getPaintingAuthorRaw());
+        this.txtAuthor.setText(super.getConfigItem().getPaintingAuthorRaw());
 
     }
 
@@ -107,7 +108,7 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
 
 
         // Image icon
-        if (this._entryData != null && this._entryData.isValid()) {
+        if (this.getConfigItem() != null && this.getConfigItem().isValid()) {
 
             // Selected painting extra info
             final int boxX = this.width / 2 + 4;
@@ -131,7 +132,7 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
             final int textStartY = boxY + boxHeight + titleMaginTop;
 
 
-            final String paintingFilename = this._entryData.getPaintingFileName();
+            final String paintingFilename = this.getConfigItem().getPaintingFileName();
             String extraInfo = String.format("%s: %.1f KB", StatCollector.translateToLocal(this.getLanguageKey("painting_info.filesize_label")), super.getFileSizeKBytes());
             if (super.hasValidImage()) {
                 extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("painting_info.size_label")), super.getTileWidth(), super.getTileHeight(),
@@ -182,10 +183,10 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
             // Tooltip
             final boolean isMouseOverIconArea = MouseHelper.isMouseInside(mouseX, mouseY, boxX, boxY, boxWidth, boxHeight);
             if (isMouseOverIconArea) {
-                tooltip = TextFormatTable.BOLD + this._entryData.getPaintingFileName() + TextFormatTable.RESET;
-                tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("painting_info.date_created_label")), this._entryData.getFormatedCreationDate());
-                tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("painting_info.date_updated_label")), this._entryData.getFormatedLastUpdateDate());
-                tooltip += "\nUUID: " + this._entryData.getUUID();
+                tooltip = TextFormatTable.BOLD + this.getConfigItem().getPaintingFileName() + TextFormatTable.RESET;
+                tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("painting_info.date_created_label")), this.getConfigItem().getFormatedCreationDate());
+                tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("painting_info.date_updated_label")), this.getConfigItem().getFormatedLastUpdateDate());
+                tooltip += "\nUUID: " + this.getConfigItem().getUUID();
             }
 
 
@@ -213,7 +214,7 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
         super.drawScreen(mouseX, mouseY, partialTicks);
 
 
-        if (!tooltip.isEmpty()) {
+        if (!StringUtils.isNullOrEmpty(tooltip)) {
             super.func_146283_a(this.mc.fontRenderer.listFormattedStringToWidth(tooltip, 300), mouseX, mouseY);
         }
 
@@ -236,8 +237,8 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
             if (button.id == BT_ID_DONE) {
 
                 // Updates the entry
-                this._entryData.setPaintingTitle(this.txtName.getText());
-                this._entryData.setPaintingAuthor(this.txtAuthor.getText());
+                this.getConfigItem().setPaintingTitle(this.txtName.getText());
+                this.getConfigItem().setPaintingAuthor(this.txtAuthor.getText());
 
                 // Confirms the file import
                 this._ownerGui.confirmClicked(true, 0);

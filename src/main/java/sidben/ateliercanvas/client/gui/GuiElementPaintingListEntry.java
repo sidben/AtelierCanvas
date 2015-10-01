@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringUtils;
 import org.lwjgl.opengl.GL11;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.reference.ColorTable;
@@ -66,9 +67,9 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
         int paddingLeft = 0;
 
 
-        if (this._entryData.isValid()) {
-            paintingName = this._entryData.getPaintingTitle();
-            paintingInfo1 = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this._entryData.getPaintingAuthor());
+        if (this.getConfigItem().isValid()) {
+            paintingName = this.getConfigItem().getPaintingTitle();
+            paintingInfo1 = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this.getConfigItem().getPaintingAuthor());
             if (super.hasValidImage()) {
                 paintingInfo2 = String.format("%s: %dx%d", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight());
             } else {
@@ -98,7 +99,7 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
             // Tooltip
-            this._tooltip = this._entryData.getValiadtionErrors();
+            this._tooltip = this.getConfigItem().getValiadtionErrors();
         }
 
 
@@ -116,12 +117,21 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
         if (textWidth > 157) {
             paintingName = this.mc.fontRenderer.trimStringToWidth(paintingName, 157 - this.mc.fontRenderer.getStringWidth("...")) + "...";
         }
-        this.mc.fontRenderer.drawStringWithShadow(paintingName, listInitialX + 32 + 2, listInitialY + 1, ColorTable.WHITE);
+        int auxColor = this.getConfigItem().getIsEnabled() ? ColorTable.WHITE : ColorTable.LIGHT_GRAY;
+        this.mc.fontRenderer.drawStringWithShadow(paintingName, listInitialX + 32 + 2, listInitialY + 1, auxColor);
 
         // Painting data (author, size, etc)
         this.mc.fontRenderer.drawStringWithShadow(paintingInfo1, listInitialX + 32 + 2, listInitialY + 12, ColorTable.GRAY);
         this.mc.fontRenderer.drawStringWithShadow(paintingInfo2, listInitialX + 32 + 2, listInitialY + 22, ColorTable.GRAY);
 
+        
+        // Draw a mask if the entry is disabled
+        if (!this.getConfigItem().getIsEnabled()) {
+            Gui.drawRect(listInitialX + paddingLeft, listInitialY + paddingTop, listInitialX + paddingLeft + sampleWidth, listInitialY + paddingTop + sampleHeight, 0xcc000000);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+
+        
     }
 
 
@@ -144,7 +154,9 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
      */
     public String getTooltip()
     {
-        return super.getWarningMessage().isEmpty() ? (this._tooltip == null ? "" : this._tooltip) : super.getWarningMessage();
+        return StringUtils.isNullOrEmpty(super.getWarningMessage()) ? (this._tooltip == null ? "" : this._tooltip) : super.getWarningMessage();
+        
+        // TODO: refactor isNullOrEmpty to isBlank (StringUtils.isBlank, not Minecraft)
     }
 
 
