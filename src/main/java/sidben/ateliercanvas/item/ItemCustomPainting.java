@@ -173,6 +173,10 @@ public class ItemCustomPainting extends Item
                     if (paintingConfig == null || !paintingConfig.isValid()) {
                         infolist.add(TextFormatTable.COLOR_RED + "This painting was not found on the config file");
                     }
+                    else if (!paintingConfig.getIsEnabled()) {
+                        infolist.add(TextFormatTable.COLOR_RED + "This painting is disabled");
+                    }
+
                 }
             }
         } else {

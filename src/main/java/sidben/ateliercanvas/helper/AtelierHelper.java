@@ -1,5 +1,6 @@
 package sidben.ateliercanvas.helper;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -34,6 +35,8 @@ public class AtelierHelper
     private final Minecraft                            mc;
     private final TextureManager                       texMan;
 
+    public final DynamicTexture blankTexture;
+
     private final LoadingCache<UUID, ResourceLocation> paintingsCache;
 
 
@@ -45,7 +48,19 @@ public class AtelierHelper
     public AtelierHelper(Minecraft minecraft) {
         this.mc = minecraft;
         this.texMan = mc.renderEngine;
+        
+        
+        // Blank Texture
+        blankTexture = new DynamicTexture(16, 16);
+        int[] blankPixels = blankTexture.getTextureData();
+        for (int i = 0; i < blankPixels.length; ++i)
+        {
+            blankPixels[i] = new Color(255, 255, 255).getRGB();         // OBS: Color(255, 255, 255).getRGB() == -1 == 0xFFFFFFFF (pure white, 100% alpha)
+        }
+        blankTexture.updateDynamicTexture();
 
+
+        // Cache
         this.paintingsCache = CacheBuilder.newBuilder().maximumSize(ConfigurationHandler.maxPaintings).expireAfterAccess(ConfigurationHandler.expirationTime, TimeUnit.MINUTES)
                 .build(new CacheLoader<UUID, ResourceLocation>()
                 {
@@ -143,15 +158,28 @@ public class AtelierHelper
     public ResourceLocation getCustomPaintingImage(UUID uuid)
     {
         try {
-            return this.paintingsCache.get(uuid);
+            // Check if the painting is enabled
+            final CustomPaintingConfigItem entryData = ConfigurationHandler.findPaintingByUUID(uuid);
+
+            if (entryData.getIsEnabled()) 
+            {
+                // Returns the cached item
+                return this.paintingsCache.get(uuid);
+            } 
+            else 
+            {
+                // Returns a blank texture
+                return texMan.getDynamicTextureLocation("blank_painting", this.blankTexture);
+            }
+            
 
         } catch (final ExecutionException e) {
             // Error loading the painting. Since this would be called every rendering tick, I can't call log methods here.
 
         }
 
-        final DynamicTexture dynamictexture = TextureUtil.missingTexture;
-        return texMan.getDynamicTextureLocation("missing_icon", dynamictexture);
+        // If all fails, return the broken texture icon
+        return texMan.getDynamicTextureLocation("missing_icon", TextureUtil.missingTexture);
     }
 
 
