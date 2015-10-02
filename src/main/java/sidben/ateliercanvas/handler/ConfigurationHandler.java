@@ -292,7 +292,9 @@ public class ConfigurationHandler
             if (currentEntry != null) 
             {
                 // Updates the existing entry
-                currentEntry.updateEntryFrom(item);
+                if (!currentEntry.equals(item)) {
+                    currentEntry.updateEntryFrom(item);
+                }
             }
             else 
             {

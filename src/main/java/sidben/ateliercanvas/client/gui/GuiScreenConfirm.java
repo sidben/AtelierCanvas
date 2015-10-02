@@ -43,8 +43,6 @@ public class GuiScreenConfirm extends GuiScreen
     
     
     
-    public int oldSelectedIndex;
-    
 
 
     /**

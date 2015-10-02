@@ -35,11 +35,17 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
 
     private GuiTextField     txtName;
     private GuiTextField     txtAuthor;
+    
+    /**
+     * Code returned by the confirmClicked, to identify this GUI as the origin.
+     */
+    final private int _confirmedReturnCode; 
 
 
 
-    public GuiScreenCustomPaintingsEditor(GuiScreen ownerGui, CustomPaintingConfigItem entryData) {
+    public GuiScreenCustomPaintingsEditor(GuiScreen ownerGui, CustomPaintingConfigItem entryData, int returnCode) {
         super(ownerGui, entryData);
+        this._confirmedReturnCode = returnCode;
     }
 
 
@@ -231,6 +237,12 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
     protected void actionPerformed(GuiButton button)
     {
         if (button.enabled) {
+            
+            // Return code
+            boolean confirmed = (button.id == BT_ID_DONE);
+            this._ownerGui.confirmClicked(confirmed, this._confirmedReturnCode);
+            
+            /*
 
             if (button.id == BT_ID_BACK) {
 
@@ -249,6 +261,8 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
                 this.mc.displayGuiScreen(this._ownerGui);
 
             }
+            
+            */
 
         }
     }
@@ -296,5 +310,23 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
     {
         return "sidben.ateliercanvas.config." + name;
     }
+    
+    
+    
+    /**
+     * Returns the name of the painting from the textbox.
+     */
+    public String getPaintingName() {
+        return this.txtName.getText();
+    }
+    
+    
+    /**
+     * Returns the author of the painting from the textbox.
+     */
+    public String getPaintingAuthor() {
+        return this.txtAuthor.getText();
+    }
+    
 
 }

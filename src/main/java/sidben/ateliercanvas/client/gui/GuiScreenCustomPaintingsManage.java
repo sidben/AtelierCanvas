@@ -56,6 +56,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     private static final int                  BT_ID_ENABLE  = 5;
     
     private static final int                  GUI_REMOVE_RETURNCODE  = -2;      // Must be negative value
+    private static final int                  GUI_EDIT_RETURNCODE  = -7;      // Must be negative value
 
 
     public final GuiConfig                    parentScreen;
@@ -65,6 +66,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     private GuiElementPaintingList            guiPaintingList;
     private GuiElementPaintingDetails         guiElementPaintingDetails;
     private GuiScreenConfirm           guiConfirmed;
+    private GuiScreenCustomPaintingsEditor  guiEditor;
     private GuiButton btEdit;
     private GuiButton btRemove;
     private GuiButton btEnable;
@@ -133,6 +135,9 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         
         // Confirmation screen (removal)
         this.guiConfirmed = new GuiScreenConfirm(this, "Are you sure?", -2);
+
+        // Editor
+        this.guiEditor = null;
     }
 
 
@@ -187,14 +192,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         
             if (button.id == BT_ID_DONE) {
                 // Saves config (if needed) and return
-                final String configID = ConfigurationHandler.CATEGORY_PAINTINGS;
-                final boolean requiresMcRestart = false;
 
-                // Fires the related event. I don't use this, but I'm following GuiConfig code. Maybe Forge needs this info)
-                final ConfigChangedEvent event = new OnConfigChangedEvent(Reference.ModID, configID, isWorldRunning, requiresMcRestart);
-                FMLCommonHandler.instance().bus().post(event);
-                if (!event.getResult().equals(Result.DENY)) {
-                    FMLCommonHandler.instance().bus().post(new PostConfigChangedEvent(Reference.ModID, configID, isWorldRunning, requiresMcRestart));
 
     
                     // Identifies and update every element that changed
@@ -212,13 +210,18 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                         }
                     }
                     
+                    
                     // Save the changes to the config file, if anything changed
                     if (elementChanged) {
                         ConfigurationHandler.updateAndSaveConfig();
                     }
 
-                }
 
+                
+                // "Resets" the item list and selected item
+                this.selectedIndex = -1;
+                this.paintingList = null;
+                
                 
                 // Returns to the parent screen
                 this.mc.displayGuiScreen(this.parentScreen);
@@ -233,7 +236,8 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                 if (this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
                     final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
                     if (entry != null) {
-                        this.mc.displayGuiScreen(new GuiScreenCustomPaintingsEditor(this, entry.getConfigItem()));
+                        this.guiEditor = new GuiScreenCustomPaintingsEditor(this, entry.getConfigItem(), GUI_EDIT_RETURNCODE);
+                        this.mc.displayGuiScreen(guiEditor);
                     }
                 }
 
@@ -269,7 +273,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             
             else if (button.id == BT_ID_REMOVE) {
                 // Removes the selected painting from the config
-                guiConfirmed.oldSelectedIndex = this.selectedIndex;
+                // guiConfirmed.oldSelectedIndex = this.selectedIndex;
                 this.mc.displayGuiScreen(guiConfirmed);
                 // this.removedIndex = this.selectedIndex;
 
@@ -301,8 +305,6 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             Keyboard.enableRepeatEvents(false);
         */
         // this.removedIndex = -1;
-        this.selectedIndex = -1;
-        this.paintingList = null;
     }
 
     
@@ -359,7 +361,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         // OBS 2: this event is also fired by the confirmation screen (remove painting). For that reason,
         //          the confirmation screen pass a unique, negative index. 
         if (index == GuiScreenCustomPaintingsManage.GUI_REMOVE_RETURNCODE) {
-            this.selectedIndex = this.guiConfirmed.oldSelectedIndex;
+            // this.selectedIndex = this.guiConfirmed.oldSelectedIndex;
             
             this.mc.displayGuiScreen(this);
 
@@ -376,6 +378,21 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
             // this.removedIndex = -1;
         }
+        
+        // Return from the editor, updates the entry
+        else if (index == GuiScreenCustomPaintingsManage.GUI_EDIT_RETURNCODE) {
+
+            if (result && this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
+                final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
+
+                // Updates the entry
+                entry.setPaintingInfo(this.guiEditor.getPaintingName(), this.guiEditor.getPaintingAuthor());
+            }
+
+            this.mc.displayGuiScreen(this);
+            
+        }
+        
         else 
         {
             // Item selection

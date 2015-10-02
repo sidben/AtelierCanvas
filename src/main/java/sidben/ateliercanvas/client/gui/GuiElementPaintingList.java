@@ -24,7 +24,6 @@ public class GuiElementPaintingList extends GuiListExtended
 {
 
     protected final Minecraft mc;
-    protected final IListContainer _callback;
 
     @SuppressWarnings("rawtypes")
     protected final List      valueList;
@@ -40,8 +39,6 @@ public class GuiElementPaintingList extends GuiListExtended
         this.mc = minecraft;
         this.valueList = list;
         this.field_148163_i = false;        // ?
-        // this._callback = callback;
-        this._callback = null;
         this._parentGui = parentGui;
     }
 

@@ -37,20 +37,23 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author sidben
  */
 @SideOnly(Side.CLIENT)
-public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implements IListContainer
+public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implements IListContainer
 {
 
     private static final int                  BT_ID_BACK       = 1;
     private static final int                  BT_ID_OPENFOLDER = 2;
     private static final int                  BT_ID_SELECT     = 3;
 
+    private static final int                  GUI_ADDNEW_RETURNCODE  = -3;      // Must be negative value
 
+    
     public final GuiScreen                    parentScreen;
     public final boolean                      isWorldRunning;
 
     private List<GuiElementPaintingListEntry> paintingList;
     private GuiElementPaintingList            guiPaintingList;
     private GuiElementPaintingDetails         guiElementPaintingDetails;
+    private GuiScreenCustomPaintingsEditor  guiEditor;
     private GuiButton                         btSelect;
     private int                               selectedIndex    = -1;
 
@@ -100,6 +103,9 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
         // Paintings details screen
         this.guiElementPaintingDetails = new GuiElementPaintingDetails(this, null);
         this.displayDetails(this.selectedIndex);
+        
+        // Editor
+        this.guiEditor = null;
     }
 
 
@@ -177,7 +183,8 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
                 if (button.enabled && this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
                     final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
                     if (entry != null) {
-                        this.mc.displayGuiScreen(new GuiScreenCustomPaintingsEditor(this, entry.getConfigItem()));
+                        this.guiEditor = new GuiScreenCustomPaintingsEditor(this, entry.getConfigItem(), GUI_ADDNEW_RETURNCODE);
+                        this.mc.displayGuiScreen(guiEditor);
                     }
                 }
             }
@@ -264,10 +271,23 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
     @Override
     public void confirmClicked(boolean result, int id)
     {
-        if (result) {
-            this.addSelectedPaintingToConfigFile();
-            this.mc.displayGuiScreen(this);
+        if (id == GUI_ADDNEW_RETURNCODE) {
+            if (result) {
+                this.addSelectedPaintingToConfigFile();
+                this.mc.displayGuiScreen(this);
+            }
         }
+        else 
+        {
+            // Item selection
+            if (result) {
+                this.selectedIndex = -1;
+                this.displayDetailsButtons(false);
+                this.displayDetails(id);
+                this.selectedIndex = id;
+            }
+        }
+
     }
 
 
@@ -280,14 +300,12 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
         final int index = this.selectedIndex;
         this.selectedIndex = -1;
 
-        LogHelper.info("Importing painting #" + index + " from the list");
+        // LogHelper.info("Importing painting #" + index + " from the list");
         if (index >= 0 && index < this.paintingList.size()) {
             final CustomPaintingConfigItem selectedEntry = this.paintingList.get(index).getConfigItem();
-            ConfigurationHandler.addNewItemAndSaveConfig(selectedEntry);
+            ConfigurationHandler.addOrUpdateEntry(selectedEntry);
+            ConfigurationHandler.updateAndSaveConfig();
             return true;
-
-        } else {
-            LogHelper.error("    Invalid painting index");
         }
 
         return false;
@@ -325,15 +343,6 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen implement
     }
 
 
-
-    @Override
-    public void onItemSelected(GuiElementPaintingList list, int index)
-    {
-        this.selectedIndex = -1;
-        this.displayDetailsButtons(false);
-        this.displayDetails(index);
-        this.selectedIndex = index;
-    }
 
 
     /**

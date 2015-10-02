@@ -75,6 +75,13 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
         this._changed = true;
     }
     
+    
+    public void setPaintingInfo(String title, String author) {
+        this._entryData.setPaintingTitle(title);
+        this._entryData.setPaintingAuthor(author);
+        this._changed = true;
+    }
+    
 
 
     private void loadPaintingIcon()
