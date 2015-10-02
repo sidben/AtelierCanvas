@@ -20,7 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 
-
+@Deprecated
 public class CommandAtelier extends CommandBase
 {
 

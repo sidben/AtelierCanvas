@@ -33,9 +33,8 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
 
 
 
-    private String _tooltip;
+    private String  _tooltip;
     private boolean _removed;
-    
 
 
 
@@ -91,8 +90,8 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
             sampleWidth = (int) (sampleWidth * iconWidthStretchRatio);
             sampleHeight = (int) (sampleHeight * iconHeightStretchRatio);
         }
-        
-        
+
+
         // Painting info, when removed
         if (this.removed()) {
             paintingName = "[Removed]";
@@ -127,21 +126,21 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
         if (textWidth > 157) {
             paintingName = this.mc.fontRenderer.trimStringToWidth(paintingName, 157 - this.mc.fontRenderer.getStringWidth("...")) + "...";
         }
-        int auxColor = this.removed() ? ColorTable.GRAY20 : this.getConfigItem().getIsEnabled() ? ColorTable.WHITE : ColorTable.LIGHT_GRAY;
+        final int auxColor = this.removed() ? ColorTable.GRAY20 : this.getConfigItem().getIsEnabled() ? ColorTable.WHITE : ColorTable.LIGHT_GRAY;
         this.mc.fontRenderer.drawStringWithShadow(paintingName, listInitialX + 32 + 2, listInitialY + 1, auxColor);
 
         // Painting data (author, size, etc)
         this.mc.fontRenderer.drawStringWithShadow(paintingInfo1, listInitialX + 32 + 2, listInitialY + 12, ColorTable.GRAY);
         this.mc.fontRenderer.drawStringWithShadow(paintingInfo2, listInitialX + 32 + 2, listInitialY + 22, ColorTable.GRAY);
 
-        
+
         // Draw a mask if the entry is disabled
         if (!this.getConfigItem().getIsEnabled()) {
             Gui.drawRect(listInitialX + paddingLeft, listInitialY + paddingTop, listInitialX + paddingLeft + sampleWidth, listInitialY + paddingTop + sampleHeight, 0xcc000000);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         }
 
-        
+
     }
 
 
@@ -157,23 +156,24 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
     {
     }
 
-    
-    
+
+
     /**
      * Mark this element as needing to be removed from the config.
      */
-    public void setRemoved() {
+    public void setRemoved()
+    {
         this._removed = true;
     }
-    
+
     /**
      * Returns if this element is marked for removal.
      */
-    public boolean removed() {
+    public boolean removed()
+    {
         return this._removed;
     }
-    
-    
+
 
 
     /**
@@ -182,7 +182,7 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
     public String getTooltip()
     {
         return StringUtils.isNullOrEmpty(super.getWarningMessage()) ? (this._tooltip == null ? "" : this._tooltip) : super.getWarningMessage();
-        
+
         // TODO: refactor isNullOrEmpty to isBlank (StringUtils.isBlank, not Minecraft)
     }
 

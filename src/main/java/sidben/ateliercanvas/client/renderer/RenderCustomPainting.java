@@ -61,8 +61,8 @@ public class RenderCustomPainting extends Render
         this.drawPainting(painting, painting.getWidthPixels(), painting.getHeightPixels(), 0, 0);
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         GL11.glPopMatrix();
-        
-        this.func_147914_a(painting, x + (double)((float)Direction.offsetX[painting.hangingDirection] * 0.3F), y - 0.25D, z + (double)((float)Direction.offsetZ[painting.hangingDirection] * 0.3F));
+
+        this.func_147914_a(painting, x + Direction.offsetX[painting.hangingDirection] * 0.3F, y - 0.25D, z + Direction.offsetZ[painting.hangingDirection] * 0.3F);
     }
 
 
@@ -84,8 +84,8 @@ public class RenderCustomPainting extends Render
 
     private void drawPainting(EntityCustomPainting painting, int width, int height, int offsetX, int offsetY)
     {
-        final float f = (float)(-width) / 2.0F;
-        final float f1 = (float)(-height) / 2.0F;
+        final float f = (-width) / 2.0F;
+        final float f1 = (-height) / 2.0F;
         final double zPos = 0.5;
         final float f3 = 0.75F;
         final float f4 = 0.8125F;
@@ -101,27 +101,27 @@ public class RenderCustomPainting extends Render
         final float f14 = 0.0625F;
 
 
-        float xEnd, xStart, yEnd, yStart;
+        double xEnd, xStart, yEnd, yStart;
         float uStart, uEnd, vStart, vEnd;
         final Tessellator tessellator = Tessellator.instance;
 
 
-        
+
         bindTexture(vanillaPainting);
-        
-        int iMax = width / 16;
-        int jMax = height / 16;
+
+        final int iMax = width / 16;
+        final int jMax = height / 16;
 
         for (int i = 0; i < iMax; ++i) {
 
             for (int j = 0; j < jMax; ++j) {
 
-                xEnd = f + (float)((i + 1) * 16);
-                xStart = f + (float)(i * 16);
-                yEnd = f1 + (float)((j + 1) * 16);
-                yStart = f1 + (float)(j * 16);
+                xEnd = f + (i + 1) * 16;
+                xStart = f + i * 16;
+                yEnd = f1 + (j + 1) * 16;
+                yStart = f1 + j * 16;
 
-                this.setupLightmap(painting, (xEnd + xStart) / 2.0F, (yEnd + yStart) / 2.0F);
+                this.setupLightmap(painting, (float)(xEnd + xStart) / 2.0F, (float)(yEnd + yStart) / 2.0F);
 
 
                 uStart = (offsetX + width - i * 16) / 256.0F;
@@ -132,65 +132,69 @@ public class RenderCustomPainting extends Render
 
                 // DEBUG
                 /*
-                LogHelper.info("{" + i + "," + j +"}: "+ width + "x" + height + " | " + xEnd + " | " + xStart + " | " + yEnd + " | " + yStart);
-                LogHelper.info("{" + i + "," + j +"}: "+ uStart + " | " + uEnd + " | " + vStart + " | " + vEnd);
-                LogHelper.info("");
-                */
+                 * LogHelper.info("{" + i + "," + j +"}: "+ width + "x" + height + " | " + xEnd + " | " + xStart + " | " + yEnd + " | " + yStart);
+                 * LogHelper.info("{" + i + "," + j +"}: "+ uStart + " | " + uEnd + " | " + vStart + " | " + vEnd);
+                 * LogHelper.info("");
+                 */
 
 
                 tessellator.startDrawingQuads();
-                
+
                 // Back
                 tessellator.setNormal(0.0F, 0.0F, 1.0F);
-                tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f3, (double)f5);
-                tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f4, (double)f5);
-                tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f4, (double)f6);
-                tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f3, (double)f6);
+                tessellator.addVertexWithUV(xEnd, yEnd, zPos, f3, f5);
+                tessellator.addVertexWithUV(xStart, yEnd, zPos, f4, f5);
+                tessellator.addVertexWithUV(xStart, yStart, zPos, f4, f6);
+                tessellator.addVertexWithUV(xEnd, yStart, zPos, f3, f6);
 
 
                 // Borders - top
                 if (j == jMax - 1) {
+                    // Only renders necessary geometry
                     tessellator.setNormal(0.0F, 1.0F, 0.0F);
-                    tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)(-zPos), (double)f7, (double)f9);
-                    tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)(-zPos), (double)f8, (double)f9);
-                    tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f8, (double)f10);
-                    tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f7, (double)f10);
+                    tessellator.addVertexWithUV(xEnd, yEnd, (-zPos), f7, f9);
+                    tessellator.addVertexWithUV(xStart, yEnd, (-zPos), f8, f9);
+                    tessellator.addVertexWithUV(xStart, yEnd, zPos, f8, f10);
+                    tessellator.addVertexWithUV(xEnd, yEnd, zPos, f7, f10);
                 }
-                
+
                 // Borders - bottom
                 if (j == 0) {
+                    // Only renders necessary geometry
                     tessellator.setNormal(0.0F, -1.0F, 0.0F);
-                    tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f7, (double)f9);
-                    tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f8, (double)f9);
-                    tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)(-zPos), (double)f8, (double)f10);
-                    tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)(-zPos), (double)f7, (double)f10);
+                    tessellator.addVertexWithUV(xEnd, yStart, zPos, f7, f9);
+                    tessellator.addVertexWithUV(xStart, yStart, zPos, f8, f9);
+                    tessellator.addVertexWithUV(xStart, yStart, (-zPos), f8, f10);
+                    tessellator.addVertexWithUV(xEnd, yStart, (-zPos), f7, f10);
                 }
 
                 // Borders - left
                 if (i == iMax - 1) {
+                    // Only renders necessary geometry
                     tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-                    tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)zPos, (double)f12, (double)f13);
-                    tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)zPos, (double)f12, (double)f14);
-                    tessellator.addVertexWithUV((double)xEnd, (double)yStart, (double)(-zPos), (double)f11, (double)f14);
-                    tessellator.addVertexWithUV((double)xEnd, (double)yEnd, (double)(-zPos), (double)f11, (double)f13);
-                }    
+                    tessellator.addVertexWithUV(xEnd, yEnd, zPos, f12, f13);
+                    tessellator.addVertexWithUV(xEnd, yStart, zPos, f12, f14);
+                    tessellator.addVertexWithUV(xEnd, yStart, (-zPos), f11, f14);
+                    tessellator.addVertexWithUV(xEnd, yEnd, (-zPos), f11, f13);
+                }
 
                 // Borders - right
                 if (i == 0) {
+                    // Only renders necessary geometry
                     tessellator.setNormal(1.0F, 0.0F, 0.0F);
-                    tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)(-zPos), (double)f12, (double)f13);
-                    tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)(-zPos), (double)f12, (double)f14);
-                    tessellator.addVertexWithUV((double)xStart, (double)yStart, (double)zPos, (double)f11, (double)f14);
-                    tessellator.addVertexWithUV((double)xStart, (double)yEnd, (double)zPos, (double)f11, (double)f13);
+                    tessellator.addVertexWithUV(xStart, yEnd, (-zPos), f12, f13);
+                    tessellator.addVertexWithUV(xStart, yStart, (-zPos), f12, f14);
+                    tessellator.addVertexWithUV(xStart, yStart, zPos, f11, f14);
+                    tessellator.addVertexWithUV(xStart, yEnd, zPos, f11, f13);
                 }
 
-                
+
                 tessellator.draw();
 
             }
         }
 
-        
+
         xStart = f;
         xEnd = f + width;
         yStart = f1;
@@ -215,8 +219,8 @@ public class RenderCustomPainting extends Render
         tessellator.draw();
 
     }
-    
-    
+
+
 
     private void setupLightmap(EntityCustomPainting painting, float p_77008_2_, float p_77008_3_)
     {
@@ -248,53 +252,43 @@ public class RenderCustomPainting extends Render
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
     }
 
-    
-    
-    
+
+
     /**
      * Renders the name of the painting, like an item frame renders the item custom name.
      */
     protected void func_147914_a(EntityCustomPainting painting, double x, double y, double z)
     {
-            
-        if (Minecraft.isGuiEnabled() && this.renderManager.livingPlayer.isSneaking())
-        {
-            float titleSize = 0.016666668F * 1.4F;
-            float subtitleSize = 0.016666668F * 1.0F;
-            double playerDistance = painting.getDistanceSqToEntity(this.renderManager.livingPlayer);
-            float displayDistance = 8.0F;
-            float actualHeight = (float) (painting.boundingBox.maxY - painting.boundingBox.minY);
+
+        if (Minecraft.isGuiEnabled() && this.renderManager.livingPlayer.isSneaking()) {
+            final float titleSize = 0.016666668F * 1.4F;
+            final float subtitleSize = 0.016666668F * 1.0F;
+            final double playerDistance = painting.getDistanceSqToEntity(this.renderManager.livingPlayer);
+            final float displayDistance = 8.0F;
+            final float actualHeight = (float) (painting.boundingBox.maxY - painting.boundingBox.minY);
             float directionAngle = 0F;
-            float titleBoxOpacity = 0.5F;
+            final float titleBoxOpacity = 0.5F;
 
-            // DEBUG
-            /*
-            System.out.println(String.format("    %.3f | %.3f | %.3f   (%.1f)", (float)x, (float)y, (float)z, actualHeight));
-            System.out.println("    " + playerDistance + " of " + displayDistance);
-            System.out.println("    " + this.renderManager.livingPlayer.isSneaking());
-            System.out.println("    " + this.renderManager.playerViewX + " / " + this.renderManager.playerViewY);
-            System.out.println("    " + painting.hangingDirection + ": " + Direction.offsetX[painting.hangingDirection] + " x " + Direction.offsetZ[painting.hangingDirection]);
-            */
-            
 
-            if (playerDistance < displayDistance)
-            {
+
+            if (playerDistance < displayDistance) {
                 String paintingTitle = painting.getTitle();
                 String paintingSubtitle = painting.getAuthor();
-                int maxTextSize = 128;
+                final int maxTextSize = 128;
 
                 // Formats the title and subtitle
-                if (!StringUtils.isNullOrEmpty(paintingTitle)){
+                if (!StringUtils.isNullOrEmpty(paintingTitle)) {
                     paintingTitle = this.getFontRendererFromRenderManager().trimStringToWidth(paintingTitle, maxTextSize);
                     if (painting.getIsAuthentic()) {
                         paintingTitle = TextFormatTable.COLOR_YELLOW + paintingTitle;
                     }
                 }
-                if (!StringUtils.isNullOrEmpty(paintingSubtitle)){
-                    paintingSubtitle = StatCollector.translateToLocalFormatted("sidben.ateliercanvas:item.custom_painting.author_label", new Object[] { this.getFontRendererFromRenderManager().trimStringToWidth(paintingSubtitle, maxTextSize) });
+                if (!StringUtils.isNullOrEmpty(paintingSubtitle)) {
+                    paintingSubtitle = StatCollector.translateToLocalFormatted("sidben.ateliercanvas:item.custom_painting.author_label", new Object[] { this.getFontRendererFromRenderManager()
+                            .trimStringToWidth(paintingSubtitle, maxTextSize) });
                 }
-                
-                
+
+
                 // Finds the angle to rotate the floating text. I bet there is a better way to do this...
                 if (painting.hangingDirection == 0) {
                     directionAngle = 180.0F;
@@ -305,16 +299,16 @@ public class RenderCustomPainting extends Render
                 }
 
 
-                FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
-                Tessellator tessellator = Tessellator.instance;
+                final FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
+                final Tessellator tessellator = Tessellator.instance;
                 int i;
 
-                
+
                 // Title
-                if (!StringUtils.isNullOrEmpty(paintingTitle)){
+                if (!StringUtils.isNullOrEmpty(paintingTitle)) {
                     GL11.glPushMatrix();
-                    GL11.glTranslatef((float)x, (float)y + 0.45F - (actualHeight / 2), (float)z);
-                    
+                    GL11.glTranslatef((float) x, (float) y + 0.45F - (actualHeight / 2), (float) z);
+
                     GL11.glNormal3f(0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(directionAngle, 0.0F, 1.0F, 0.0F);                               // -this.renderManager.playerViewY
                     GL11.glRotatef(this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);               // this.renderManager.playerViewX
@@ -324,19 +318,19 @@ public class RenderCustomPainting extends Render
                     GL11.glDepthMask(false);
                     GL11.glEnable(GL11.GL_BLEND);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                    
+
                     GL11.glDisable(GL11.GL_TEXTURE_2D);
                     tessellator.startDrawingQuads();
-                    
+
                     // Draws the box behind the text
                     i = fontrenderer.getStringWidth(paintingTitle) / 2;
                     tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, titleBoxOpacity);
-                    tessellator.addVertex((double)(-i - 1), -1.0D, 0.0D);
-                    tessellator.addVertex((double)(-i - 1), 8.0D, 0.0D);
-                    tessellator.addVertex((double)(i + 1), 8.0D, 0.0D);
-                    tessellator.addVertex((double)(i + 1), -1.0D, 0.0D);
+                    tessellator.addVertex(-i - 1, -1.0D, 0.0D);
+                    tessellator.addVertex(-i - 1, 8.0D, 0.0D);
+                    tessellator.addVertex(i + 1, 8.0D, 0.0D);
+                    tessellator.addVertex(i + 1, -1.0D, 0.0D);
                     tessellator.draw();
-                    
+
                     // Draws the text
                     GL11.glEnable(GL11.GL_TEXTURE_2D);
                     fontrenderer.drawString(paintingTitle, -fontrenderer.getStringWidth(paintingTitle) / 2, 0, 553648127);
@@ -346,18 +340,16 @@ public class RenderCustomPainting extends Render
                     GL11.glEnable(GL11.GL_LIGHTING);
                     GL11.glDisable(GL11.GL_BLEND);
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    GL11.glPopMatrix();                    
+                    GL11.glPopMatrix();
                 }
 
 
-                
-                
-                
+
                 // Subtitle
-                if (!StringUtils.isNullOrEmpty(paintingSubtitle)){
+                if (!StringUtils.isNullOrEmpty(paintingSubtitle)) {
                     GL11.glPushMatrix();
-                    GL11.glTranslatef((float)x, (float)y + 0.2F - (actualHeight / 2), (float)z);
-                    
+                    GL11.glTranslatef((float) x, (float) y + 0.2F - (actualHeight / 2), (float) z);
+
                     GL11.glNormal3f(0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(directionAngle, 0.0F, 1.0F, 0.0F);                               // -this.renderManager.playerViewY
                     GL11.glRotatef(this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);               // this.renderManager.playerViewX
@@ -367,19 +359,19 @@ public class RenderCustomPainting extends Render
                     GL11.glDepthMask(false);
                     GL11.glEnable(GL11.GL_BLEND);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                    
+
                     GL11.glDisable(GL11.GL_TEXTURE_2D);
                     tessellator.startDrawingQuads();
-                    
+
                     // Draws the box behind the text
                     i = fontrenderer.getStringWidth(paintingSubtitle) / 2;
                     tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, titleBoxOpacity);
-                    tessellator.addVertex((double)(-i - 1), -1.0D, 0.0D);
-                    tessellator.addVertex((double)(-i - 1), 8.0D, 0.0D);
-                    tessellator.addVertex((double)(i + 1), 8.0D, 0.0D);
-                    tessellator.addVertex((double)(i + 1), -1.0D, 0.0D);
+                    tessellator.addVertex(-i - 1, -1.0D, 0.0D);
+                    tessellator.addVertex(-i - 1, 8.0D, 0.0D);
+                    tessellator.addVertex(i + 1, 8.0D, 0.0D);
+                    tessellator.addVertex(i + 1, -1.0D, 0.0D);
                     tessellator.draw();
-                    
+
                     // Draws the text
                     GL11.glEnable(GL11.GL_TEXTURE_2D);
                     fontrenderer.drawString(paintingSubtitle, -fontrenderer.getStringWidth(paintingSubtitle) / 2, 0, 553648127);
@@ -391,59 +383,10 @@ public class RenderCustomPainting extends Render
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                     GL11.glPopMatrix();
                 }
-                
-                /*
-                GL11.glEnable(GL11.GL_TEXTURE_2D);
-                GL11.glDepthMask(true);
-                fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, 553648127);
-                GL11.glEnable(GL11.GL_LIGHTING);
-                GL11.glDisable(GL11.GL_BLEND);
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                GL11.glPopMatrix();
-                */
 
-                
-                /*
-                if (painting.isSneaking())
-                {
-                    FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
-                    GL11.glPushMatrix();
-                    GL11.glTranslatef((float)x + 0.0F, (float)y + painting.height + 0.5F, (float)z);
-                    GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-                    GL11.glRotatef(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-                    GL11.glRotatef(this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-                    GL11.glScalef(-f1, -f1, f1);
-                    GL11.glDisable(GL11.GL_LIGHTING);
-                    GL11.glTranslatef(0.0F, 0.25F / f1, 0.0F);
-                    GL11.glDepthMask(false);
-                    GL11.glEnable(GL11.GL_BLEND);
-                    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                    Tessellator tessellator = Tessellator.instance;
-                    GL11.glDisable(GL11.GL_TEXTURE_2D);
-                    tessellator.startDrawingQuads();
-                    int i = fontrenderer.getStringWidth(s) / 2;
-                    tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-                    tessellator.addVertex((double)(-i - 1), -1.0D, 0.0D);
-                    tessellator.addVertex((double)(-i - 1), 8.0D, 0.0D);
-                    tessellator.addVertex((double)(i + 1), 8.0D, 0.0D);
-                    tessellator.addVertex((double)(i + 1), -1.0D, 0.0D);
-                    tessellator.draw();
-                    GL11.glEnable(GL11.GL_TEXTURE_2D);
-                    GL11.glDepthMask(true);
-                    fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, 553648127);
-                    GL11.glEnable(GL11.GL_LIGHTING);
-                    GL11.glDisable(GL11.GL_BLEND);
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    GL11.glPopMatrix();
-                }
-                else
-                {
-                    this.func_147906_a(painting, s, x, y, z, 64);
-                }
-                */
             }
         }
     }
 
-    
+
 }

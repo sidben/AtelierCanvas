@@ -1,26 +1,16 @@
 package sidben.ateliercanvas.client.gui;
 
-import static sidben.ateliercanvas.reference.TextFormatTable.GLYPH_BACK;
 import java.util.ArrayList;
 import java.util.List;
-import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.reference.ColorTable;
-import sidben.ateliercanvas.reference.Reference;
 import sidben.ateliercanvas.reference.TextFormatTable;
 import cpw.mods.fml.client.config.GuiConfig;
-import cpw.mods.fml.client.config.GuiUnicodeGlyphButton;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
-import cpw.mods.fml.client.event.ConfigChangedEvent.PostConfigChangedEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -49,14 +39,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiScreenCustomPaintingsManage extends GuiScreen
 {
 
-    private static final int                  BT_ID_DONE    = 1;
-    // private static final int                  BT_ID_ADDNEW  = 2;
-    private static final int                  BT_ID_CHANGE  = 3;
-    private static final int                  BT_ID_REMOVE  = 4;
-    private static final int                  BT_ID_ENABLE  = 5;
-    
-    private static final int                  GUI_REMOVE_RETURNCODE  = -2;      // Must be negative value
-    private static final int                  GUI_EDIT_RETURNCODE  = -7;      // Must be negative value
+    private static final int                  BT_ID_DONE            = 1;
+    private static final int                  BT_ID_CHANGE          = 3;
+    private static final int                  BT_ID_REMOVE          = 4;
+    private static final int                  BT_ID_ENABLE          = 5;
+
+    private static final int                  GUI_REMOVE_RETURNCODE = -2;      // Must be negative value
+    private static final int                  GUI_EDIT_RETURNCODE   = -7;      // Must be negative value
 
 
     public final GuiConfig                    parentScreen;
@@ -65,18 +54,13 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     private List<GuiElementPaintingListEntry> paintingList;
     private GuiElementPaintingList            guiPaintingList;
     private GuiElementPaintingDetails         guiElementPaintingDetails;
-    private GuiScreenConfirm           guiConfirmed;
-    private GuiScreenCustomPaintingsEditor  guiEditor;
-    private GuiButton btEdit;
-    private GuiButton btRemove;
-    private GuiButton btEnable;
-    private GuiButton[] btsEditor;
-    private int                               selectedIndex = -1;
-    // private int                               removedIndex = -1;
-    
-    
-    /** Tracks the initial size of the paintingList array, to detect if items were removed */
-    // private int initialListSize;
+    private GuiScreenConfirm                  guiConfirmed;
+    private GuiScreenCustomPaintingsEditor    guiEditor;
+    private GuiButton                         btEdit;
+    private GuiButton                         btRemove;
+    private GuiButton                         btEnable;
+    private GuiButton[]                       btsEditor;
+    private int                               selectedIndex         = -1;
 
 
 
@@ -90,15 +74,15 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
 
     @Override
-    @SuppressWarnings({ "unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void initGui()
     {
-        
+
         if (this.paintingList == null) {
             this.loadConfigValues();
         }
-        
-        
+
+
         // Buttons
         final int buttonWidth = 66;
         final int secondColumnX = this.width / 2 + 4;
@@ -108,11 +92,11 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         btEdit = new GuiButton(BT_ID_CHANGE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("edit")));
         btRemove = new GuiButton(BT_ID_REMOVE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("remove")));
         btEnable = new GuiButton(BT_ID_ENABLE, secondColumnX, buttonStartY, "---");
-        
-        btsEditor = new GuiButton[] {btEdit, btRemove, btEnable};
-        
-        
-        
+
+        btsEditor = new GuiButton[] { btEdit, btRemove, btEnable };
+
+
+
         this.buttonList.add(new GuiButton(BT_ID_DONE, this.width / 2 - 100, this.height - 48, StatCollector.translateToLocal("gui.done")));
 
         for (int i = 0; i < btsEditor.length; i++) {
@@ -120,7 +104,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             btsEditor[i].xPosition = secondColumnX + (buttonWidth * (i)) + (buttonMargin * (i));
             btsEditor[i].width = buttonWidth;
         }
-        
+
         this.displayDetailsButtons(false);
 
 
@@ -132,7 +116,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         // Paintings details screen
         this.guiElementPaintingDetails = new GuiElementPaintingDetails(this, null);
         this.displayDetails(this.selectedIndex);
-        
+
         // Confirmation screen (removal)
         this.guiConfirmed = new GuiScreenConfirm(this, "Are you sure?", -2);
 
@@ -150,7 +134,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
         // If the GUI is large, allows more info and a bigger picture
         if (this.height > 320) {
-            for (GuiButton button : this.btsEditor) {
+            for (final GuiButton button : this.btsEditor) {
                 button.yPosition = 164;
             }
         }
@@ -167,7 +151,8 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         // Texts - Title, Total paintings installed
         this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title")), this.width / 2, 8, ColorTable.WHITE);
         this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("manage_paintings")), this.width / 2, 18, ColorTable.WHITE);
-        this.drawCenteredString(this.fontRendererObj, String.format(StatCollector.translateToLocal(getLanguageKey("installed_counter")), this.paintingList.size()), this.width / 2, this.height - 20, ColorTable.GRAY);
+        this.drawCenteredString(this.fontRendererObj, String.format(StatCollector.translateToLocal(getLanguageKey("installed_counter")), this.paintingList.size()), this.width / 2, this.height - 20,
+                ColorTable.GRAY);
 
 
         // Parent call (draws buttons)
@@ -189,48 +174,47 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     protected void actionPerformed(GuiButton button)
     {
         if (button.enabled) {
-        
+
             if (button.id == BT_ID_DONE) {
                 // Saves config (if needed) and return
 
 
-    
-                    // Identifies and update every element that changed
-                    boolean elementChanged = false;
-                    for (GuiElementPaintingListEntry item : this.paintingList) {
-                        if (item.changed()) {
-                            // An item was changed, update the config
-                            elementChanged = true;
-                            ConfigurationHandler.addOrUpdateEntry(item.getConfigItem());
-                        }
-                        else if (item.removed()) {
-                            // An item was removed, update the config
-                            elementChanged = true;
-                            ConfigurationHandler.removeEntry(item.getConfigItem().getUUID());
-                        }
+
+                // Identifies and update every element that changed
+                boolean elementChanged = false;
+                for (final GuiElementPaintingListEntry item : this.paintingList) {
+                    if (item.changed()) {
+                        // An item was changed, update the config
+                        elementChanged = true;
+                        ConfigurationHandler.addOrUpdateEntry(item.getConfigItem());
+                    } else if (item.removed()) {
+                        // An item was removed, update the config
+                        elementChanged = true;
+                        ConfigurationHandler.removeEntry(item.getConfigItem().getUUID());
                     }
-                    
-                    
-                    // Save the changes to the config file, if anything changed
-                    if (elementChanged) {
-                        ConfigurationHandler.updateAndSaveConfig();
-                    }
+                }
 
 
-                
+                // Save the changes to the config file, if anything changed
+                if (elementChanged) {
+                    ConfigurationHandler.updateAndSaveConfig();
+                }
+
+
+
                 // "Resets" the item list and selected item
                 this.selectedIndex = -1;
                 this.paintingList = null;
-                
-                
+
+
                 // Returns to the parent screen
                 this.mc.displayGuiScreen(this.parentScreen);
 
 
-            } 
-            
-            
-            
+            }
+
+
+
             else if (button.id == BT_ID_CHANGE) {
                 // Open editor for current painting
                 if (this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
@@ -241,50 +225,45 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                     }
                 }
 
-            } 
-            
-            
-            
+            }
+
+
+
             else if (button.id == BT_ID_ENABLE) {
                 // Enable / Disable painting
                 if (this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
                     final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
                     if (entry != null) {
-                        // final CustomPaintingConfigItem entryData = entry.getConfigItem();
-                        
                         // Changes the config
                         entry.swapIsEnabled();
-                        
+
                         // Update the button display
                         btEnable.displayString = StatCollector.translateToLocal(getLanguageKey(entry.getConfigItem().getIsEnabled() ? "enabled" : "disabled"));
                         if (!entry.getConfigItem().getIsEnabled()) {
                             btEnable.displayString = TextFormatTable.COLOR_GRAY + btEnable.displayString;
                         }
 
-                        
+
                     }
-                    
+
                 }
 
             }
 
-            
-            
-            
+
+
             else if (button.id == BT_ID_REMOVE) {
                 // Removes the selected painting from the config
-                // guiConfirmed.oldSelectedIndex = this.selectedIndex;
                 this.mc.displayGuiScreen(guiConfirmed);
-                // this.removedIndex = this.selectedIndex;
 
             }
 
-        }            
-            
+        }
+
     }
 
 
-    
+
     /**
      * Called when the screen is unloaded. Used to disable keyboard repeat events
      */
@@ -292,23 +271,21 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     public void onGuiClosed()
     {
         /*
-        this.entryList.onGuiClosed();
-        
-        if (this.configID != null && this.parentScreen instanceof GuiConfig)
-        {
-            GuiConfig parentGuiConfig = (GuiConfig) this.parentScreen;
-            parentGuiConfig.needsRefresh = true;
-            parentGuiConfig.initGui();
-        }
-        
-        if (!(this.parentScreen instanceof GuiConfig))
-            Keyboard.enableRepeatEvents(false);
-        */
-        // this.removedIndex = -1;
+         * this.entryList.onGuiClosed();
+         * 
+         * if (this.configID != null && this.parentScreen instanceof GuiConfig)
+         * {
+         * GuiConfig parentGuiConfig = (GuiConfig) this.parentScreen;
+         * parentGuiConfig.needsRefresh = true;
+         * parentGuiConfig.initGui();
+         * }
+         * 
+         * if (!(this.parentScreen instanceof GuiConfig))
+         * Keyboard.enableRepeatEvents(false);
+         */
     }
 
-    
-    
+
 
     /**
      * Called when the mouse is clicked.
@@ -341,10 +318,6 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
 
 
-
-
-
-
     /**
      * Returns the full language key for elements of this GUI.
      */
@@ -355,30 +328,29 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
 
 
+    @Override
     public void confirmClicked(boolean result, int index)
     {
         // OBS: this event is fired by the GuiElementPaintingList when an item is selected
         // OBS 2: this event is also fired by the confirmation screen (remove painting). For that reason,
-        //          the confirmation screen pass a unique, negative index. 
+        // the confirmation screen pass a unique, negative index.
         if (index == GuiScreenCustomPaintingsManage.GUI_REMOVE_RETURNCODE) {
-            // this.selectedIndex = this.guiConfirmed.oldSelectedIndex;
-            
-            this.mc.displayGuiScreen(this);
 
             // removes the selected index
             if (result && this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
                 final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
-                
+
                 // Marks the element as removed
                 entry.setRemoved();
                 this.selectedIndex = -1;
                 this.displayDetailsButtons(false);
-                
+
             }
 
-            // this.removedIndex = -1;
+            this.mc.displayGuiScreen(this);
+
         }
-        
+
         // Return from the editor, updates the entry
         else if (index == GuiScreenCustomPaintingsManage.GUI_EDIT_RETURNCODE) {
 
@@ -390,11 +362,10 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             }
 
             this.mc.displayGuiScreen(this);
-            
+
         }
-        
-        else 
-        {
+
+        else {
             // Item selection
             if (result) {
                 this.selectedIndex = -1;
@@ -402,19 +373,19 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                 this.displayDetails(index);
                 this.selectedIndex = index;
             }
-            
+
         }
     }
 
 
     protected void displayDetailsButtons(boolean visible)
     {
-        for (GuiButton button : this.btsEditor) {
+        for (final GuiButton button : this.btsEditor) {
             button.visible = visible;
         }
     }
-    
-    
+
+
     /**
      * Displays the GUI element with the image details and thumbnail.
      * 
@@ -436,19 +407,19 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         }
     }
 
-    
-    
+
+
     /**
      * Loads the config entries on the listbox array.
      */
-    private void loadConfigValues() {
+    private void loadConfigValues()
+    {
 
         // Listbox data (loads from config)
         this.paintingList = new ArrayList<GuiElementPaintingListEntry>();
         for (final CustomPaintingConfigItem item : ConfigurationHandler.getAllMahGoodPaintings()) {
             this.paintingList.add(new GuiElementPaintingListEntry(this, item));
         }
-        // this.initialListSize = this.paintingList.size();
 
     }
 

@@ -1,7 +1,6 @@
 package sidben.ateliercanvas.handler;
 
 import static sidben.ateliercanvas.handler.ConfigurationHandler.EMPTY_UUID;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,9 +38,6 @@ public class CustomPaintingConfigItem
     private int                    _height          = ConfigurationHandler.minPaintingSize;
 
     private String                 validationErrors = "";
-    
-   
-    
 
 
 
@@ -68,6 +64,7 @@ public class CustomPaintingConfigItem
      *            <li><b>[8]</b> - Image width in pixels. Integer (if not valid, will be set at 16).</li>
      *            <li><b>[9]</b> - Image height in pixels. Integer (if not valid, will be set at 16).</li>
      * 
+     *            <li><b>[?]</b> - Painting group / pack.</li>
      *            <li><b>[?]</b> - Player name that imported / created / uploaded the painting.</li>
      *            <li><b>[?]</b> - Player UUID that imported / created / uploaded the painting.</li>
      *            <li><b>[?]</b> - Painting lore. String, optional.</li>
@@ -297,7 +294,7 @@ public class CustomPaintingConfigItem
     }
 
 
-    
+
     /**
      * <p>
      * Updates this entry with values from the given config entry.
@@ -316,8 +313,6 @@ public class CustomPaintingConfigItem
         this._lastUpdateDate = new Date();          // current date
     }
 
-    
-    
 
 
     // ----------------------------------------------------------------

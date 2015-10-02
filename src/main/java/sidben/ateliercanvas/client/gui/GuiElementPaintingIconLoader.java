@@ -33,19 +33,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class GuiElementPaintingIconLoader extends GuiScreen
 {
 
-    private ResourceLocation           _locationPaintingIcon;
-    private int                        _iconWidth;
-    private int                        _iconHeight;
-    private long                       _fileSize;
-    private final int                  _resolution = ConfigurationHandler.defaultResolution;           // TODO: support for high-res paintings
-    private String                     _warnings;
-    private boolean                    _validImage = false;
-    private boolean _changed = false;
+    private ResourceLocation         _locationPaintingIcon;
+    private int                      _iconWidth;
+    private int                      _iconHeight;
+    private long                     _fileSize;
+    private final int                _resolution = ConfigurationHandler.defaultResolution;           // TODO: support for high-res paintings
+    private String                   _warnings;
+    private boolean                  _validImage = false;
+    private boolean                  _changed    = false;
 
-    protected final Minecraft          mc;
-    protected final GuiScreen          _ownerGui;
+    protected final Minecraft        mc;
+    protected final GuiScreen        _ownerGui;
     private CustomPaintingConfigItem _entryData;
-
 
 
 
@@ -63,25 +62,27 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
         this.loadPaintingIcon();
     }
 
-    
-    public CustomPaintingConfigItem getConfigItem() 
+
+    public CustomPaintingConfigItem getConfigItem()
     {
         return this._entryData;
     }
-    
-    
-    public void swapIsEnabled() {
+
+
+    public void swapIsEnabled()
+    {
         this._entryData.setIsEnabled(!this._entryData.getIsEnabled());
         this._changed = true;
     }
-    
-    
-    public void setPaintingInfo(String title, String author) {
+
+
+    public void setPaintingInfo(String title, String author)
+    {
         this._entryData.setPaintingTitle(title);
         this._entryData.setPaintingAuthor(author);
         this._changed = true;
     }
-    
+
 
 
     private void loadPaintingIcon()
@@ -119,11 +120,11 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
                 }
 
                 /*
-                // Compare file size (actual VS config)     TODO: Maybe make it an option for the implemented class to auto-update file size "Size don't match, edit to update"
-                else if (this._fileSize != this._entryData.getExpectedSize()) {
-                    this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_size_not_match"));
-                }
-                */
+                 * // Compare file size (actual VS config) TODO: Maybe make it an option for the implemented class to auto-update file size "Size don't match, edit to update"
+                 * else if (this._fileSize != this._entryData.getExpectedSize()) {
+                 * this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_size_not_match"));
+                 * }
+                 */
 
                 // Validate file extension
                 else if (!fileExtensionChecker.accept(iconFile.getParentFile(), iconFile.getName())) {
@@ -138,13 +139,13 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
 
                     this._iconWidth = paintingIcon.getWidth();
                     this._iconHeight = paintingIcon.getHeight();
-                    
-                    // Updates the config entry with the dimensions 
+
+                    // Updates the config entry with the dimensions
                     if (_entryData.getWidth() != _iconWidth || _entryData.getHeight() != _iconHeight) {
                         this._entryData.setSizePixels(_iconWidth, _iconHeight);
                         this._changed = true;
                     }
-                    
+
                     // Updates the config entry with the size
                     if (this._fileSize != this._entryData.getExpectedSize()) {
                         this._entryData.setActualFileSize(_fileSize);
@@ -168,7 +169,7 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
                 e.printStackTrace();
 
             }
-            
+
         }
 
 
@@ -184,8 +185,8 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
             this._validImage = true;
 
         }
-        
-        
+
+
     }
 
 
@@ -244,8 +245,7 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
         return this._changed;
     }
 
-    
-    
+
 
     /**
      * Returns any error/warning messages generated when this class
@@ -264,24 +264,24 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
     {
         return "sidben.ateliercanvas.config.painting_info." + name;
     }
-    
-    
-    
-    
+
+
+
     /**
-     * Extracts only the config elements of the given list of GuiElementPaintingIconLoader. 
+     * Extracts only the config elements of the given list of GuiElementPaintingIconLoader.
      */
-    public static List<CustomPaintingConfigItem> extractConfig(List<? extends GuiElementPaintingIconLoader> list) {
-        List<CustomPaintingConfigItem> configList = new ArrayList<CustomPaintingConfigItem>();
-        
+    public static List<CustomPaintingConfigItem> extractConfig(List<? extends GuiElementPaintingIconLoader> list)
+    {
+        final List<CustomPaintingConfigItem> configList = new ArrayList<CustomPaintingConfigItem>();
+
         for (final GuiElementPaintingIconLoader item : list) {
             if (item != null && item._entryData != null) {
                 configList.add(item._entryData);
             }
         }
-        
+
         return configList;
     }
-    
+
 
 }

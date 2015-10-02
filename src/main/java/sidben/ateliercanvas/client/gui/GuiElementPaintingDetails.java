@@ -33,7 +33,6 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
         super(ownerGui, entryData);
     }
 
-    
 
 
     @Override
@@ -79,7 +78,8 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
             String extraInfo = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this.getConfigItem().getPaintingAuthor());
             extraInfo += String.format("\n%s: %.1f KB", StatCollector.translateToLocal(this.getLanguageKey("filesize_label")), super.getFileSizeKBytes());
             if (super.hasValidImage()) {
-                extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight(), super.getIconWidth(), super.getIconHeight());
+                extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight(),
+                        super.getIconWidth(), super.getIconHeight());
             } else {
                 extraInfo += String.format("\n%s: -", StatCollector.translateToLocal(this.getLanguageKey("size_label")));
             }

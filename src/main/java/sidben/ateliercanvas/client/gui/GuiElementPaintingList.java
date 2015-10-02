@@ -27,9 +27,9 @@ public class GuiElementPaintingList extends GuiListExtended
 
     @SuppressWarnings("rawtypes")
     protected final List      valueList;
-    
-    private final GuiScreen _parentGui;
-    
+
+    private final GuiScreen   _parentGui;
+
 
     // TODO: List sorting criteria (mod param?) - DEFAULT: Size (Area > Width) > Name
 
@@ -49,44 +49,41 @@ public class GuiElementPaintingList extends GuiListExtended
     @Override
     public boolean func_148179_a(int mouseX, int mouseY, int mouseEvent)
     {
-        if (this.func_148141_e(mouseY))
-        {
-            int index = this.func_148124_c(mouseX, mouseY);
+        if (this.func_148141_e(mouseY)) {
+            final int index = this.func_148124_c(mouseX, mouseY);
 
-            if (index >= 0)
-            {
-                int i1 = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
-                int j1 = this.top + 4 - this.getAmountScrolled() + index * this.slotHeight + this.headerPadding;
-                int relativeX = mouseX - i1;
-                int relativeY = mouseY - j1;
+            if (index >= 0) {
+                final int i1 = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
+                final int j1 = this.top + 4 - this.getAmountScrolled() + index * this.slotHeight + this.headerPadding;
+                final int relativeX = mouseX - i1;
+                final int relativeY = mouseY - j1;
 
                 // Check if the selected item is marked for removal. In that case, no callback is called
-                boolean markedToRemove = this.getListEntry(index).removed();
-                
+                final boolean markedToRemove = this.getListEntry(index).removed();
+
                 if (!markedToRemove) {
-                    
+
                     // Custom callback
                     this._parentGui.confirmClicked(true, index);
-                    
-                    if (this.getListEntry(index).mousePressed(index, mouseX, mouseY, mouseEvent, relativeX, relativeY))
-                    {
+
+                    if (this.getListEntry(index).mousePressed(index, mouseX, mouseY, mouseEvent, relativeX, relativeY)) {
                         this.func_148143_b(false);
                         return true;
                     }
 
                 } // (!markedToRemove)
-                
+
                 else {
                     this._parentGui.confirmClicked(true, -1);
                 }
-                
+
             } // (index >= 0)
         }
 
         return false;
     }
-   
-    
+
+
 
     @SuppressWarnings("rawtypes")
     public List func_148201_l()

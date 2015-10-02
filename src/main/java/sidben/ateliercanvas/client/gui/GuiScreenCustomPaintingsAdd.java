@@ -54,14 +54,14 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
 
         ((GuiButton) this.buttonList.get(2)).enabled = false;
         ((GuiButton) this.buttonList.get(3)).enabled = false;
-        
+
         /*
          * for (int i = 0; i <= 3; i++) {
          * ((GuiButton) this.buttonList.get(i)).enabled = false;
          * }
          */
 
-        // Fake listbox, used only for visual effects  TODO: use a regular list
+        // Fake listbox, used only for visual effects TODO: use a regular list
         this.guiList = new GuiElementPaintingList(this.mc, this.width, this.height + 55 - 32, new ArrayList<Object>(), null);
     }
 

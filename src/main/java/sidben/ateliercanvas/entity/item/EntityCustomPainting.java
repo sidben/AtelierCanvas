@@ -136,32 +136,36 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
             }
         }
 
-        ItemStack its_a_me_Painting = this.getMyItem();
+        final ItemStack its_a_me_Painting = this.getMyItem();
         this.entityDropItem(its_a_me_Painting, 0.0F);
     }
 
-    
+
     /**
      * Called when a user uses the creative pick block button on this entity.
-     *
-     * @param target The full target the player is looking at
+     * 
+     * @param target
+     *            The full target the player is looking at
      * @return A ItemStack to add to the player's inventory, Null if nothing should be added.
      */
     @Override
     public ItemStack getPickedResult(MovingObjectPosition target)
     {
-        ItemStack its_a_me_Painting = this.getMyItem();
+        final ItemStack its_a_me_Painting = this.getMyItem();
         return its_a_me_Painting;
     }
-    
-    
+
+
     /**
      * Returns the ItemStack of this painting.
      */
-    private ItemStack getMyItem() {
-        if (this._entry == null) return null;
+    private ItemStack getMyItem()
+    {
+        if (this._entry == null) {
+            return null;
+        }
 
-        
+
         // Gets an item stack with the current painting data
         final ItemStack its_a_me_Painting = new ItemStack(MyItems.customPainting);
         MyItems.customPainting.addPaintingData(its_a_me_Painting, this._entry, false);
@@ -171,9 +175,7 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
 
         return its_a_me_Painting;
     }
-    
-    
-    
+
 
 
     // ------------------------------------------------------------------------------

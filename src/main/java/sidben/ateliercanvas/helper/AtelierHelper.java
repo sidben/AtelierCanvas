@@ -35,7 +35,7 @@ public class AtelierHelper
     private final Minecraft                            mc;
     private final TextureManager                       texMan;
 
-    public final DynamicTexture blankTexture;
+    public final DynamicTexture                        blankTexture;
 
     private final LoadingCache<UUID, ResourceLocation> paintingsCache;
 
@@ -48,13 +48,12 @@ public class AtelierHelper
     public AtelierHelper(Minecraft minecraft) {
         this.mc = minecraft;
         this.texMan = mc.renderEngine;
-        
-        
+
+
         // Blank Texture
         blankTexture = new DynamicTexture(16, 16);
-        int[] blankPixels = blankTexture.getTextureData();
-        for (int i = 0; i < blankPixels.length; ++i)
-        {
+        final int[] blankPixels = blankTexture.getTextureData();
+        for (int i = 0; i < blankPixels.length; ++i) {
             blankPixels[i] = new Color(255, 255, 255).getRGB();         // OBS: Color(255, 255, 255).getRGB() == -1 == 0xFFFFFFFF (pure white, 100% alpha)
         }
         blankTexture.updateDynamicTexture();
@@ -161,17 +160,14 @@ public class AtelierHelper
             // Check if the painting is enabled
             final CustomPaintingConfigItem entryData = ConfigurationHandler.findPaintingByUUID(uuid);
 
-            if (entryData != null && entryData.getIsEnabled()) 
-            {
+            if (entryData != null && entryData.getIsEnabled()) {
                 // Returns the cached item
                 return this.paintingsCache.get(uuid);
-            } 
-            else 
-            {
+            } else {
                 // Returns a blank texture
                 return texMan.getDynamicTextureLocation("blank_painting", this.blankTexture);
             }
-            
+
 
         } catch (final ExecutionException e) {
             // Error loading the painting. Since this would be called every rendering tick, I can't call log methods here.

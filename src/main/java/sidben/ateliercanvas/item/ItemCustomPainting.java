@@ -125,8 +125,7 @@ public class ItemCustomPainting extends Item
             final NBTTagCompound nbttagcompound = stack.getTagCompound();
             final String title = nbttagcompound.getString(ItemCustomPainting.NBTPaintingTitle);
 
-            if (!StringUtils.isNullOrEmpty(title))
-            {
+            if (!StringUtils.isNullOrEmpty(title)) {
                 return title;
             }
         }
@@ -172,8 +171,7 @@ public class ItemCustomPainting extends Item
                     final CustomPaintingConfigItem paintingConfig = ConfigurationHandler.findPaintingByUUID(uniqueId);
                     if (paintingConfig == null || !paintingConfig.isValid()) {
                         infolist.add(TextFormatTable.COLOR_RED + "This painting was not found on the config file");
-                    }
-                    else if (!paintingConfig.getIsEnabled()) {
+                    } else if (!paintingConfig.getIsEnabled()) {
                         infolist.add(TextFormatTable.COLOR_RED + "This painting is disabled");
                     }
 

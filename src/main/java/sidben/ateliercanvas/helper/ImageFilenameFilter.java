@@ -15,12 +15,13 @@ public class ImageFilenameFilter implements FilenameFilter
     @Override
     public boolean accept(File dir, String filename)
     {
-        String extension = filename.substring(filename.lastIndexOf(".")); 
+        final String extension = filename.substring(filename.lastIndexOf("."));
         return extension.equalsIgnoreCase(".PNG");
     }
-    
-    
-    public static String acceptedExtensions() {
+
+
+    public static String acceptedExtensions()
+    {
         return "PNG";
     }
 

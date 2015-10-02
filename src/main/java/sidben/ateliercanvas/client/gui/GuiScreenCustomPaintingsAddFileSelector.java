@@ -40,22 +40,22 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implements IListContainer
 {
 
-    private static final int                  BT_ID_BACK       = 1;
-    private static final int                  BT_ID_OPENFOLDER = 2;
-    private static final int                  BT_ID_SELECT     = 3;
+    private static final int                  BT_ID_BACK            = 1;
+    private static final int                  BT_ID_OPENFOLDER      = 2;
+    private static final int                  BT_ID_SELECT          = 3;
 
-    private static final int                  GUI_ADDNEW_RETURNCODE  = -3;      // Must be negative value
+    private static final int                  GUI_ADDNEW_RETURNCODE = -3;      // Must be negative value
 
-    
+
     public final GuiScreen                    parentScreen;
     public final boolean                      isWorldRunning;
 
     private List<GuiElementPaintingListEntry> paintingList;
     private GuiElementPaintingList            guiPaintingList;
     private GuiElementPaintingDetails         guiElementPaintingDetails;
-    private GuiScreenCustomPaintingsEditor  guiEditor;
+    private GuiScreenCustomPaintingsEditor    guiEditor;
     private GuiButton                         btSelect;
-    private int                               selectedIndex    = -1;
+    private int                               selectedIndex         = -1;
 
 
 
@@ -103,7 +103,7 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
         // Paintings details screen
         this.guiElementPaintingDetails = new GuiElementPaintingDetails(this, null);
         this.displayDetails(this.selectedIndex);
-        
+
         // Editor
         this.guiEditor = null;
     }
@@ -191,8 +191,8 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
 
             else if (button.id == BT_ID_OPENFOLDER) {
 
-                /*
-                 * Ref: GuiScreenResourcePacks.actionPerformed(2)
+                /**
+                 * @see GuiScreenResourcePacks.actionPerformed() - value 2
                  */
 
                 final File folder = new File(this.mc.mcDataDir, ConfigurationHandler.IMAGES_BASE_PATH);
@@ -281,13 +281,11 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
                 // Updates and save the config file
                 ConfigurationHandler.addOrUpdateEntry(entry.getConfigItem());
                 ConfigurationHandler.updateAndSaveConfig();
-                
+
                 this.selectedIndex = -1;
                 this.mc.displayGuiScreen(this);
             }
-        }
-        else 
-        {
+        } else {
             // Item selection
             if (result) {
                 this.selectedIndex = -1;
@@ -298,9 +296,6 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
         }
 
     }
-
-
-
 
 
 
@@ -332,7 +327,6 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
         btSelect.visible = visible;
         btSelect.enabled = enabled;
     }
-
 
 
 

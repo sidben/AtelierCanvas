@@ -80,20 +80,19 @@ public class ItemRandomPainting extends Item
 
     /*
      * TODO: create an animation for unwrapping the painting. Right now there is a bug where the item is used twice.
-    public int getMaxItemUseDuration(ItemStack stack)
-    {
-        return 10;
-    }
+     * public int getMaxItemUseDuration(ItemStack stack)
+     * {
+     * return 10;
+     * }
+     * 
+     * public EnumAction getItemUseAction(ItemStack stack)
+     * {
+     * return EnumAction.none;
+     * }
+     */
 
-    public EnumAction getItemUseAction(ItemStack stack)
-    {
-        return EnumAction.none;
-    }
-    */
-    
-    
-    
-    
+
+
     // --------------------------------------------------------------------
     // Actions
     // --------------------------------------------------------------------
@@ -109,27 +108,28 @@ public class ItemRandomPainting extends Item
 
         // Sound
         player.playSound("ateliercanvas:painting_open", 3.0F, 1.0F);
-        
+
         return this.giveRandomPainting(stack, world, player);
     }
-    
-    
+
+
     /**
      * Called when an item finished the useDuration time.
      */
+    @Override
     public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player)
     {
         return super.onEaten(stack, world, player);
     }
-    
-    
+
+
     private ItemStack giveRandomPainting(ItemStack stack, World world, EntityPlayer player)
     {
 
         // Uses the item (reduces stack)
         --stack.stackSize;
 
-        
+
         // Creates a new custom painting stack (args: item, amount, damage)
         final ItemStack painting = new ItemStack(MyItems.customPainting, 1, 0);
 

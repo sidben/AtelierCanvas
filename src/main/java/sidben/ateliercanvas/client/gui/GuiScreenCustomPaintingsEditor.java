@@ -35,16 +35,16 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
 
     private GuiTextField     txtName;
     private GuiTextField     txtAuthor;
-    
+
     /**
      * Code returned by the confirmClicked, to identify this GUI as the origin.
      */
-    final private int _confirmedReturnCode; 
+    final private int        _confirmedReturnCode;
 
 
 
     public GuiScreenCustomPaintingsEditor(GuiScreen ownerGui, CustomPaintingConfigItem entryData, int returnCode) {
-        super(ownerGui, entryData);
+        super(ownerGui, entryData);     // TODO: standardize the parent GUI variable name
         this._confirmedReturnCode = returnCode;
     }
 
@@ -208,11 +208,12 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
         this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("painting_info.title_label")), this.width / 2 - 4 - 200, 37, ColorTable.LIGHT_GRAY);
         this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("painting_info.author_label")), this.width / 2 - 4 - 200, 81, ColorTable.LIGHT_GRAY);
         this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("painting_info.enabled_label")), this.width / 2 - 4 - 200, 125, ColorTable.LIGHT_GRAY);
-        if (this.getConfigItem().getIsEnabled())
+        if (this.getConfigItem().getIsEnabled()) {
             this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("enabled")), this.width / 2 - 4 - 200, 138, ColorTable.WHITE);
-        else 
+        } else {
             this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("disabled")), this.width / 2 - 4 - 200, 138, ColorTable.WHITE);
-        
+        }
+
         // Text fields
         this.txtName.yPosition = 50;
         this.txtAuthor.yPosition = 94;
@@ -237,32 +238,10 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
     protected void actionPerformed(GuiButton button)
     {
         if (button.enabled) {
-            
+
             // Return code
-            boolean confirmed = (button.id == BT_ID_DONE);
+            final boolean confirmed = (button.id == BT_ID_DONE);
             this._ownerGui.confirmClicked(confirmed, this._confirmedReturnCode);
-            
-            /*
-
-            if (button.id == BT_ID_BACK) {
-
-                // Returns to the parent screen
-                this.mc.displayGuiScreen(this._ownerGui);       // TODO: standardize the parent GUI variable name
-
-            }
-
-            if (button.id == BT_ID_DONE) {
-
-                // Updates the entry
-                this.getConfigItem().setPaintingTitle(this.txtName.getText());
-                this.getConfigItem().setPaintingAuthor(this.txtAuthor.getText());
-
-                // Returns to the parent screen
-                this.mc.displayGuiScreen(this._ownerGui);
-
-            }
-            
-            */
 
         }
     }
@@ -310,23 +289,25 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
     {
         return "sidben.ateliercanvas.config." + name;
     }
-    
-    
-    
+
+
+
     /**
      * Returns the name of the painting from the textbox.
      */
-    public String getPaintingName() {
+    public String getPaintingName()
+    {
         return this.txtName.getText();
     }
-    
-    
+
+
     /**
      * Returns the author of the painting from the textbox.
      */
-    public String getPaintingAuthor() {
+    public String getPaintingAuthor()
+    {
         return this.txtAuthor.getText();
     }
-    
+
 
 }

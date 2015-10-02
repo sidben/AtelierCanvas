@@ -68,7 +68,7 @@ public class ConfigurationHandler
 
 
 
-    private static final int                      DEFAULT_maxFileSize        = 30;                               // NOTE: the default file size is in KBytes to make the property slider more friendly
+    private static final int                      DEFAULT_maxFileSize        = 30;                                                     // NOTE: the default file size is in KBytes to make the property slider more friendly
     private static final int                      DEFAULT_maxPaintingSize    = 64;
     private static final String                   DEFAULT_paintingDateFormat = "yyyy-MM-dd";
     private static final boolean                  DEFAULT_simpleRecipes      = false;
@@ -273,58 +273,55 @@ public class ConfigurationHandler
             LogHelper.info("    Error importing a config entry: [" + item.getValiadtionErrors() + "]");
         }
     }
-    
-    
-    
+
+
+
     /**
      * Updates the item with the same UUID of the given element. If the item UUID
      * is not found, it's added to the list.
      */
-    public static void addOrUpdateEntry(CustomPaintingConfigItem item) {
+    public static void addOrUpdateEntry(CustomPaintingConfigItem item)
+    {
         if (item == null || item.getUUID() == EMPTY_UUID) {
             return;
         }
         if (item.isValid()) {
 
             // Tries to find the item
-            CustomPaintingConfigItem currentEntry = findPaintingByUUID(item.getUUID()); 
-            
-            if (currentEntry != null) 
-            {
+            final CustomPaintingConfigItem currentEntry = findPaintingByUUID(item.getUUID());
+
+            if (currentEntry != null) {
                 // Updates the existing entry
                 if (!currentEntry.equals(item)) {
                     currentEntry.updateEntryFrom(item);
                 }
-            }
-            else 
-            {
+            } else {
                 // Adds a new entry
                 ConfigurationHandler.mahPaintings.add(item);
             }
 
         } else {
             LogHelper.info("    Error updating a config entry: [" + item.getValiadtionErrors() + "]");
-            
-        }        
+
+        }
     }
-    
-    
+
+
     /**
      * Removes the item with the informed UUID from the config file.
      */
-    public static void removeEntry(UUID uuid) {
+    public static void removeEntry(UUID uuid)
+    {
 
         // Tries to find the item
-        CustomPaintingConfigItem targetEntry = findPaintingByUUID(uuid);
-        
-        if (targetEntry != null) 
-        {
+        final CustomPaintingConfigItem targetEntry = findPaintingByUUID(uuid);
+
+        if (targetEntry != null) {
             // Removes the existing entry
             ConfigurationHandler.mahPaintings.remove(targetEntry);
         }
 
     }
-    
 
 
 
@@ -333,8 +330,8 @@ public class ConfigurationHandler
      */
     public static void updateAndSaveConfig()
     {
-        List<UUID> uniqueEntries = new ArrayList<UUID>();
-        
+        final List<UUID> uniqueEntries = new ArrayList<UUID>();
+
         // Clear all content of the category
         ConfigurationHandler.config.getCategory(CATEGORY_PAINTINGS).clear();
         visiblePaintings.clear();
@@ -349,10 +346,10 @@ public class ConfigurationHandler
 
                 // Updates the config
                 final String configKey = String.format("%s_%03d", ConfigurationHandler.PAINTINGS_ARRAY_KEY, c);
-                
+
                 configProp = ConfigurationHandler.config.get(CATEGORY_PAINTINGS, configKey, new String[] {});
                 configProp.set(item.ToStringArray());
-                
+
                 // Updates the visible paintings array
                 if (item.getIsEnabled()) {
                     visiblePaintings.add(item.getUUID());
@@ -360,9 +357,9 @@ public class ConfigurationHandler
 
                 uniqueEntries.add(item.getUUID());
                 c++;
-                
+
             }
-            
+
             // TODO: remove the duplicate entries from mahPaintings
         }
 
@@ -424,10 +421,10 @@ public class ConfigurationHandler
     {
         if (mahPaintings.size() > 0 && visiblePaintings.size() > 0) {
             final Random rand = new Random();
-            
+
             // Draws a random entry from the array of enabled paintings
             final int luckyDraw = rand.nextInt(visiblePaintings.size());
-            
+
             // Returns the painting with the drawn UUID
             return findPaintingByUUID(visiblePaintings.get(luckyDraw));
         }
