@@ -272,8 +272,17 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
     public void confirmClicked(boolean result, int id)
     {
         if (id == GUI_ADDNEW_RETURNCODE) {
-            if (result) {
-                this.addSelectedPaintingToConfigFile();
+            if (result && this.selectedIndex >= 0 && this.selectedIndex < this.paintingList.size()) {
+                final GuiElementPaintingListEntry entry = this.paintingList.get(this.selectedIndex);
+
+                // Updates the entry
+                entry.setPaintingInfo(this.guiEditor.getPaintingName(), this.guiEditor.getPaintingAuthor());
+
+                // Updates and save the config file
+                ConfigurationHandler.addOrUpdateEntry(entry.getConfigItem());
+                ConfigurationHandler.updateAndSaveConfig();
+                
+                this.selectedIndex = -1;
                 this.mc.displayGuiScreen(this);
             }
         }
@@ -292,24 +301,6 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
 
 
 
-    /**
-     * Looks for the last element selected and adds it to the config file.
-     */
-    private boolean addSelectedPaintingToConfigFile()
-    {
-        final int index = this.selectedIndex;
-        this.selectedIndex = -1;
-
-        // LogHelper.info("Importing painting #" + index + " from the list");
-        if (index >= 0 && index < this.paintingList.size()) {
-            final CustomPaintingConfigItem selectedEntry = this.paintingList.get(index).getConfigItem();
-            ConfigurationHandler.addOrUpdateEntry(selectedEntry);
-            ConfigurationHandler.updateAndSaveConfig();
-            return true;
-        }
-
-        return false;
-    }
 
 
 
