@@ -161,7 +161,7 @@ public class AtelierHelper
             // Check if the painting is enabled
             final CustomPaintingConfigItem entryData = ConfigurationHandler.findPaintingByUUID(uuid);
 
-            if (entryData.getIsEnabled()) 
+            if (entryData != null && entryData.getIsEnabled()) 
             {
                 // Returns the cached item
                 return this.paintingsCache.get(uuid);
