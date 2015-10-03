@@ -38,7 +38,7 @@ public class GuiElementPaintingList extends GuiListExtended
         super(minecraft, width, height, 32, height - 55, 36);
         this.mc = minecraft;
         this.valueList = list;
-        this.field_148163_i = false;        // ?
+        this.field_148163_i = false;        // ? - maybe related to scrolling
         this._parentScreen = parentScreen;
     }
 

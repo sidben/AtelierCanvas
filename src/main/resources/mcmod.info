@@ -1,6 +1,6 @@
 [
 {
-"modid": "AtelierCanvas",
+"modid": "ateliercanvas",
 "name": "Atelier Canvas",
 "description": "Allows players to add custom paintings to the game.",
 "version": "${version}",

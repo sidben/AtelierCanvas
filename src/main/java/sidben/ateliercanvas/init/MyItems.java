@@ -32,9 +32,9 @@ public class MyItems
     @SideOnly(Side.CLIENT)
     public static void registerRender()
     {
-        MyItems.customPaintingIcon = "ateliercanvas:" + "painting_custom";
-        MyItems.customPaintingShinyIcon = "ateliercanvas:" + "painting_custom_shiny";  // TODO: create helper class to encapsulate Reference.ResourcesNamespace
-        MyItems.randomPaintingIcon = "ateliercanvas:" + "painting_random";
+        MyItems.customPaintingIcon = "ateliercanvas:painting_custom";
+        MyItems.customPaintingShinyIcon = "ateliercanvas:painting_custom_shiny";
+        MyItems.randomPaintingIcon = "ateliercanvas:painting_random";
     }
 
 
