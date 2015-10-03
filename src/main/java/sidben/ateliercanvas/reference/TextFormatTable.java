@@ -33,5 +33,6 @@ public class TextFormatTable
     public static final String COLOR_WHITE       = "\u00a7f";
     
     public static final String GLYPH_BACK        = "\u21a9";
+    public static final String GLYPH_SORT        = "\u21c5";
 
 }

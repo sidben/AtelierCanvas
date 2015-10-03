@@ -115,7 +115,7 @@ public class ConfigurationHandler
         prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         propOrder.add(prop.getName());
 
-        prop = config.get(Configuration.CATEGORY_GENERAL, "max_image_size", DEFAULT_maxPaintingSize, "", 64, 64);
+        prop = config.get(Configuration.CATEGORY_GENERAL, "max_image_size", DEFAULT_maxPaintingSize, "", 64, 128);
         prop.setLanguageKey(LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "max_image_size"));
         maxPaintingSize = prop.getInt(DEFAULT_maxPaintingSize);
         prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);

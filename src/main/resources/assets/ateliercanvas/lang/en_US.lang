@@ -32,6 +32,10 @@ sidben.ateliercanvas:config.select=Select
 sidben.ateliercanvas:config.enabled=Enabled
 sidben.ateliercanvas:config.disabled=Disabled
 sidben.ateliercanvas:config.installed_counter=%d paintings installed
+sidben.ateliercanvas:config.sort=Sort
+sidben.ateliercanvas:config.sort_by_size=Sorted by size
+sidben.ateliercanvas:config.sort_by_title=Sorted by title
+sidben.ateliercanvas:config.sort_by_author=Sorted by author
 
 # Config GUI - Properties
 sidben.ateliercanvas:config.prop.simple_recipes=Simple recipes

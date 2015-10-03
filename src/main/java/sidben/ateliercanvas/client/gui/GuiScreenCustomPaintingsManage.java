@@ -1,5 +1,6 @@
 package sidben.ateliercanvas.client.gui;
 
+import static sidben.ateliercanvas.reference.TextFormatTable.GLYPH_SORT;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -8,11 +9,15 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItemComparator;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItemComparator.SortingType;
 import sidben.ateliercanvas.helper.LocalizationHelper;
 import sidben.ateliercanvas.helper.LocalizationHelper.Category;
+import sidben.ateliercanvas.helper.MouseHelper;
 import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.TextFormatTable;
 import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.client.config.GuiUnicodeGlyphButton;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -45,9 +50,10 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     private static final int                  BT_ID_CHANGE          = 3;
     private static final int                  BT_ID_REMOVE          = 4;
     private static final int                  BT_ID_ENABLE          = 5;
+    private static final int                  BT_ID_SORT            = 6;
 
-    private static final int                  GUI_REMOVE_RETURNCODE = -2;      // Must be negative value
-    private static final int                  GUI_EDIT_RETURNCODE   = -7;      // Must be negative value
+    private static final int                  GUI_REMOVE_RETURNCODE = -2;              // Must be negative value
+    private static final int                  GUI_EDIT_RETURNCODE   = -7;              // Must be negative value
 
 
     public final GuiConfig                    parentScreen;
@@ -62,7 +68,9 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     private GuiButton                         btRemove;
     private GuiButton                         btEnable;
     private GuiButton[]                       btsEditor;
+    private GuiButton                         btSorting;
     private int                               selectedIndex         = -1;
+    private SortingType                       listSorting           = SortingType.SIZE;
 
 
 
@@ -80,10 +88,6 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
     public void initGui()
     {
 
-        if (this.paintingList == null) {
-            this.loadConfigValues();
-        }
-
 
         // Buttons
         final int buttonWidth = 66;
@@ -98,22 +102,22 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         btsEditor = new GuiButton[] { btEdit, btRemove, btEnable };
 
 
+        btSorting = new GuiUnicodeGlyphButton(BT_ID_SORT, this.width / 2 - 4 - 200, this.height - 48, 70, 20, " " + LocalizationHelper.translate(Category.CONFIG, "sort"), GLYPH_SORT, 2.0F);
 
         this.buttonList.add(new GuiButton(BT_ID_DONE, this.width / 2 - 100, this.height - 48, StatCollector.translateToLocal("gui.done")));
+        this.buttonList.add(btSorting);
 
+
+        // Resize and repositions the editor buttons
         for (int i = 0; i < btsEditor.length; i++) {
             this.buttonList.add(btsEditor[i]);
             btsEditor[i].xPosition = secondColumnX + (buttonWidth * (i)) + (buttonMargin * (i));
             btsEditor[i].width = buttonWidth;
         }
 
+        this.refreshListbox();
         this.displayDetailsButtons(false);
 
-
-        // Paintings listbox
-        this.guiPaintingList = new GuiElementPaintingList(this.mc, 200, this.height, this.paintingList, this);
-        this.guiPaintingList.setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
-        this.guiPaintingList.registerScrollButtons(7, 8);
 
         // Paintings details screen
         this.guiElementPaintingDetails = new GuiElementPaintingDetails(this, null);
@@ -162,10 +166,25 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
 
         // Tooltips (OBS: this must come after [super.drawScreen], or else the buttons will get a weird gray overlay
-        if (!this.guiPaintingList.getTooltip().isEmpty()) {
+        if (MouseHelper.isMouseInside(mouseX, mouseY, btSorting)) {
+            // Sorting button tooltip
+            if (this.listSorting == SortingType.AUTHOR) {
+                this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(LocalizationHelper.translate(Category.CONFIG, "sort_by_author"), 300), mouseX, mouseY);
+
+            } else if (this.listSorting == SortingType.TITLE) {
+                this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(LocalizationHelper.translate(Category.CONFIG, "sort_by_title"), 300), mouseX, mouseY);
+
+            } else if (this.listSorting == SortingType.SIZE) {
+                this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(LocalizationHelper.translate(Category.CONFIG, "sort_by_size"), 300), mouseX, mouseY);
+
+            }
+
+        } else if (!this.guiPaintingList.getTooltip().isEmpty()) {
             this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(this.guiPaintingList.getTooltip(), 300), mouseX, mouseY);
+
         } else if (!this.guiElementPaintingDetails.getTooltip().isEmpty()) {
             this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(this.guiElementPaintingDetails.getTooltip(), 300), mouseX, mouseY);
+
         }
 
     }
@@ -257,6 +276,25 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             else if (button.id == BT_ID_REMOVE) {
                 // Removes the selected painting from the config
                 this.mc.displayGuiScreen(guiConfirmed);
+
+            }
+
+
+
+            else if (button.id == BT_ID_SORT) {
+                // Changes the list sorting and refresh the GUI
+                if (this.listSorting == SortingType.AUTHOR) {
+                    this.listSorting = SortingType.TITLE;
+                } else if (this.listSorting == SortingType.TITLE) {
+                    this.listSorting = SortingType.SIZE;
+                } else {
+                    this.listSorting = SortingType.AUTHOR;
+                }
+
+                this.selectedIndex = -1;
+                this.paintingList = null;
+                this.displayDetails(this.selectedIndex);
+                this.refreshListbox();
 
             }
 
@@ -401,15 +439,33 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
 
 
+    private void refreshListbox()
+    {
+        if (this.paintingList == null) {
+            this.loadConfigValues();
+        }
+
+        // Paintings listbox
+        this.guiPaintingList = new GuiElementPaintingList(this.mc, 200, this.height, this.paintingList, this);
+        this.guiPaintingList.setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
+        this.guiPaintingList.registerScrollButtons(7, 8);
+    }
+
+
+
     /**
      * Loads the config entries on the listbox array.
      */
     private void loadConfigValues()
     {
 
+        // Sorting
+        final List<CustomPaintingConfigItem> configList = ConfigurationHandler.getAllMahGoodPaintings();
+        configList.sort(new CustomPaintingConfigItemComparator(listSorting));
+
         // Listbox data (loads from config)
         this.paintingList = new ArrayList<GuiElementPaintingListEntry>();
-        for (final CustomPaintingConfigItem item : ConfigurationHandler.getAllMahGoodPaintings()) {
+        for (final CustomPaintingConfigItem item : configList) {
             this.paintingList.add(new GuiElementPaintingListEntry(this, item));
         }
 
