@@ -218,7 +218,11 @@ public class ItemCustomPainting extends Item
                 uniqueId = nbttagcompound.getString(ItemCustomPainting.NBTPaintingUUID);
             }
 
-            // TODO: check if the painting has valid NBT / UUID. If not, don't place (check visible uuids)
+            
+            // Check if the UUID is valid and enabled. If not, don't place the painting.
+            if (!ConfigurationHandler.isUUIDEnabled(uniqueId)) {
+                return false;
+            }
             
 
             final int facing = Direction.facingToDirection[side];

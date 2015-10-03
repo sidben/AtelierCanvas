@@ -423,6 +423,25 @@ public class ConfigurationHandler
 
         return null;
     }
+    
+    
+    
+    
+    /**
+     * Check if the given UUID is present in the config file and also
+     * if the UUID is enabled.
+     */
+    public static boolean isUUIDEnabled(String uuidString)
+    {
+        UUID uuid = null;
+
+        try {
+            uuid = UUID.fromString(uuidString);
+            return visiblePaintings.contains(uuid);
+        } catch (final IllegalArgumentException e) {
+            return false;
+        }
+    }
 
 
 }
