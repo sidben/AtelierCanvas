@@ -30,8 +30,8 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
 
 
 
-    public GuiElementPaintingDetails(GuiScreen ownerGui, CustomPaintingConfigItem entryData) {
-        super(ownerGui, entryData);
+    public GuiElementPaintingDetails(GuiScreen parentScreen, CustomPaintingConfigItem entryData) {
+        super(parentScreen, entryData);
     }
 
 
@@ -51,7 +51,7 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
         if (this.getConfigItem() != null && this.getConfigItem().isValid()) {
 
             // Selected painting extra info
-            final int boxX = this._ownerGui.width / 2 + 4;
+            final int boxX = this._parentScreen.width / 2 + 4;
             final int boxY = 32;
             final int boxWidth = 200;
             int boxHeight = 64;
@@ -65,13 +65,13 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
             // TODO: support for paintings larger than 64x64 pixels
 
             // If the GUI is large, allows more info and a bigger picture
-            if (this._ownerGui.height > 320) {
+            if (this._parentScreen.height > 320) {
                 boxHeight = 128;
                 sampleWidth *= 2;
                 sampleHeight *= 2;
             }
 
-            final int textStartX = this._ownerGui.width / 2 + 4;
+            final int textStartX = this._parentScreen.width / 2 + 4;
             final int textStartY = boxY + boxHeight + titleMaginTop;
 
 

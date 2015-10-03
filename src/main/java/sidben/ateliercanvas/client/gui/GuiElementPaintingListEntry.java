@@ -39,8 +39,8 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
 
 
 
-    public GuiElementPaintingListEntry(GuiScreen ownerGui, CustomPaintingConfigItem entryData) {
-        super(ownerGui, entryData);
+    public GuiElementPaintingListEntry(GuiScreen parentScreen, CustomPaintingConfigItem entryData) {
+        super(parentScreen, entryData);
     }
 
 

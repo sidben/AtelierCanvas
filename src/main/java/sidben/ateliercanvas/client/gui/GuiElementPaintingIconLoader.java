@@ -44,14 +44,14 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
     private boolean                  _changed    = false;
 
     protected final Minecraft        mc;
-    protected final GuiScreen        _ownerGui;
+    protected final GuiScreen        _parentScreen;
     private CustomPaintingConfigItem _entryData;
 
 
 
-    public GuiElementPaintingIconLoader(GuiScreen ownerGui, CustomPaintingConfigItem entryData) {
+    public GuiElementPaintingIconLoader(GuiScreen parentScreen, CustomPaintingConfigItem entryData) {
         this.mc = Minecraft.getMinecraft();
-        this._ownerGui = ownerGui;
+        this._parentScreen = parentScreen;
         updateConfigItem(entryData);
     }
 

@@ -45,8 +45,8 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
 
 
 
-    public GuiScreenCustomPaintingsEditor(GuiScreen ownerGui, CustomPaintingConfigItem entryData, int returnCode) {
-        super(ownerGui, entryData);     // TODO: standardize the parent GUI variable name
+    public GuiScreenCustomPaintingsEditor(GuiScreen parentScreen, CustomPaintingConfigItem entryData, int returnCode) {
+        super(parentScreen, entryData);
         this._confirmedReturnCode = returnCode;
     }
 
@@ -250,7 +250,7 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
 
             // Return code
             final boolean confirmed = (button.id == BT_ID_DONE);
-            this._ownerGui.confirmClicked(confirmed, this._confirmedReturnCode);
+            this._parentScreen.confirmClicked(confirmed, this._confirmedReturnCode);
 
         }
     }

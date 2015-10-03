@@ -28,18 +28,18 @@ public class GuiElementPaintingList extends GuiListExtended
     @SuppressWarnings("rawtypes")
     protected final List      valueList;
 
-    private final GuiScreen   _parentGui;
+    private final GuiScreen   _parentScreen;
 
 
     // TODO: List sorting criteria (mod param?) - DEFAULT: Size (Area > Width) > Name
 
     @SuppressWarnings("rawtypes")
-    public GuiElementPaintingList(Minecraft minecraft, int width, int height, List list, GuiScreen parentGui) {
+    public GuiElementPaintingList(Minecraft minecraft, int width, int height, List list, GuiScreen parentScreen) {
         super(minecraft, width, height, 32, height - 55, 36);
         this.mc = minecraft;
         this.valueList = list;
         this.field_148163_i = false;        // ?
-        this._parentGui = parentGui;
+        this._parentScreen = parentScreen;
     }
 
 
@@ -64,7 +64,7 @@ public class GuiElementPaintingList extends GuiListExtended
                 if (!markedToRemove) {
 
                     // Custom callback
-                    this._parentGui.confirmClicked(true, index);
+                    this._parentScreen.confirmClicked(true, index);
 
                     if (this.getListEntry(index).mousePressed(index, mouseX, mouseY, mouseEvent, relativeX, relativeY)) {
                         this.func_148143_b(false);
@@ -74,7 +74,7 @@ public class GuiElementPaintingList extends GuiListExtended
                 } // (!markedToRemove)
 
                 else {
-                    this._parentGui.confirmClicked(true, -1);
+                    this._parentScreen.confirmClicked(true, -1);
                 }
 
             } // (index >= 0)

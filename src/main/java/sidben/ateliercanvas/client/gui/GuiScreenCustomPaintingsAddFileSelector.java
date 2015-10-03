@@ -39,7 +39,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author sidben
  */
 @SideOnly(Side.CLIENT)
-public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implements IListContainer
+public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen
 {
 
     private static final int                  BT_ID_BACK            = 1;
