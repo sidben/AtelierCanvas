@@ -11,6 +11,8 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import scala.actors.threadpool.Arrays;
 import sidben.ateliercanvas.helper.ImageFilenameFilter;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.reference.Reference;
 import cpw.mods.fml.client.config.GuiConfigEntries;
@@ -103,24 +105,24 @@ public class ConfigurationHandler
 
         // Load properties
         prop = config.get(Configuration.CATEGORY_GENERAL, "simple_recipes", DEFAULT_simpleRecipes);
-        prop.setLanguageKey(getLanguageKey("simple_recipes"));
+        prop.setLanguageKey(LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "simple_recipes"));
         simpleRecipes = prop.getBoolean(DEFAULT_simpleRecipes);
         propOrder.add(prop.getName());
 
         prop = config.get(Configuration.CATEGORY_GENERAL, "max_filesize_kb", DEFAULT_maxFileSize, "", 10, 1024);     // 1048576 bytes == 1024KB == 1 MB
-        prop.setLanguageKey(getLanguageKey("max_filesize_kb"));
+        prop.setLanguageKey(LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "max_filesize_kb"));
         maxFileSize = (prop.getInt(DEFAULT_maxFileSize) * 1024);
         prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         propOrder.add(prop.getName());
 
         prop = config.get(Configuration.CATEGORY_GENERAL, "max_image_size", DEFAULT_maxPaintingSize, "", 64, 128);
-        prop.setLanguageKey(getLanguageKey("max_image_size"));
+        prop.setLanguageKey(LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "max_image_size"));
         maxPaintingSize = prop.getInt(DEFAULT_maxPaintingSize);
         prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         propOrder.add(prop.getName());
 
         prop = config.get(Configuration.CATEGORY_GENERAL, "date_format", DEFAULT_paintingDateFormat);
-        prop.setLanguageKey(getLanguageKey("date_format"));
+        prop.setLanguageKey(LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "date_format"));
         paintingDateFormat = prop.getString();
         prop.setValidValues(new String[] { "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "dd-MMM-yyyy", "yyyy-MMM-dd" });
         propOrder.add(prop.getName());
@@ -174,16 +176,6 @@ public class ConfigurationHandler
             // Resync config
             loadConfig();
         }
-    }
-
-
-
-    /**
-     * Returns the full language key for elements of this GUI.
-     */
-    protected static String getLanguageKey(String name)
-    {
-        return "sidben.ateliercanvas.config.prop." + name;
     }
 
 
@@ -360,7 +352,7 @@ public class ConfigurationHandler
 
             }
 
-            // TODO: remove the duplicate entries from mahPaintings
+            // TODO: remove the duplicate entries from mahPaintings (Note: what can cause duplicate entries on the current version?)
         }
 
         // Saves the config file

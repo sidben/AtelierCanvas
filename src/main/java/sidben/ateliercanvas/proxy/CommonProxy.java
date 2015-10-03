@@ -56,7 +56,6 @@ public abstract class CommonProxy implements IProxy
 
 
         // Entities
-        LogHelper.info("-- Registering custom painting entity");
         EntityRegistry.registerModEntity(EntityCustomPainting.class, "CustomPaintingEntity", 0, ModAtelierCanvas.instance, 160, Integer.MAX_VALUE, false);
     }
 

@@ -12,6 +12,8 @@ import net.minecraft.util.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.helper.MouseHelper;
 import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.TextFormatTable;
@@ -138,13 +140,20 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
             final int textStartY = boxY + boxHeight + titleMaginTop;
 
 
+            // Painting file name
             final String paintingFilename = this.getConfigItem().getPaintingFileName();
-            String extraInfo = String.format("%s: %.1f KB", StatCollector.translateToLocal(this.getLanguageKey("painting_info.filesize_label")), super.getFileSizeKBytes());
+
+            // Painting extra info (file size, dimensions)
+            /*
+             * NOTE: I have to format the file size here, because "%.1f" in the language file will be replace by "%s"
+             * on the StringTranslate.parseLangFile() method.
+             */
+            String extraInfo = LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "filesize", String.format("%.1f", super.getFileSizeKBytes())) + "\n";
             if (super.hasValidImage()) {
-                extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("painting_info.size_label")), super.getTileWidth(), super.getTileHeight(),
-                        super.getIconWidth(), super.getIconHeight());
+                extraInfo += LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "dimensions", super.getTileWidth(), super.getTileHeight(), super.getIconWidth(),
+                        super.getIconHeight());
             } else {
-                extraInfo += String.format("\n%s: -", StatCollector.translateToLocal(this.getLanguageKey("painting_info.size_label")));
+                extraInfo += LocalizationHelper.translate(Category.CONFIG_PAINTING_INFO, "dimensions_empty");
             }
 
 
@@ -189,10 +198,10 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
             // Tooltip
             final boolean isMouseOverIconArea = MouseHelper.isMouseInside(mouseX, mouseY, boxX, boxY, boxWidth, boxHeight);
             if (isMouseOverIconArea) {
-                tooltip = TextFormatTable.BOLD + this.getConfigItem().getPaintingFileName() + TextFormatTable.RESET;
-                tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("painting_info.date_created_label")), this.getConfigItem().getFormatedCreationDate());
-                tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("painting_info.date_updated_label")), this.getConfigItem().getFormatedLastUpdateDate());
-                tooltip += "\nUUID: " + this.getConfigItem().getUUID();
+                tooltip = TextFormatTable.BOLD + this.getConfigItem().getPaintingFileName() + TextFormatTable.RESET + "\n";
+                tooltip += LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "date_created", this.getConfigItem().getFormatedCreationDate()) + "\n";
+                tooltip += LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "date_updated", this.getConfigItem().getFormatedCreationDate()) + "\n";
+                tooltip += "UUID: " + this.getConfigItem().getUUID();
             }
 
 
@@ -200,18 +209,18 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
 
 
         // Texts - Title, Total paintings installed
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title")), this.width / 2, 8, ColorTable.WHITE);
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title_new")), this.width / 2, 18, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "title"), this.width / 2, 8, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "title_new"), this.width / 2, 18, ColorTable.WHITE);
 
 
         // Text fields labels
-        this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("painting_info.title_label")), this.width / 2 - 4 - 200, 37, ColorTable.LIGHT_GRAY);
-        this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("painting_info.author_label")), this.width / 2 - 4 - 200, 81, ColorTable.LIGHT_GRAY);
-        this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("painting_info.enabled_label")), this.width / 2 - 4 - 200, 125, ColorTable.LIGHT_GRAY);
+        this.drawString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG_EDITOR, "title_label"), this.width / 2 - 4 - 200, 37, ColorTable.LIGHT_GRAY);
+        this.drawString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG_EDITOR, "author_label"), this.width / 2 - 4 - 200, 81, ColorTable.LIGHT_GRAY);
+        this.drawString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG_EDITOR, "enabled_label"), this.width / 2 - 4 - 200, 125, ColorTable.LIGHT_GRAY);
         if (this.getConfigItem().getIsEnabled()) {
-            this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("enabled")), this.width / 2 - 4 - 200, 138, ColorTable.WHITE);
+            this.drawString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "enabled"), this.width / 2 - 4 - 200, 138, ColorTable.WHITE);
         } else {
-            this.drawString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("disabled")), this.width / 2 - 4 - 200, 138, ColorTable.WHITE);
+            this.drawString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "disabled"), this.width / 2 - 4 - 200, 138, ColorTable.WHITE);
         }
 
         // Text fields
@@ -278,16 +287,6 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
         super.mouseClicked(mouseX, mouseY, partialTicks);
         this.txtName.mouseClicked(mouseX, mouseY, partialTicks);
         this.txtAuthor.mouseClicked(mouseX, mouseY, partialTicks);
-    }
-
-
-    /**
-     * Returns the full language key for elements of this GUI.
-     */
-    @Override
-    protected String getLanguageKey(String name)
-    {
-        return "sidben.ateliercanvas.config." + name;
     }
 
 

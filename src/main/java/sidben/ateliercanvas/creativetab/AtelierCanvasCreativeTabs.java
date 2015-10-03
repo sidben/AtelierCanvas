@@ -1,6 +1,8 @@
 package sidben.ateliercanvas.creativetab;
 
 import java.util.List;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.init.MyItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -13,8 +15,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class AtelierCanvasCreativeTabs extends CreativeTabs
 {
 
-    public AtelierCanvasCreativeTabs(String unlocalizedName) {
-        super(unlocalizedName);
+    public AtelierCanvasCreativeTabs() {
+        super("");
     }
 
 
@@ -25,6 +27,19 @@ public class AtelierCanvasCreativeTabs extends CreativeTabs
         return Items.painting;
     }
 
+    
+    
+    /**
+     * Gets the translated Label.
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public String getTranslatedTabLabel()
+    {
+        return LocalizationHelper.translate(Category.CREATIVE_TAB, "name");
+    }
+
+    
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override

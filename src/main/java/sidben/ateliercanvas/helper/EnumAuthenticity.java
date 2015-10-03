@@ -1,8 +1,8 @@
 package sidben.ateliercanvas.helper;
 
 import java.util.Random;
-import net.minecraft.util.StatCollector;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 
 
 /**
@@ -42,7 +42,7 @@ public enum EnumAuthenticity {
 
     public String getTranslatedName()
     {
-        return StatCollector.translateToLocal("sidben.ateliercanvas:item.custom_painting." + this._langKey);
+        return LocalizationHelper.translate(Category.ITEM_CUSTOM_PAINTING, this._langKey);
     }
 
 

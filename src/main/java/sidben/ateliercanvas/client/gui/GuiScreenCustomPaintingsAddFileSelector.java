@@ -17,6 +17,8 @@ import org.lwjgl.Sys;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.helper.ImageFilenameFilter;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.helper.MouseHelper;
 import sidben.ateliercanvas.reference.ColorTable;
@@ -75,10 +77,10 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
         final int secondColumnX = this.width / 2 + 4;
         final int buttonStartY = 100;
 
-        btSelect = new GuiButton(BT_ID_SELECT, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("select")));
+        btSelect = new GuiButton(BT_ID_SELECT, secondColumnX, buttonStartY, LocalizationHelper.translate(Category.CONFIG, "select"));
         btSelect.width = 200;
 
-        this.buttonList.add(new GuiOptionButton(BT_ID_OPENFOLDER, this.width / 2 - 154, this.height - 48, StatCollector.translateToLocal(getLanguageKey("open_folder"))));
+        this.buttonList.add(new GuiOptionButton(BT_ID_OPENFOLDER, this.width / 2 - 154, this.height - 48, LocalizationHelper.translate(Category.CONFIG, "open_folder")));
         this.buttonList.add(new GuiUnicodeGlyphButton(BT_ID_BACK, secondColumnX, this.height - 48, 150, 20, " " + StatCollector.translateToLocal("gui.back"), GLYPH_BACK, 2.0F));
         this.buttonList.add(btSelect);
 
@@ -131,9 +133,9 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
         this.guiPaintingList.drawScreen(mouseX, mouseY, partialTicks);
 
         // Texts - Title, folder info
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title")), this.width / 2, 8, ColorTable.WHITE);
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("add_new_file")), this.width / 2, 18, ColorTable.WHITE);
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("folder_info")), this.width / 2 - 77, this.height - 26, ColorTable.GRAY);
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "title"), this.width / 2, 8, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "add_new_file"), this.width / 2, 18, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "folder_info"), this.width / 2 - 77, this.height - 26, ColorTable.GRAY);
 
 
         // Parent call (draws buttons)
@@ -152,11 +154,11 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
             if (isMouseOverFolderButton) {
                 String info = "";
 
-                info += String.format("%s%s\n", TextFormatTable.COLOR_GRAY, StatCollector.translateToLocal(getLanguageKey("prop.valid_extensions")));
+                info += String.format("%s%s\n", TextFormatTable.COLOR_GRAY, LocalizationHelper.translate(Category.CONFIG_PROPERTIES, "valid_extensions"));
                 info += String.format("  %s%s\n", TextFormatTable.COLOR_YELLOW, ImageFilenameFilter.acceptedExtensions());
-                info += String.format("%s%s\n", TextFormatTable.COLOR_GRAY, StatCollector.translateToLocal(getLanguageKey("prop.max_image_size")));
+                info += String.format("%s%s\n", TextFormatTable.COLOR_GRAY, LocalizationHelper.translate(Category.CONFIG_PROPERTIES, "max_image_size"));
                 info += String.format("  %1$s%2$dx%2$d\n", TextFormatTable.COLOR_YELLOW, ConfigurationHandler.maxPaintingSize);
-                info += String.format("%s%s\n", TextFormatTable.COLOR_GRAY, StatCollector.translateToLocal(getLanguageKey("prop.max_filesize_kb")));
+                info += String.format("%s%s\n", TextFormatTable.COLOR_GRAY, LocalizationHelper.translate(Category.CONFIG_PROPERTIES, "max_filesize_kb"));
                 info += String.format("  %s%.1f KB", TextFormatTable.COLOR_YELLOW, (ConfigurationHandler.maxFileSize / 1024F));
 
                 this.drawToolTip(this.mc.fontRenderer.listFormattedStringToWidth(info, 300), mouseX, mouseY);
@@ -303,16 +305,6 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen // implem
     public void drawToolTip(List stringList, int x, int y)
     {
         super.func_146283_a(stringList, x, y);
-    }
-
-
-
-    /**
-     * Returns the full language key for elements of this GUI.
-     */
-    protected String getLanguageKey(String name)
-    {
-        return "sidben.ateliercanvas.config." + name;
     }
 
 

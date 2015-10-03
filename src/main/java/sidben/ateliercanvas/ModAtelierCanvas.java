@@ -46,7 +46,7 @@ public class ModAtelierCanvas
 
     
     // Creative Tabs
-    public static CreativeTabs tabMod = new AtelierCanvasCreativeTabs("tab_atelier_canvas");
+    public static CreativeTabs tabMod = new AtelierCanvasCreativeTabs();
 
     
 

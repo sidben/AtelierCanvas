@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.reference.ColorTable;
 import cpw.mods.fml.client.config.GuiUnicodeGlyphButton;
 import cpw.mods.fml.relauncher.Side;
@@ -48,9 +50,9 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
         final int buttonY = 64;
 
         this.buttonList.add(new GuiUnicodeGlyphButton(BT_ID_BACK, buttonX, this.height - 29, 200, 20, " " + StatCollector.translateToLocal("gui.back"), GLYPH_BACK, 2.0F));
-        this.buttonList.add(new GuiButton(BT_ID_NEWFILE, buttonX, buttonY, StatCollector.translateToLocal(getLanguageKey("add_new_file"))));
-        this.buttonList.add(new GuiButton(BT_ID_NEWURL, buttonX, buttonY + 22, StatCollector.translateToLocal(getLanguageKey("add_new_url"))));
-        this.buttonList.add(new GuiButton(BT_ID_NEWBASE64, buttonX, buttonY + 44, StatCollector.translateToLocal(getLanguageKey("add_new_base64"))));
+        this.buttonList.add(new GuiButton(BT_ID_NEWFILE, buttonX, buttonY, LocalizationHelper.translate(Category.CONFIG, "add_new_file")));
+        this.buttonList.add(new GuiButton(BT_ID_NEWURL, buttonX, buttonY + 22, LocalizationHelper.translate(Category.CONFIG, "add_new_url")));
+        this.buttonList.add(new GuiButton(BT_ID_NEWBASE64, buttonX, buttonY + 44, LocalizationHelper.translate(Category.CONFIG, "add_new_base64")));
 
         ((GuiButton) this.buttonList.get(2)).enabled = false;
         ((GuiButton) this.buttonList.get(3)).enabled = false;
@@ -77,8 +79,8 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
 
 
         // Texts - Title, Total paintings installed
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title")), this.width / 2, 8, ColorTable.WHITE);
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title_new")), this.width / 2, 18, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "title"), this.width / 2, 8, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "title_new"), this.width / 2, 18, ColorTable.WHITE);
 
 
         // Parent call (draws buttons)
@@ -139,16 +141,6 @@ public class GuiScreenCustomPaintingsAdd extends GuiScreen
     public void drawToolTip(List stringList, int x, int y)
     {
         super.func_146283_a(stringList, x, y);
-    }
-
-
-
-    /**
-     * Returns the full language key for elements of this GUI.
-     */
-    protected String getLanguageKey(String name)
-    {
-        return "sidben.ateliercanvas.config." + name;
     }
 
 }

@@ -4,10 +4,11 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
 import org.lwjgl.opengl.GL11;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.reference.ColorTable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -70,11 +71,12 @@ public class GuiElementPaintingListEntry extends GuiElementPaintingIconLoader im
         // Painting info
         if (this.getConfigItem().isValid()) {
             paintingName = this.getConfigItem().getPaintingTitle();
-            paintingInfo1 = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this.getConfigItem().getPaintingAuthor());
+            paintingInfo1 = LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "author", this.getConfigItem().getPaintingAuthor());
             if (super.hasValidImage()) {
-                paintingInfo2 = String.format("%s: %dx%d", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight());
+                paintingInfo2 = LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "dimensions", super.getTileWidth(), super.getTileHeight(), super.getIconWidth(),
+                        super.getIconHeight());
             } else {
-                paintingInfo2 = String.format("%s: -", StatCollector.translateToLocal(this.getLanguageKey("size_label")));
+                paintingInfo2 = LocalizationHelper.translate(Category.CONFIG_PAINTING_INFO, "dimensions_empty");
             }
 
 

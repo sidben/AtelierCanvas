@@ -6,8 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
-import net.minecraft.util.StatCollector;
 import org.apache.commons.lang3.StringUtils;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.reference.TextFormatTable;
 
 
@@ -182,7 +183,7 @@ public class CustomPaintingConfigItem
     /** Returns the painting title. If empty, will return a default text. */
     public String getPaintingTitle()
     {
-        return this._title.isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("title_empty")) + TextFormatTable.RESET : this._title;
+        return this._title.isEmpty() ? TextFormatTable.ITALIC + LocalizationHelper.translate(Category.CONFIG_PAINTING_INFO, "title_empty") + TextFormatTable.RESET : this._title;
     }
 
     /** Returns the painting title, even if empty */
@@ -194,7 +195,7 @@ public class CustomPaintingConfigItem
     /** Returns the painting author. If empty, will return a default text. */
     public String getPaintingAuthor()
     {
-        return this._author.isEmpty() ? TextFormatTable.ITALIC + StatCollector.translateToLocal(this.getLanguageKey("author_empty")) + TextFormatTable.RESET : this._author;
+        return this._author.isEmpty() ? TextFormatTable.ITALIC + LocalizationHelper.translate(Category.CONFIG_PAINTING_INFO, "author_empty") + TextFormatTable.RESET : this._author;
     }
 
     /** Returns the painting author, even if empty */
@@ -329,15 +330,15 @@ public class CustomPaintingConfigItem
             return false;
         }
         if (this._fileName.isEmpty()) {
-            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_filename"));
+            validationErrors = LocalizationHelper.translate(Category.ERROR, "empty_filename");
             return false;
         }
         if (this._uuid == null) {
-            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_empty_uuid"));
+            validationErrors = LocalizationHelper.translate(Category.ERROR, "empty_uuid");
             return false;
         }
         if (this._sizeBytes <= 0) {
-            validationErrors = StatCollector.translateToLocal(this.getLanguageKey("error_invalid_filesize"));
+            validationErrors = LocalizationHelper.translate(Category.ERROR, "invalid_filesize");
             return false;
         }
 
@@ -420,15 +421,6 @@ public class CustomPaintingConfigItem
         } else {
             return true;
         }
-    }
-
-
-    /**
-     * Returns the full language key for elements of this GUI.
-     */
-    protected String getLanguageKey(String name)
-    {
-        return "sidben.ateliercanvas.config.painting_info." + name;
     }
 
 

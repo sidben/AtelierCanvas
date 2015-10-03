@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.TextFormatTable;
 import cpw.mods.fml.client.config.GuiConfig;
@@ -89,8 +91,8 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         final int buttonStartY = 100;
         final int buttonMargin = 1;
 
-        btEdit = new GuiButton(BT_ID_CHANGE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("edit")));
-        btRemove = new GuiButton(BT_ID_REMOVE, secondColumnX, buttonStartY, StatCollector.translateToLocal(getLanguageKey("remove")));
+        btEdit = new GuiButton(BT_ID_CHANGE, secondColumnX, buttonStartY, LocalizationHelper.translate(Category.CONFIG, "edit"));
+        btRemove = new GuiButton(BT_ID_REMOVE, secondColumnX, buttonStartY, LocalizationHelper.translate(Category.CONFIG, "remove"));
         btEnable = new GuiButton(BT_ID_ENABLE, secondColumnX, buttonStartY, "---");
 
         btsEditor = new GuiButton[] { btEdit, btRemove, btEnable };
@@ -149,9 +151,9 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
         this.guiPaintingList.drawScreen(mouseX, mouseY, partialTicks);
 
         // Texts - Title, Total paintings installed
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("title")), this.width / 2, 8, ColorTable.WHITE);
-        this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(getLanguageKey("manage_paintings")), this.width / 2, 18, ColorTable.WHITE);
-        this.drawCenteredString(this.fontRendererObj, String.format(StatCollector.translateToLocal(getLanguageKey("installed_counter")), this.paintingList.size()), this.width / 2, this.height - 20,
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "title"), this.width / 2, 8, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translate(Category.CONFIG, "manage_paintings"), this.width / 2, 18, ColorTable.WHITE);
+        this.drawCenteredString(this.fontRendererObj, LocalizationHelper.translateFormatted(Category.CONFIG, "installed_counter", this.paintingList.size()), this.width / 2, this.height - 20,
                 ColorTable.GRAY);
 
 
@@ -238,7 +240,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
                         entry.swapIsEnabled();
 
                         // Update the button display
-                        btEnable.displayString = StatCollector.translateToLocal(getLanguageKey(entry.getConfigItem().getIsEnabled() ? "enabled" : "disabled"));
+                        btEnable.displayString = LocalizationHelper.translate(Category.CONFIG, (entry.getConfigItem().getIsEnabled() ? "enabled" : "disabled"));
                         if (!entry.getConfigItem().getIsEnabled()) {
                             btEnable.displayString = TextFormatTable.COLOR_GRAY + btEnable.displayString;
                         }
@@ -318,16 +320,6 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
 
 
-    /**
-     * Returns the full language key for elements of this GUI.
-     */
-    protected String getLanguageKey(String name)
-    {
-        return "sidben.ateliercanvas.config." + name;
-    }
-
-
-
     @Override
     public void confirmClicked(boolean result, int index)
     {
@@ -398,7 +390,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
             final GuiElementPaintingListEntry entry = this.paintingList.get(index);
             this.guiElementPaintingDetails.updateConfigItem(entry.getConfigItem());
 
-            btEnable.displayString = StatCollector.translateToLocal(getLanguageKey(entry.getConfigItem().getIsEnabled() ? "enabled" : "disabled"));
+            btEnable.displayString = LocalizationHelper.translate(Category.CONFIG, (entry.getConfigItem().getIsEnabled() ? "enabled" : "disabled"));
             if (!entry.getConfigItem().getIsEnabled()) {
                 btEnable.displayString = TextFormatTable.COLOR_GRAY + btEnable.displayString;
             }

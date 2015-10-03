@@ -9,12 +9,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import sidben.ateliercanvas.ModAtelierCanvas;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.reference.TextFormatTable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -121,7 +122,7 @@ public class RenderCustomPainting extends Render
                 yEnd = f1 + (j + 1) * 16;
                 yStart = f1 + j * 16;
 
-                this.setupLightmap(painting, (float)(xEnd + xStart) / 2.0F, (float)(yEnd + yStart) / 2.0F);
+                this.setupLightmap(painting, (float) (xEnd + xStart) / 2.0F, (float) (yEnd + yStart) / 2.0F);
 
 
                 uStart = (offsetX + width - i * 16) / 256.0F;
@@ -284,8 +285,8 @@ public class RenderCustomPainting extends Render
                     }
                 }
                 if (!StringUtils.isNullOrEmpty(paintingSubtitle)) {
-                    paintingSubtitle = StatCollector.translateToLocalFormatted("sidben.ateliercanvas:item.custom_painting.author_label", new Object[] { this.getFontRendererFromRenderManager()
-                            .trimStringToWidth(paintingSubtitle, maxTextSize) });
+                    paintingSubtitle = LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "author",
+                            this.getFontRendererFromRenderManager().trimStringToWidth(paintingSubtitle, maxTextSize));
                 }
 
 

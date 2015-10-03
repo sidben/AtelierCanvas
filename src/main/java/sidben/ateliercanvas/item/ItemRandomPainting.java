@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.LocalizationHelper;
 import sidben.ateliercanvas.init.MyItems;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,7 +28,6 @@ public class ItemRandomPainting extends Item
     // Constructors
     // --------------------------------------------------------------------
     public ItemRandomPainting() {
-        this.setUnlocalizedName(ItemRandomPainting.unlocalizedName);
         this.setHasSubtypes(false);
     }
 
@@ -57,19 +57,13 @@ public class ItemRandomPainting extends Item
     @Override
     public String getUnlocalizedName()
     {
-        // TODO: encapsulate into Reference.ResourcesNamespace
-        return String.format("%s:item.%s", "sidben.ateliercanvas", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+        return LocalizationHelper.getLanguageKey(LocalizationHelper.Category.ITEM, unlocalizedName);
     }
 
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
-        return String.format("%s:item.%s", "sidben.ateliercanvas", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-    }
-
-    protected String getUnwrappedUnlocalizedName(String unlocalizedName)
-    {
-        return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+        return LocalizationHelper.getLanguageKey(LocalizationHelper.Category.ITEM, unlocalizedName);
     }
 
 

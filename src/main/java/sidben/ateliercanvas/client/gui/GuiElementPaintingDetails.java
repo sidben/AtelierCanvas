@@ -3,9 +3,10 @@ package sidben.ateliercanvas.client.gui;
 import java.util.List;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.helper.MouseHelper;
 import sidben.ateliercanvas.reference.ColorTable;
 import sidben.ateliercanvas.reference.TextFormatTable;
@@ -74,14 +75,23 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
             final int textStartY = boxY + boxHeight + titleMaginTop;
 
 
+            // Painting title
             final String paintingName = this.getConfigItem().getPaintingTitle();
-            String extraInfo = String.format("%s: %s", StatCollector.translateToLocal(this.getLanguageKey("author_label")), this.getConfigItem().getPaintingAuthor());
-            extraInfo += String.format("\n%s: %.1f KB", StatCollector.translateToLocal(this.getLanguageKey("filesize_label")), super.getFileSizeKBytes());
+
+            // Painting extra info (author, file size, dimensions)
+            String extraInfo = LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "author", this.getConfigItem().getPaintingAuthor()) + "\n";
+
+            /*
+             * NOTE: I have to format the file size here, because "%.1f" in the language file will be replace by "%s"
+             * on the StringTranslate.parseLangFile() method.
+             */
+            extraInfo += LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "filesize", String.format("%.1f", super.getFileSizeKBytes())) + "\n";
+
             if (super.hasValidImage()) {
-                extraInfo += String.format("\n%s: %dx%d (%dx%d pixels)", StatCollector.translateToLocal(this.getLanguageKey("size_label")), super.getTileWidth(), super.getTileHeight(),
-                        super.getIconWidth(), super.getIconHeight());
+                extraInfo += LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "dimensions", super.getTileWidth(), super.getTileHeight(), super.getIconWidth(),
+                        super.getIconHeight());
             } else {
-                extraInfo += String.format("\n%s: -", StatCollector.translateToLocal(this.getLanguageKey("size_label")));
+                extraInfo += LocalizationHelper.translate(Category.CONFIG_PAINTING_INFO, "dimensions_empty");
             }
 
 
@@ -127,10 +137,10 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
             this._tooltip = "";
             final boolean isMouseOverIconArea = MouseHelper.isMouseInside(mouseX, mouseY, boxX, boxY, boxWidth, boxHeight);
             if (isMouseOverIconArea) {
-                this._tooltip = TextFormatTable.BOLD + this.getConfigItem().getPaintingFileName() + TextFormatTable.RESET;
-                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_created_label")), this.getConfigItem().getFormatedCreationDate());
-                this._tooltip += String.format("\n%s: %s", StatCollector.translateToLocal(this.getLanguageKey("date_updated_label")), this.getConfigItem().getFormatedLastUpdateDate());
-                this._tooltip += "\nUUID: " + this.getConfigItem().getUUID();
+                this._tooltip = TextFormatTable.BOLD + this.getConfigItem().getPaintingFileName() + TextFormatTable.RESET + "\n";
+                this._tooltip += LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "date_created", this.getConfigItem().getFormatedCreationDate()) + "\n";
+                this._tooltip += LocalizationHelper.translateFormatted(Category.CONFIG_PAINTING_INFO, "date_updated", this.getConfigItem().getFormatedCreationDate()) + "\n";
+                this._tooltip += "UUID: " + this.getConfigItem().getUUID();
             }
 
 
@@ -149,15 +159,5 @@ public class GuiElementPaintingDetails extends GuiElementPaintingIconLoader
         return this._tooltip == null ? "" : this._tooltip;
     }
 
-
-
-    /**
-     * Returns the full language key for elements of this GUI.
-     */
-    @Override
-    protected String getLanguageKey(String name)
-    {
-        return "sidben.ateliercanvas.config.painting_info." + name;
-    }
 
 }

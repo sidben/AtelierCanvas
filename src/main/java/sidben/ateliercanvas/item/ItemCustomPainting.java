@@ -13,14 +13,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.World;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.helper.EnumAuthenticity;
-import sidben.ateliercanvas.helper.LogHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.init.MyItems;
 import sidben.ateliercanvas.reference.BlockSide;
 import sidben.ateliercanvas.reference.TextFormatTable;
@@ -54,7 +54,6 @@ public class ItemCustomPainting extends Item
     // Constructors
     // --------------------------------------------------------------------
     public ItemCustomPainting() {
-        this.setUnlocalizedName(ItemCustomPainting.unlocalizedName);
         this.setHasSubtypes(true);
     }
 
@@ -101,19 +100,13 @@ public class ItemCustomPainting extends Item
     @Override
     public String getUnlocalizedName()
     {
-        // TODO: encapsulate into Reference.ResourcesNamespace
-        return String.format("%s:item.%s", "sidben.ateliercanvas", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+        return LocalizationHelper.getLanguageKey(LocalizationHelper.Category.ITEM, unlocalizedName);
     }
 
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
-        return String.format("%s:item.%s", "sidben.ateliercanvas", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-    }
-
-    protected String getUnwrappedUnlocalizedName(String unlocalizedName)
-    {
-        return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+        return LocalizationHelper.getLanguageKey(LocalizationHelper.Category.ITEM, unlocalizedName);
     }
 
 
@@ -148,7 +141,7 @@ public class ItemCustomPainting extends Item
 
             // Author
             if (!StringUtils.isNullOrEmpty(author)) {
-                infolist.add(TextFormatTable.COLOR_GRAY + StatCollector.translateToLocalFormatted("sidben.ateliercanvas:item.custom_painting.author_label", new Object[] { author }));
+                infolist.add(TextFormatTable.COLOR_GRAY + LocalizationHelper.translateFormatted(Category.ITEM_CUSTOM_PAINTING, "author", author));
             }
 
             // Authenticity
@@ -164,15 +157,15 @@ public class ItemCustomPainting extends Item
                 final String uniqueId = nbttagcompound.getString(ItemCustomPainting.NBTPaintingUUID);
 
                 if (StringUtils.isNullOrEmpty(uniqueId)) {
-                    infolist.add(TextFormatTable.COLOR_RED + "This painting is blank");
+                    infolist.add(TextFormatTable.COLOR_RED + LocalizationHelper.translate(Category.WARNING, "empty_uuid"));
                 } else {
                     infolist.add(TextFormatTable.COLOR_GRAY + TextFormatTable.ITALIC + uniqueId);
 
                     final CustomPaintingConfigItem paintingConfig = ConfigurationHandler.findPaintingByUUID(uniqueId);
                     if (paintingConfig == null || !paintingConfig.isValid()) {
-                        infolist.add(TextFormatTable.COLOR_RED + "This painting was not found on the config file");
+                        infolist.add(TextFormatTable.COLOR_RED + LocalizationHelper.translate(Category.WARNING, "uuid_not_found"));
                     } else if (!paintingConfig.getIsEnabled()) {
-                        infolist.add(TextFormatTable.COLOR_RED + "This painting is disabled");
+                        infolist.add(TextFormatTable.COLOR_RED + LocalizationHelper.translate(Category.WARNING, "disabled"));
                     }
 
                 }
@@ -180,7 +173,7 @@ public class ItemCustomPainting extends Item
         } else {
             // Debug info (F3 + H), check the UUID and if the painting is installed
             if (debugmode) {
-                infolist.add(TextFormatTable.COLOR_RED + "This painting is empty");
+                infolist.add(TextFormatTable.COLOR_RED + LocalizationHelper.translate(Category.WARNING, "empty_nbt"));
             }
         }
     }
@@ -212,10 +205,6 @@ public class ItemCustomPainting extends Item
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
-        LogHelper.info("onItemUse()");
-        LogHelper.info("    side: " + side);
-        LogHelper.info("    pos: " + x + ", " + y + ", " + z);
-
 
         // Check if the player clicked on a valid surface (only accept the side of blocks)
         if (side == BlockSide.ABOVE || side == BlockSide.BELOW) {
@@ -229,16 +218,13 @@ public class ItemCustomPainting extends Item
                 uniqueId = nbttagcompound.getString(ItemCustomPainting.NBTPaintingUUID);
             }
 
+            // TODO: check if the painting has valid NBT / UUID. If not, don't place (check visible uuids)
+            
 
             final int facing = Direction.facingToDirection[side];
             final EntityHanging entityhanging = this.createHangingEntity(world, x, y, z, facing, uniqueId, stack.getItemDamage());
 
-            // DEBUG
-            if (entityhanging != null) {
-                LogHelper.info("    valid surface: " + entityhanging.onValidSurface() + " (ItemCustomPainting)");
-            }
-
-
+            
             // Check if the player can place blocks
             if (!player.canPlayerEdit(x, y, z, side, stack)) {
                 return false;
@@ -246,7 +232,6 @@ public class ItemCustomPainting extends Item
                 if (entityhanging != null && entityhanging.onValidSurface()) {
                     // Places the painting entity
                     if (!world.isRemote) {
-                        LogHelper.info("--Spawning custom painting at " + x + ", " + y + ", " + z);
                         world.spawnEntityInWorld(entityhanging);
                     }
 

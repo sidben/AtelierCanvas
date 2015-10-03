@@ -14,10 +14,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
 import sidben.ateliercanvas.helper.ImageFilenameFilter;
+import sidben.ateliercanvas.helper.LocalizationHelper;
+import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.helper.LogHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -111,24 +112,24 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
 
                 // Validate if the file exists
                 if (!iconFile.exists()) {
-                    this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_not_found"));
+                    this._warnings = LocalizationHelper.translate(Category.ERROR, "not_found");
                 }
 
                 // Validate file size
                 else if (this._fileSize > ConfigurationHandler.maxFileSize) {
-                    this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_big_file"));
+                    this._warnings = LocalizationHelper.translate(Category.ERROR, "big_file");
                 }
 
                 /*
                  * // Compare file size (actual VS config) TODO: Maybe make it an option for the implemented class to auto-update file size "Size don't match, edit to update"
                  * else if (this._fileSize != this._entryData.getExpectedSize()) {
-                 * this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_size_not_match"));
+                 * this._warnings = LocalizationHelper.translate(Category.ERROR, "size_not_match");
                  * }
                  */
 
                 // Validate file extension
                 else if (!fileExtensionChecker.accept(iconFile.getParentFile(), iconFile.getName())) {
-                    this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_invalid_extension"));
+                    this._warnings = LocalizationHelper.translate(Category.ERROR, "invalid_extension");
                 }
 
                 // Try to load the image
@@ -154,7 +155,7 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
 
                     // Validate the max dimensions
                     if (this._iconWidth > ConfigurationHandler.maxPaintingSize || this._iconHeight > ConfigurationHandler.maxPaintingSize) {
-                        this._warnings = StatCollector.translateToLocal(this.getLanguageKey("error_big_pixels"));
+                        this._warnings = LocalizationHelper.translate(Category.ERROR, "big_pixels");
                     }
 
                     else {
@@ -254,15 +255,6 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
     protected String getWarningMessage()
     {
         return this._warnings == null ? "" : this._warnings;
-    }
-
-
-    /**
-     * Returns the full language key for elements of this GUI.
-     */
-    protected String getLanguageKey(String name)
-    {
-        return "sidben.ateliercanvas.config.painting_info." + name;
     }
 
 
