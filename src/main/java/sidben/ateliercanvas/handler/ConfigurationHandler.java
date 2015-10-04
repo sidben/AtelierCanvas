@@ -2,6 +2,7 @@ package sidben.ateliercanvas.handler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -9,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import scala.actors.threadpool.Arrays;
 import sidben.ateliercanvas.helper.ImageFilenameFilter;
 import sidben.ateliercanvas.helper.LocalizationHelper;
 import sidben.ateliercanvas.helper.LocalizationHelper.Category;
@@ -188,7 +188,6 @@ public class ConfigurationHandler
      * 
      * @see sidben.ateliercanvas.client.gui.GuiScreenCustomPaintingsAddFileSelector
      */
-    @SuppressWarnings("unchecked")
     public static List<CustomPaintingConfigItem> getPaintingsInConfigFolderNotInstalled()
     {
         final List<CustomPaintingConfigItem> fakeConfigList = new ArrayList<CustomPaintingConfigItem>();
