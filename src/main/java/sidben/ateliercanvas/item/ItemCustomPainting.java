@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
 import sidben.ateliercanvas.handler.CustomPaintingConfigItem;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItemComparator;
+import sidben.ateliercanvas.handler.CustomPaintingConfigItemComparator.SortingType;
 import sidben.ateliercanvas.helper.EnumAuthenticity;
 import sidben.ateliercanvas.helper.LocalizationHelper;
 import sidben.ateliercanvas.helper.LocalizationHelper.Category;
@@ -304,11 +306,18 @@ public class ItemCustomPainting extends Item
     {
         ItemStack paintingStack;
 
-        for (final CustomPaintingConfigItem configItem : ConfigurationHandler.getAllMahGoodPaintings()) {
-            paintingStack = new ItemStack(item, 1);
-            MyItems.customPainting.addPaintingData(paintingStack, configItem, false);
-
-            itemList.add(paintingStack);
+        // Sorts the config list by painting title
+        List<CustomPaintingConfigItem> configList = ConfigurationHandler.getAllMahGoodPaintings();
+        configList.sort(new CustomPaintingConfigItemComparator(SortingType.TITLE));
+        
+        // Adds each painting to the creative menu, if they are enabled
+        for (final CustomPaintingConfigItem configItem : configList) {
+            if (ConfigurationHandler.isUUIDEnabled(configItem.getUUID())) {
+                paintingStack = new ItemStack(item, 1);
+                MyItems.customPainting.addPaintingData(paintingStack, configItem, false);
+    
+                itemList.add(paintingStack);
+            }
         }
     }
 

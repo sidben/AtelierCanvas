@@ -7,7 +7,6 @@ import sidben.ateliercanvas.ModAtelierCanvas;
 import sidben.ateliercanvas.client.renderer.RenderCustomPainting;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
 import sidben.ateliercanvas.helper.AtelierHelper;
-import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.init.MyItems;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
@@ -16,20 +15,15 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 public class ClientProxy extends CommonProxy
 {
 
-    
 
 
     @Override
     public void pre_initialize()
     {
-        LogHelper.info("=================PREINIT (client proxy)========================");
-
-
         super.pre_initialize();
 
         // Block and item textures
         MyItems.registerRender();
-
     }
 
 
@@ -37,9 +31,6 @@ public class ClientProxy extends CommonProxy
     @Override
     public void initialize()
     {
-        LogHelper.info("=================LOAD (client proxy)========================");
-
-
         super.initialize();
 
         // Helper classes single instances
@@ -47,7 +38,6 @@ public class ClientProxy extends CommonProxy
 
         // Entity renderer
         RenderingRegistry.registerEntityRenderingHandler(EntityCustomPainting.class, new RenderCustomPainting());
-
     }
 
 

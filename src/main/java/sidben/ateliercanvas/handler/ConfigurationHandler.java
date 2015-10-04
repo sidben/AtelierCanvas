@@ -437,11 +437,19 @@ public class ConfigurationHandler
 
         try {
             uuid = UUID.fromString(uuidString);
-            return visiblePaintings.contains(uuid);
+            return isUUIDEnabled(uuid);
         } catch (final IllegalArgumentException e) {
             return false;
         }
     }
 
+    /**
+     * Check if the given UUID is present in the config file and also
+     * if the UUID is enabled.
+     */
+    public static boolean isUUIDEnabled(UUID uuid)
+    {
+        return visiblePaintings.contains(uuid);
+    }
 
 }

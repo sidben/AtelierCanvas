@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import sidben.ateliercanvas.ModAtelierCanvas;
 import sidben.ateliercanvas.entity.item.EntityCustomPainting;
-import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.init.MyItems;
 import sidben.ateliercanvas.init.MyRecipes;
 import sidben.ateliercanvas.network.MessageCustomPaintingInfo;
@@ -42,9 +41,6 @@ public abstract class CommonProxy implements IProxy
     @Override
     public void initialize()
     {
-        LogHelper.info("=================LOAD (common proxy)========================");
-
-
         // Recipes
         MyRecipes.registerRecipes();
 
