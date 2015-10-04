@@ -31,7 +31,6 @@ public class GuiElementPaintingList extends GuiListExtended
     private final GuiScreen   _parentScreen;
 
 
-    // TODO: List sorting criteria (mod param?) - DEFAULT: Size (Area > Width) > Name
 
     @SuppressWarnings("rawtypes")
     public GuiElementPaintingList(Minecraft minecraft, int width, int height, List list, GuiScreen parentScreen) {

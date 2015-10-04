@@ -257,13 +257,13 @@ public class CustomPaintingConfigItem
     /** Returns the painting width in tiles. Each 'tile' is a 16x16 block, so a painting with 48x32 size in pixels would occupy 3x2 tiles */
     public int getTileWidth()
     {
-        return (int) Math.ceil(this._width / 16);
+        return (int) Math.max(Math.ceil(this._width / 16), 1);
     }
 
     /** Returns the painting height in tiles. Each 'tile' is a 16x16 block, so a painting with 48x32 size in pixels would occupy 3x2 tiles */
     public int getTileHeight()
     {
-        return (int) Math.ceil(this._height / 16);
+        return (int) Math.max(Math.ceil(this._height / 16), 1);
     }
 
 
@@ -285,8 +285,8 @@ public class CustomPaintingConfigItem
 
     public void setSizePixels(int width, int height)
     {
-        this._width = Math.max(width, ConfigurationHandler.minPaintingSize);
-        this._height = Math.max(height, ConfigurationHandler.minPaintingSize);
+        this._width = Math.max(width, 1);
+        this._height = Math.max(height, 1);
     }
 
     public void setActualFileSize(long value)

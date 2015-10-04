@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Direction;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import sidben.ateliercanvas.handler.ConfigurationHandler;
@@ -174,6 +175,93 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         its_a_me_Painting.setItemDamage(this._itemDamageValue);
 
         return its_a_me_Painting;
+    }
+
+
+
+    /*
+     * Complete copy-paste of the setDirection method so I can override the private
+     * [func_70517_b] method and add support for paintings larger than 64 pixels.
+     * 
+     * @see net.minecraft.entity.EntityHanging#setDirection(int)
+     */
+    @Override
+    public void setDirection(int direction)
+    {
+        this.hangingDirection = direction;
+        this.prevRotationYaw = this.rotationYaw = direction * 90;
+        float f = this.getWidthPixels();
+        float f1 = this.getHeightPixels();
+        float f2 = this.getWidthPixels();
+
+        if (direction != 2 && direction != 0) {
+            f = 0.5F;
+        } else {
+            f2 = 0.5F;
+            this.rotationYaw = this.prevRotationYaw = Direction.rotateOpposite[direction] * 90;
+        }
+
+        f /= 32.0F;
+        f1 /= 32.0F;
+        f2 /= 32.0F;
+        float f3 = this.field_146063_b + 0.5F;
+        float f4 = this.field_146064_c + 0.5F;
+        float f5 = this.field_146062_d + 0.5F;
+        final float f6 = 0.5625F;       // OBS: 0.5625 == 9/16 
+
+        if (direction == 2) {
+            f5 -= f6;
+        }
+
+        if (direction == 1) {
+            f3 -= f6;
+        }
+
+        if (direction == 0) {
+            f5 += f6;
+        }
+
+        if (direction == 3) {
+            f3 += f6;
+        }
+
+        if (direction == 2) {
+            f3 -= this.func_70517_b(this.getWidthPixels());
+        }
+
+        if (direction == 1) {
+            f5 += this.func_70517_b(this.getWidthPixels());
+        }
+
+        if (direction == 0) {
+            f3 += this.func_70517_b(this.getWidthPixels());
+        }
+
+        if (direction == 3) {
+            f5 -= this.func_70517_b(this.getWidthPixels());
+        }
+
+        f4 += this.func_70517_b(this.getHeightPixels());
+        this.setPosition(f3, f4, f5);
+        final float f7 = -0.03125F;     // OBS: -0.03125 == 1/32 
+        
+        double minX = f3 - f - f7;
+        double minY = f4 - f1 - f7;
+        double minZ = f5 - f2 - f7;
+        double maxX = f3 + f + f7;
+        double maxY = f4 + f1 + f7;
+        double maxZ = f5 + f2 + f7;
+        
+        this.boundingBox.setBounds(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+
+    /**
+     * Adjusts the position of the painting.
+     */
+    private float func_70517_b(int value)
+    {
+        return value % 32 == 0 ? 0.5F : 0F;
     }
 
 

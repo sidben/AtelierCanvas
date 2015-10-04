@@ -108,7 +108,6 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
                 this._fileSize = iconFile.length();
                 final ImageFilenameFilter fileExtensionChecker = new ImageFilenameFilter();
 
-                // TODO: Decide about images that don't follow the 16x16 ratio (accept, reject, edit or make optional)
 
                 // Validate if the file exists
                 if (!iconFile.exists()) {
@@ -210,12 +209,12 @@ public abstract class GuiElementPaintingIconLoader extends GuiScreen
 
     protected int getTileWidth()
     {
-        return this._iconWidth / this._resolution;
+        return Math.max(this._iconWidth / this._resolution, 1);
     }
 
     protected int getTileHeight()
     {
-        return this._iconHeight / this._resolution;
+        return Math.max(this._iconHeight / this._resolution, 1);
     }
 
     protected long getFileSizeBytes()

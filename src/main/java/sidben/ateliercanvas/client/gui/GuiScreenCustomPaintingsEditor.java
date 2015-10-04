@@ -130,7 +130,6 @@ public class GuiScreenCustomPaintingsEditor extends GuiElementPaintingIconLoader
             // Size of the preview image
             int sampleWidth = super.getIconWidth() > 64 ? 64 : super.getIconWidth();
             int sampleHeight = super.getIconHeight() > 64 ? 64 : super.getIconHeight();
-            // TODO: support for paintings larger than 64x64 pixels
 
             // If the GUI is large, allows more info and a bigger picture
             sampleWidth *= 2;
