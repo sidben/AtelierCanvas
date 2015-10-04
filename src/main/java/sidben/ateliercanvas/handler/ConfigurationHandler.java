@@ -15,7 +15,6 @@ import sidben.ateliercanvas.helper.LocalizationHelper;
 import sidben.ateliercanvas.helper.LocalizationHelper.Category;
 import sidben.ateliercanvas.helper.LogHelper;
 import sidben.ateliercanvas.reference.Reference;
-import cpw.mods.fml.client.config.GuiConfigEntries;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -97,42 +96,17 @@ public class ConfigurationHandler
 
     private static void loadConfig()
     {
-        final List<String> propOrder = new ArrayList<String>();
-        Property prop;
-        ConfigCategory cat;
+
+        // Load properties - general
+        simpleRecipes = config.getBoolean("simple_recipes", Configuration.CATEGORY_GENERAL, DEFAULT_simpleRecipes, "", LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "simple_recipes"));
+        maxFileSize = config.getInt("max_filesize_kb", Configuration.CATEGORY_GENERAL, DEFAULT_maxFileSize * 1024, 10, 1024, "", LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "max_filesize_kb")) * 1024;
+        maxPaintingSize = config.getInt("max_image_size", Configuration.CATEGORY_GENERAL, DEFAULT_maxPaintingSize, 64, 128, "", LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "max_image_size"));
+        paintingDateFormat = config.getString("date_format", Configuration.CATEGORY_GENERAL, DEFAULT_paintingDateFormat, "", new String[] { "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "dd-MMM-yyyy", "yyyy-MMM-dd" }, LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "date_format"));
 
 
 
-        // Load properties
-        prop = config.get(Configuration.CATEGORY_GENERAL, "simple_recipes", DEFAULT_simpleRecipes);
-        prop.setLanguageKey(LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "simple_recipes"));
-        simpleRecipes = prop.getBoolean(DEFAULT_simpleRecipes);
-        propOrder.add(prop.getName());
-
-        prop = config.get(Configuration.CATEGORY_GENERAL, "max_filesize_kb", DEFAULT_maxFileSize, "", 10, 1024);     // 1048576 bytes == 1024KB == 1 MB
-        prop.setLanguageKey(LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "max_filesize_kb"));
-        maxFileSize = (prop.getInt(DEFAULT_maxFileSize) * 1024);
-        prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
-        propOrder.add(prop.getName());
-
-        prop = config.get(Configuration.CATEGORY_GENERAL, "max_image_size", DEFAULT_maxPaintingSize, "", 64, 128);
-        prop.setLanguageKey(LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "max_image_size"));
-        maxPaintingSize = prop.getInt(DEFAULT_maxPaintingSize);
-        prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
-        propOrder.add(prop.getName());
-
-        prop = config.get(Configuration.CATEGORY_GENERAL, "date_format", DEFAULT_paintingDateFormat);
-        prop.setLanguageKey(LocalizationHelper.getLanguageKey(Category.CONFIG_PROPERTIES, "date_format"));
-        paintingDateFormat = prop.getString();
-        prop.setValidValues(new String[] { "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "dd-MMM-yyyy", "yyyy-MMM-dd" });
-        propOrder.add(prop.getName());
-
-
-        config.setCategoryPropertyOrder(Configuration.CATEGORY_GENERAL, propOrder);
-
-
-
-        cat = config.getCategory(CATEGORY_PAINTINGS);
+        // Custom paintings category
+        final ConfigCategory cat = config.getCategory(CATEGORY_PAINTINGS);
         cat.setComment(CustomPaintingConfigItem.getArrayDescription());
 
 
@@ -157,7 +131,7 @@ public class ConfigurationHandler
             }
         }
 
-        LogHelper.info("Loaded complete, [" + mahPaintings.size() + "] entries found.");
+        LogHelper.info("Loading complete, [" + mahPaintings.size() + "] entries found.");
 
 
 
