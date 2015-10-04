@@ -135,7 +135,7 @@ public class ItemCustomPainting extends Item
     public void addInformation(ItemStack stack, EntityPlayer player, List infolist, boolean debugmode)
     {
         if (stack.hasTagCompound()) {
-            // TODO: how to update author and title when the config changes? Maybe I shouldn't store that as NBT at all, or find a way to do a 1-time only check.
+            // TODO: how to update author and title when the config changes? Update when the painting is placed / broken
 
             final NBTTagCompound nbttagcompound = stack.getTagCompound();
             final String author = nbttagcompound.getString(ItemCustomPainting.NBTPaintingAuthor);

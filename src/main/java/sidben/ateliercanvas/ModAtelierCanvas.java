@@ -76,8 +76,6 @@ public class ModAtelierCanvas
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        LogHelper.info("=================PREINIT========================");
-
         // Loads config
         ConfigurationHandler.init(event.getSuggestedConfigurationFile());
         FMLCommonHandler.instance().bus().register(new ConfigurationHandler());
@@ -91,8 +89,6 @@ public class ModAtelierCanvas
     @Mod.EventHandler
     public void load(FMLInitializationEvent event)
     {
-        LogHelper.info("=================LOAD========================");
-
         // Event Handlers
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
 
@@ -105,10 +101,6 @@ public class ModAtelierCanvas
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        LogHelper.info("=================POSTINIT========================");
-
-
-
         // Sided post-initialization
         proxy.post_initialize();
     }

@@ -97,7 +97,6 @@ public class ItemRandomPainting extends Item
      */
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
-        System.out.println("onItemRightClick()");
         // player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
 
         // Sound

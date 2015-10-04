@@ -84,7 +84,6 @@ public class AtelierHelper
                                 fileSize = iconFile.length();
                                 final ImageFilenameFilter fileExtensionChecker = new ImageFilenameFilter();
 
-                                // TODO: Decide about images that don't follow the 16x16 ratio (accept, reject, edit or make optional)
 
                                 LogHelper.info(String.format("Adding custom painting to the cache: %s | %s", entryData.getPaintingFileName(), entryData.getUUID()));
 
