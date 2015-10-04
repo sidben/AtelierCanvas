@@ -2,6 +2,7 @@ package sidben.ateliercanvas.client.gui;
 
 import static sidben.ateliercanvas.reference.TextFormatTable.GLYPH_SORT;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -461,7 +462,7 @@ public class GuiScreenCustomPaintingsManage extends GuiScreen
 
         // Sorting
         final List<CustomPaintingConfigItem> configList = ConfigurationHandler.getAllMahGoodPaintings();
-        configList.sort(new CustomPaintingConfigItemComparator(listSorting));
+        Collections.sort(configList, new CustomPaintingConfigItemComparator(listSorting));
 
         // Listbox data (loads from config)
         this.paintingList = new ArrayList<GuiElementPaintingListEntry>();

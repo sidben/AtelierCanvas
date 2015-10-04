@@ -1,5 +1,6 @@
 package sidben.ateliercanvas.item;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -308,7 +309,7 @@ public class ItemCustomPainting extends Item
 
         // Sorts the config list by painting title
         List<CustomPaintingConfigItem> configList = ConfigurationHandler.getAllMahGoodPaintings();
-        configList.sort(new CustomPaintingConfigItemComparator(SortingType.TITLE));
+        Collections.sort(configList, new CustomPaintingConfigItemComparator(SortingType.TITLE));
         
         // Adds each painting to the creative menu, if they are enabled
         for (final CustomPaintingConfigItem configItem : configList) {
