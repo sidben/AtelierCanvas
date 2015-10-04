@@ -201,42 +201,50 @@ public class GuiScreenCustomPaintingsAddFileSelector extends GuiScreen
                 final String s = folder.getAbsolutePath();
                 LogHelper.info("Opening custom paintings folder");
 
-                if (Util.getOSType() == Util.EnumOS.OSX) {
-                    try {
-                        Runtime.getRuntime().exec(new String[] { "/usr/bin/open", s });
-                        return;
-                    } catch (final IOException ex) {
-                        LogHelper.error("Couldn\'t open file");
-                        LogHelper.error(ex.getMessage());
+                if (!folder.exists() || !folder.isDirectory()) {
+                    LogHelper.error("Error - Folder not found");
+                }
+
+                else {
+
+                    if (Util.getOSType() == Util.EnumOS.OSX) {
+                        try {
+                            Runtime.getRuntime().exec(new String[] { "/usr/bin/open", s });
+                            return;
+                        } catch (final IOException ex) {
+                            LogHelper.error("Couldn\'t open file");
+                            LogHelper.error(ex.getMessage());
+                        }
+                    } else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
+                        final String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] { s });
+
+                        try {
+                            Runtime.getRuntime().exec(s1);
+                            return;
+                        } catch (final IOException ex) {
+                            LogHelper.error("Couldn\'t open file");
+                            LogHelper.error(ex.getMessage());
+                        }
                     }
-                } else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
-                    final String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] { s });
+
+                    boolean flag = false;
 
                     try {
-                        Runtime.getRuntime().exec(s1);
-                        return;
-                    } catch (final IOException ex) {
-                        LogHelper.error("Couldn\'t open file");
-                        LogHelper.error(ex.getMessage());
+                        final Class oclass = Class.forName("java.awt.Desktop");
+                        final Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
+                        oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { folder.toURI() });
+                    } catch (final Throwable throwable) {
+                        LogHelper.error("Couldn\'t open link");
+                        LogHelper.error(throwable.getMessage());
+                        flag = true;
                     }
-                }
 
-                boolean flag = false;
+                    if (flag) {
+                        LogHelper.info("Opening via system class!");
+                        Sys.openURL("file://" + s);
+                    }
 
-                try {
-                    final Class oclass = Class.forName("java.awt.Desktop");
-                    final Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
-                    oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { folder.toURI() });
-                } catch (final Throwable throwable) {
-                    LogHelper.error("Couldn\'t open link");
-                    LogHelper.error(throwable.getMessage());
-                    flag = true;
-                }
-
-                if (flag) {
-                    LogHelper.info("Opening via system class!");
-                    Sys.openURL("file://" + s);
-                }
+                } // (!folder.exists() || !folder.isDirectory())
             }
 
         }

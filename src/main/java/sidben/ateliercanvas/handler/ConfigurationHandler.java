@@ -218,6 +218,7 @@ public class ConfigurationHandler
     public static List<CustomPaintingConfigItem> getPaintingsInConfigFolderNotInstalled()
     {
         final List<CustomPaintingConfigItem> fakeConfigList = new ArrayList<CustomPaintingConfigItem>();
+        boolean folderOk = false;
 
 
         // Current installed paintings
@@ -233,37 +234,36 @@ public class ConfigurationHandler
         // Sub-folder of the mod
         final File folder = new File(Minecraft.getMinecraft().mcDataDir, ConfigurationHandler.IMAGES_BASE_PATH);
 
-        // Look all files in the folder, but filter by the valid extension types
-        for (final File fileEntry : folder.listFiles(new ImageFilenameFilter())) {
-            final String name = fileEntry.getName().toLowerCase();
+        // Creates the folder if it doesn't exist
+        if (folder.exists() && folder.isDirectory()) {
+            folderOk = true;
+        } else {
+            if (folder.exists() && !folder.isDirectory()) {
+                LogHelper.error("Error: There is a file named [" + ConfigurationHandler.IMAGES_BASE_PATH + "], this will cause problems");
+            }
 
-            // If the filename is not installed, adds to the return list
-            if (!currentFiles.contains(name)) {
-                final CustomPaintingConfigItem item = new CustomPaintingConfigItem(name, true, fileEntry.length(), name, "");
-                fakeConfigList.add(item);
+            folderOk = folder.mkdirs();
+            if (!folderOk) {
+                LogHelper.error("Error creating the custom paintings folder");
+            }
+        }
+
+
+        if (folderOk) {
+            // Look all files in the folder, but filter by the valid extension types
+            for (final File fileEntry : folder.listFiles(new ImageFilenameFilter())) {
+                final String name = fileEntry.getName().toLowerCase();
+
+                // If the filename is not installed, adds to the return list
+                if (!currentFiles.contains(name)) {
+                    final CustomPaintingConfigItem item = new CustomPaintingConfigItem(name, true, fileEntry.length(), name, "");
+                    fakeConfigList.add(item);
+                }
             }
         }
 
 
         return fakeConfigList;
-    }
-
-
-    @Deprecated
-    public static void addNewItemAndSaveConfig(CustomPaintingConfigItem item)
-    {
-        if (item == null) {
-            return;
-        }
-        if (item.isValid()) {
-
-            // Adds the item
-            ConfigurationHandler.mahPaintings.add(item);
-            updateAndSaveConfig();
-
-        } else {
-            LogHelper.info("    Error importing a config entry: [" + item.getValiadtionErrors() + "]");
-        }
     }
 
 
@@ -423,10 +423,9 @@ public class ConfigurationHandler
 
         return null;
     }
-    
-    
-    
-    
+
+
+
     /**
      * Check if the given UUID is present in the config file and also
      * if the UUID is enabled.
