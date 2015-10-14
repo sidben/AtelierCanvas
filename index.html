@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Atelier Canvas - Preset Painting Packs</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/ac.css">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+ 	<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index.html">Atelier Canvas - Preset Painting Packs</a>
+        </div>
+      </div>
+    </nav>
+
+
+    <main class="container">
+    	<div id="alerts"></div>
+		<div id="mainStage"></div>
+    </main>
+
+
+	<footer class="container">
+		<p><a href="https://github.com/sidben/AtelierCanvas">Project on GitHub</a></p>
+		<p><a href="http://minecraft.curseforge.com/projects/atelier-canvas-custom-paintings/files">File downloads on CurseForge</a></p>
+	</footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script>
+	$(function() {
+		$.ajax({
+			url: "packs/packs-v2.json",
+			dataType: "text",
+			success: function(data) {
+				var obj = $.parseJSON(data);
+
+				$("#mainStage").html('<h1>Available packs</h1>');
+				var packlist = $("#mainStage").append('<ul></ul>').find('ul');
+
+				$.each(obj, function (index, value) {
+					packlist.append('<li class="pack-selector" id="' + value.file + '"><a>' + value.name + '</a></li>');
+				});
+			}
+		});
+	});
+
+	$(document).on("click",".pack-selector",function(){
+		// get the pack file
+		var packFile = this.id;
+
+		// load the JSON content via AJAX
+		$.ajax({
+			url: "packs/" + packFile + ".json",
+			dataType: "text",
+			success: function(data) {
+				$("#alerts").html('<div class="alert alert-success">Pack file loaded</div>');
+				var obj = $.parseJSON(data);
+
+				$("#mainStage").html('<h1>' + obj.pack_name + '</h1>');
+				$("#mainStage").append('<p>' + obj.pack_desc + '</p>');
+				$("#mainStage").append('<strong>Artist:</strong> ' + obj.author + '<br>');
+				$("#mainStage").append('<strong>Link:</strong> <a href="' + obj.link + '" target="_blank">' + obj.link + '<br>');
+				$("#mainStage").append('<strong>Last update:</strong> ' + obj.last_update + '<br>');
+				$("#mainStage").append('<strong>Total paintings:</strong> ' + obj.paintings.length + '<br>');
+
+				$("#mainStage").append('<hr>');
+				$("#mainStage").append('<div class="row" id="artGallery"></div>');
+				var gallery = $("#mainStage").find('#artGallery');
+
+				$.each(obj.paintings, function (index, value) {
+					gallery.append('<div class="col-md-2 col-sm-3 col-xs-4"><div class="thumbnail gallery-item"> <img src="' + value.image + '" title="UUID: ' + value.uuid +  '" /> <div class="caption">' + value.title + '<br/><small>' + value.width + 'x' + value.height + ' pixels</small></div> </div></div>');
+				});
+
+			},
+			error: function(data) {
+				$("#alerts").html('<div class="alert alert-danger">Error loading file</div>');
+				$("#mainStage").html(data);
+			}
+
+		});
+	});
+
+    </script>
+  </body>
+</html>

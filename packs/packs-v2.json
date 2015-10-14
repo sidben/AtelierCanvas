@@ -1,0 +1,14 @@
+[
+    { 
+    	"file" : "pigrider-custom-paintings",
+    	"name" : "PigRider's Custom Paintings"
+    },
+    { 
+    	"file" : "lollynl-custom-paintings", 
+    	"name" : "Lollynl's Custom Paintings"
+    },
+    { 
+    	"file" : "kenney-famous-paintings" ,
+    	"name" : "Kenney's Famous Paintings"
+    }
+]

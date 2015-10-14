@@ -1,0 +1,20 @@
+body {
+	padding-top: 80px;
+}
+
+footer {
+	background: #ddd;
+	margin-top: 100px;
+	padding: 15px 0;
+}
+
+
+.gallery-item {
+	text-align: center;
+	
+}
+
+.gallery-item img {
+	width: 100%;
+	image-rendering: -moz-crisp-edges;
+}

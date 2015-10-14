@@ -1,0 +1,7 @@
+{
+  "packs" : [
+    { "file" : "pigrider-custom-paintings" },
+    { "file" : "lollynl-custom-paintings" },
+    { "file" : "kenney-famous-paintings" }
+  ]
+}
