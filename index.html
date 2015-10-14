@@ -36,6 +36,8 @@
 		<p><a href="http://minecraft.curseforge.com/projects/atelier-canvas-custom-paintings/files">File downloads on CurseForge</a></p>
 	</footer>
 
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
@@ -69,7 +71,7 @@
 				$("#alerts").html('<div class="alert alert-success">Pack file loaded</div>');
 				var obj = $.parseJSON(data);
 
-				$("#mainStage").html('<h1>' + obj.pack_name + '</h1>');
+				$("#mainStage").html('<h1>' + obj.pack_name + ' &nbsp; <a href="packs/' + packFile + '.json" target="_blank" title="Open JSON file"><img src="assets/images/json-logo.svg" style="width: 16px;" /></a></h1>');
 				$("#mainStage").append('<p>' + obj.pack_desc + '</p>');
 				$("#mainStage").append('<strong>Artist:</strong> ' + obj.author + '<br>');
 				$("#mainStage").append('<strong>Link:</strong> <a href="' + obj.link + '" target="_blank">' + obj.link + '<br>');
